@@ -1,0 +1,39 @@
+{
+  "kind": "build_request",
+  "title": "Remove 'Built with ♥ using caffeine.ai' attribution text",
+  "projectName": "Whispers Of The White Moon",
+  "priority": "normal",
+  "requirements": [
+    {
+      "id": "REQ-57",
+      "text": "Remove the 'Built with ♥ using caffeine.ai' attribution text from all locations where it appears in the frontend (e.g., Footer component, any page layout, or index.html). Do not replace it with any other attribution or placeholder text.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-4"
+        ],
+        "quotes": [
+          "remove \"Built with ♥ using caffeine.ai\""
+        ]
+      },
+      "acceptanceCriteria": [
+        "The text 'Built with ♥ using caffeine.ai' (or any variation) is not visible anywhere on the public-facing site, the donation page, or the admin dashboard.",
+        "No empty placeholder element or whitespace gap is left in place of the removed text.",
+        "All other footer and page content remains unchanged."
+      ]
+    }
+  ],
+  "constraints": [
+    "Do not modify any files listed under frontend.immutablePaths.",
+    "Do not alter any other footer content, layout, or styling beyond removing the attribution text."
+  ],
+  "nonGoals": [
+    "Adding any replacement attribution or branding text.",
+    "Modifying the backend.",
+    "Any visual redesign of the footer or other sections."
+  ],
+  "imageRequirements": {
+    "required": [],
+    "edits": []
+  }
+}

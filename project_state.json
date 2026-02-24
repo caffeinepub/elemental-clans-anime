@@ -1,0 +1,635 @@
+{
+  "schemaVersion": "1.0.0",
+  "projectStateVersion": 39,
+  "summary": "Anime series website for 'Whispers Of The White Moon' featuring 7 elemental clans. Dark/cinematic aesthetic with navy, black, and deep purple backgrounds; glowing moon blue and fiery gold accent colors; anime streaming/promotion site feel. Smooth fade transitions and parallax scrolling. Built with HTML, CSS, and JavaScript. Now adding a secure admin dashboard for content management (episodes, characters, news, gallery, clans) matching the dark site theme.",
+  "architectural_notes": [
+    "Pure HTML/CSS/JS — no frameworks required",
+    "Dark color palette: blacks, deep purples, dark blues; glowing accents via CSS box-shadow and text-shadow",
+    "Fully responsive/mobile-friendly layout",
+    "Accent colors: moon blue (#4fc3f7 range) and fiery gold (#ffd700 range) for glowing highlights",
+    "Parallax scrolling via CSS background-attachment or JS scroll listeners on hero/section backgrounds",
+    "Admin dashboard: separate protected route/page with authentication; dark glassmorphism UI matching main site theme; CRUD management for all content types"
+  ],
+  "known_issues": [],
+  "isFixRequest": false,
+  "existing_features": [
+    {
+      "id": "feature-implement-a-cinematic-dark-hero-section-with-a-dramatic-anime-series-title-elemental-clans-or-similar-a-mystical-dark-background-with-subtle-glowing-particle-effects-a-tagline-and-two-cta-buttons-watch-trailer-and-explore-the-hero-should-occupy-full-viewport-height-with-a-parallax-style-atmospheric-feel",
+      "title": "Implement a cinematic dark hero section with a dramatic anime series title ('Elemental Clans' or similar), a mystical dark background with subtle glowing particle effects, a tagline, and two CTA buttons ('Watch Trailer' and 'Explore'). The hero should occupy full viewport height with a parallax-style atmospheric feel.",
+      "reqIds": [
+        "REQ-1"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-clans-section-showcasing-7-elemental-clan-cards-in-a-responsive-grid-each-card-must-include-a-unique-symbolic-icon-clan-name-brief-description-and-clan-specific-glowing-color-scheme-moon-clan-silvery-blue-sun-clan-golden-orange-fire-clan-red-orange-water-clan-blue-cyan-lightning-clan-electric-blue-purple-earth-clan-green-brown-balance-clan-prismatic-multi-color-cards-should-have-hover-effects-with-glow-intensification-and-scale-transform",
+      "title": "Create a Clans section showcasing 7 elemental clan cards in a responsive grid. Each card must include a unique symbolic icon, clan name, brief description, and clan-specific glowing color scheme: Moon Clan (silvery/blue), Sun Clan (golden/orange), Fire Clan (red/orange), Water Clan (blue/cyan), Lightning Clan (electric blue/purple), Earth Clan (green/brown), Balance Clan (prismatic/multi-color). Cards should have hover effects with glow intensification and scale transform.",
+      "reqIds": [
+        "REQ-2"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-an-about-synopsis-section-with-a-placeholder-story-description-2-3-paragraphs-about-the-elemental-clans-world-ancient-conflict-and-a-chosen-hero-use-a-dark-background-with-a-subtle-repeating-pattern-overlay-and-fade-in-scroll-animation",
+      "title": "Implement an About/Synopsis section with a placeholder story description (2–3 paragraphs about the elemental clans world, ancient conflict, and a chosen hero). Use a dark background with a subtle repeating pattern overlay and fade-in scroll animation.",
+      "reqIds": [
+        "REQ-3"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-characters-section-with-placeholder-character-cards-at-least-4-characters-one-from-different-clans-each-card-shows-a-character-name-their-clan-affiliation-a-role-title-and-a-placeholder-avatar-illustration-area-cards-should-use-the-clan-s-associated-glow-color-and-support-hover-effects",
+      "title": "Implement a Characters section with placeholder character cards (at least 4 characters, one from different clans). Each card shows a character name, their clan affiliation, a role/title, and a placeholder avatar illustration area. Cards should use the clan's associated glow color and support hover effects.",
+      "reqIds": [
+        "REQ-4"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-footer-with-social-media-icon-links-twitter-x-instagram-youtube-discord-as-placeholders-copyright-text-and-the-anime-series-name-style-with-dark-background-consistent-with-the-site-theme",
+      "title": "Implement a footer with social media icon links (Twitter/X, Instagram, YouTube, Discord as placeholders), copyright text, and the anime series name. Style with dark background consistent with the site theme.",
+      "reqIds": [
+        "REQ-5"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-global-scroll-triggered-fade-in-animations-for-all-major-sections-hero-excluded-add-floating-pulsing-keyframe-animations-on-clan-card-icons-include-smooth-hover-transitions-scale-glow-on-all-interactive-cards-and-buttons-add-a-subtle-animated-particle-or-star-field-canvas-effect-to-the-hero-background",
+      "title": "Implement global scroll-triggered fade-in animations for all major sections (Hero excluded). Add floating/pulsing keyframe animations on clan card icons. Include smooth hover transitions (scale + glow) on all interactive cards and buttons. Add a subtle animated particle or star-field canvas effect to the hero background.",
+      "reqIds": [
+        "REQ-6"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-apply-a-cohesive-dark-cinematic-visual-theme-across-the-entire-site-dark-background-palette-deep-blacks-0a0a0f-dark-navy-0d0d1a-deep-purple-1a0a2e-glowing-accent-colors-per-element-cinematic-anime-style-fonts-e-g-google-fonts-cinzel-for-headings-rajdhani-for-body-and-glowing-text-shadow-and-box-shadow-effects-on-key-elements-ensure-all-sections-are-fully-responsive-across-mobile-tablet-and-desktop-breakpoints",
+      "title": "Apply a cohesive dark cinematic visual theme across the entire site: dark background palette (deep blacks #0a0a0f, dark navy #0d0d1a, deep purple #1a0a2e), glowing accent colors per element, cinematic/anime-style fonts (e.g., Google Fonts: 'Cinzel' for headings, 'Rajdhani' for body), and glowing text-shadow and box-shadow effects on key elements. Ensure all sections are fully responsive across mobile, tablet, and desktop breakpoints.",
+      "reqIds": [
+        "REQ-7"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-sticky-top-navigation-bar-with-the-anime-series-logo-name-on-the-left-and-smooth-scroll-anchor-links-to-each-major-section-hero-clans-story-characters-the-navbar-should-have-a-semi-transparent-dark-background-with-blur-effect-that-becomes-more-opaque-on-scroll",
+      "title": "Implement a sticky top navigation bar with the anime series logo/name on the left and smooth-scroll anchor links to each major section (Hero, Clans, Story, Characters). The navbar should have a semi-transparent dark background with blur effect that becomes more opaque on scroll.",
+      "reqIds": [
+        "REQ-8"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refine-the-global-color-palette-to-use-deep-black-0a0a0f-dark-navy-0d0d1a-and-deep-purple-1a0a2e-as-the-primary-background-colors-across-all-sections-replace-any-existing-accent-colors-with-two-primary-accent-colors-moon-blue-cool-glowing-blue-e-g-4fc3f7-00b4ff-and-fiery-gold-warm-glowing-amber-gold-e-g-fbbf24-f59e0b-apply-these-accents-to-headings-glowing-borders-button-highlights-and-interactive-elements-update-the-tailwind-config-and-css-custom-properties-accordingly",
+      "title": "Refine the global color palette to use deep black (#0a0a0f), dark navy (#0d0d1a), and deep purple (#1a0a2e) as the primary background colors across all sections. Replace any existing accent colors with two primary accent colors: moon blue (cool glowing blue, e.g., #4fc3f7 / #00b4ff) and fiery gold (warm glowing amber/gold, e.g., #fbbf24 / #f59e0b). Apply these accents to headings, glowing borders, button highlights, and interactive elements. Update the Tailwind config and CSS custom properties accordingly.",
+      "reqIds": [
+        "REQ-9"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-style-the-site-s-typography-layout-and-ui-patterns-to-evoke-a-premium-anime-streaming-or-promotional-website-aesthetic-this-includes-using-bold-dramatic-cinzel-headings-with-glowing-text-shadow-in-moon-blue-or-fiery-gold-applying-fiery-gold-underline-or-glow-accents-to-section-titles-giving-navbar-cards-and-modals-a-dark-glass-morphism-look-semi-transparent-dark-backgrounds-subtle-border-glow-and-ensuring-cta-buttons-use-a-glowing-gradient-or-outline-style-with-hover-pulse-animations-consistent-with-anime-promotion-sites",
+      "title": "Style the site's typography, layout, and UI patterns to evoke a premium anime streaming or promotional website aesthetic. This includes: using bold, dramatic Cinzel headings with glowing text-shadow in moon blue or fiery gold; applying fiery gold underline or glow accents to section titles; giving navbar, cards, and modals a dark glass-morphism look (semi-transparent dark backgrounds + subtle border glow); and ensuring CTA buttons use a glowing gradient or outline style with hover pulse animations consistent with anime promotion sites.",
+      "reqIds": [
+        "REQ-10"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-smooth-css-fade-in-transitions-for-section-entry-animations-all-major-sections-clans-about-characters-footer-should-fade-in-and-subtly-translate-upward-as-they-enter-the-viewport-via-the-existing-intersectionobserver-usescrollfadein-hook-pattern-transition-durations-should-be-0-6-0-9s-with-ease-out-easing-additionally-add-cross-fade-or-opacity-transitions-when-interactive-elements-cards-buttons-nav-links-are-hovered-or-focused",
+      "title": "Implement smooth CSS fade-in transitions for section entry animations. All major sections (Clans, About, Characters, Footer) should fade in and subtly translate upward as they enter the viewport via the existing IntersectionObserver / useScrollFadeIn hook pattern. Transition durations should be 0.6–0.9s with ease-out easing. Additionally, add cross-fade or opacity transitions when interactive elements (cards, buttons, nav links) are hovered or focused.",
+      "reqIds": [
+        "REQ-11"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-parallax-scrolling-effect-to-the-hero-section-background-as-the-user-scrolls-down-the-hero-background-particle-canvas-or-a-dark-gradient-overlay-layer-should-move-at-a-slower-rate-than-the-foreground-content-creating-a-depth-illusion-use-css-transform-with-translatey-driven-by-scroll-position-via-a-scroll-event-listener-or-css-background-attachment-fixed-as-a-fallback-ensure-the-parallax-effect-is-disabled-or-reduced-on-mobile-to-avoid-performance-issues",
+      "title": "Add a parallax scrolling effect to the Hero section background. As the user scrolls down, the hero background (particle canvas or a dark gradient overlay layer) should move at a slower rate than the foreground content, creating a depth illusion. Use CSS transform with translateY driven by scroll position (via a scroll event listener or CSS background-attachment: fixed as a fallback). Ensure the parallax effect is disabled or reduced on mobile to avoid performance issues.",
+      "reqIds": [
+        "REQ-12"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-rename-the-website-from-elemental-clans-to-whispers-of-the-white-moon-across-all-user-facing-text-including-the-html-page-title-frontend-index-html-the-navbar-brand-logo-text-the-hero-section-title-display-the-footer-brand-name-and-any-copyright-notices",
+      "title": "Rename the website from 'Elemental Clans' to 'Whispers Of The White Moon' across all user-facing text, including the HTML page title (frontend/index.html), the navbar brand/logo text, the hero section title display, the footer brand name, and any copyright notices.",
+      "reqIds": [
+        "REQ-13"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-top-navigation-bar-to-include-the-following-seven-sections-as-smooth-scroll-anchor-links-in-this-order-home-story-characters-clans-episodes-gallery-news-updates-ensure-the-navbar-retains-its-existing-sticky-fixed-positioning-glassmorphism-dark-background-with-blur-scroll-aware-opacity-behavior-and-mobile-collapsible-menu-add-placeholder-section-ids-episodes-gallery-news-to-app-tsx-so-the-new-nav-links-have-valid-scroll-targets",
+      "title": "Update the top navigation bar to include the following seven sections as smooth-scroll anchor links in this order: Home, Story, Characters, Clans, Episodes, Gallery, News / Updates. Ensure the navbar retains its existing sticky/fixed positioning, glassmorphism dark background with blur, scroll-aware opacity behavior, and mobile collapsible menu. Add placeholder section IDs (episodes, gallery, news) to App.tsx so the new nav links have valid scroll targets.",
+      "reqIds": [
+        "REQ-14"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-three-placeholder-sections-to-the-page-for-episodes-gallery-and-news-updates-each-section-should-have-a-matching-anchor-id-episodes-gallery-news-use-the-existing-dark-glassmorphism-card-style-and-section-title-treatment-cinzel-font-fiery-gold-underline-accent-and-display-a-brief-coming-soon-placeholder-message-consistent-with-the-site-s-dark-cinematic-theme",
+      "title": "Add three placeholder sections to the page for Episodes, Gallery, and News / Updates. Each section should have a matching anchor ID (episodes, gallery, news), use the existing dark glassmorphism card style and section title treatment (Cinzel font, fiery gold underline accent), and display a brief 'Coming Soon' placeholder message consistent with the site's dark cinematic theme.",
+      "reqIds": [
+        "REQ-15"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-episodes-placeholder-section-with-a-full-season-1-episode-tracker-layout-display-a-list-of-episodes-in-a-styled-table-or-card-grid-each-showing-episode-number-episode-title-a-short-summary-1-2-sentences-and-a-release-status-badge-e-g-released-coming-soon-in-production-use-static-frontend-data-for-the-episode-list-style-consistently-with-the-site-s-dark-glassmorphism-aesthetic-cinzel-headings-fiery-gold-accents-dark-card-backgrounds-with-subtle-glow-borders-apply-the-existing-usescrollfadein-hook-for-section-entry-animation",
+      "title": "Replace the Episodes placeholder section with a full Season 1 episode tracker layout. Display a list of episodes in a styled table or card grid, each showing: episode number, episode title, a short summary (1–2 sentences), and a release status badge (e.g., 'Released', 'Coming Soon', 'In Production'). Use static frontend data for the episode list. Style consistently with the site's dark glassmorphism aesthetic (Cinzel headings, fiery gold accents, dark card backgrounds with subtle glow borders). Apply the existing useScrollFadeIn hook for section entry animation.",
+      "reqIds": [
+        "REQ-16"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-gallery-placeholder-section-with-a-full-image-gallery-featuring-clickable-thumbnail-cards-organized-into-categories-concept-art-fight-scenes-and-character-designs-thumbnails-should-open-into-a-full-screen-lightbox-modal-overlay-when-clicked-showing-the-expanded-image-with-a-close-button-and-optional-left-right-navigation-arrows-use-placeholder-or-generated-static-images-as-the-gallery-content-style-consistently-with-the-site-s-dark-glassmorphism-aesthetic-apply-the-existing-usescrollfadein-hook-for-section-entry-animation",
+      "title": "Replace the Gallery placeholder section with a full image gallery featuring clickable thumbnail cards organized into categories: Concept Art, Fight Scenes, and Character Designs. Thumbnails should open into a full-screen lightbox/modal overlay when clicked, showing the expanded image with a close button and optional left/right navigation arrows. Use placeholder or generated static images as the gallery content. Style consistently with the site's dark glassmorphism aesthetic. Apply the existing useScrollFadeIn hook for section entry animation.",
+      "reqIds": [
+        "REQ-17"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-replace-the-news-updates-placeholder-section-with-a-dev-log-news-feed-layout-where-announcements-can-be-displayed-render-a-static-list-of-news-dev-log-entries-from-a-frontend-data-file-each-entry-containing-a-title-date-category-tag-e-g-dev-log-episode-announcement-season-update-and-body-text-1-3-sentences-display-entries-as-vertically-stacked-glassmorphism-cards-in-reverse-chronological-order-style-consistently-with-the-site-s-dark-cinematic-theme-apply-the-existing-usescrollfadein-hook-for-section-entry-animation",
+      "title": "Replace the News & Updates placeholder section with a dev log / news feed layout where announcements can be displayed. Render a static list of news/dev log entries from a frontend data file, each entry containing: a title, date, category tag (e.g., 'Dev Log', 'Episode Announcement', 'Season Update'), and body text (1–3 sentences). Display entries as vertically stacked glassmorphism cards in reverse-chronological order. Style consistently with the site's dark cinematic theme. Apply the existing useScrollFadeIn hook for section entry animation.",
+      "reqIds": [
+        "REQ-18"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-generate-and-add-placeholder-gallery-images-to-frontend-public-assets-generated-for-use-in-the-gallery-section-images-should-represent-dark-anime-style-concept-art-of-a-mystical-world-a-dramatic-fight-scene-between-elemental-clan-warriors-and-character-design-portraits-with-elemental-glow-effects",
+      "title": "Generate and add placeholder gallery images to frontend/public/assets/generated for use in the Gallery section. Images should represent: dark anime-style concept art of a mystical world, a dramatic fight scene between elemental clan warriors, and character design portraits with elemental glow effects.",
+      "reqIds": [
+        "REQ-19"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-hero-section-to-feel-like-a-high-end-anime-promotion-site-landing-page-add-a-multi-layer-background-composed-of-a-deep-radial-gradient-dark-navy-deep-purple-black-a-semi-transparent-noise-grain-texture-overlay-and-the-existing-particle-canvas-as-the-topmost-background-layer-add-a-dramatic-cinematic-letterbox-bar-effect-thin-horizontal-bars-at-top-and-bottom-increase-the-title-s-glow-intensity-text-shadow-spread-and-opacity-and-animate-the-title-entrance-with-a-staggered-fade-up-scale-in-sequence-on-load-ensure-the-two-cta-buttons-have-a-high-contrast-glowing-border-pulse-animation-on-hover-that-mimics-premium-anime-streaming-site-buttons",
+      "title": "Enhance the Hero section to feel like a high-end anime promotion site landing page: add a multi-layer background composed of a deep radial gradient (dark navy → deep purple → black), a semi-transparent noise/grain texture overlay, and the existing particle canvas as the topmost background layer. Add a dramatic cinematic letterbox bar effect (thin horizontal bars at top and bottom). Increase the title's glow intensity (text-shadow spread and opacity) and animate the title entrance with a staggered fade-up + scale-in sequence on load. Ensure the two CTA buttons have a high-contrast glowing border pulse animation on hover that mimics premium anime streaming site buttons.",
+      "reqIds": [
+        "REQ-20"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-introduce-layered-depth-backgrounds-site-wide-each-major-section-about-characters-clans-episodes-gallery-news-should-use-a-unique-but-cohesive-dark-layered-background-this-means-combining-a-base-dark-color-0a0a0f-0d0d1a-or-1a0a2e-a-subtle-diagonal-or-radial-gradient-overlay-in-a-contrasting-dark-hue-and-a-very-low-opacity-repeating-geometric-pattern-or-scanline-texture-this-creates-visual-separation-between-sections-while-maintaining-the-dark-cinematic-palette-alternate-the-dominant-background-hue-between-sections-e-g-deep-black-dark-navy-deep-purple-dark-navy-to-give-the-page-visual-rhythm",
+      "title": "Introduce layered depth backgrounds site-wide: each major section (About, Characters, Clans, Episodes, Gallery, News) should use a unique but cohesive dark layered background. This means combining a base dark color (#0a0a0f, #0d0d1a, or #1a0a2e), a subtle diagonal or radial gradient overlay in a contrasting dark hue, and a very low-opacity repeating geometric pattern or scanline texture. This creates visual separation between sections while maintaining the dark cinematic palette. Alternate the dominant background hue between sections (e.g., deep black → dark navy → deep purple → dark navy) to give the page visual rhythm.",
+      "reqIds": [
+        "REQ-21"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-upgrade-all-glowing-ui-highlights-across-the-site-to-be-more-intense-and-visually-polished-increase-box-shadow-spread-and-opacity-on-clan-cards-character-cards-episode-cards-gallery-thumbnails-and-news-cards-to-match-the-vivid-neon-glow-style-seen-on-anime-promotion-sites-add-a-persistent-subtle-ambient-glow-not-just-on-hover-on-section-headings-using-text-shadow-in-moon-blue-4fc3f7-or-fiery-gold-fbbf24-add-a-glowing-horizontal-divider-line-gradient-from-transparent-moon-blue-transparent-between-major-sections-to-act-as-a-visual-separator-ensure-all-interactive-card-hover-states-transition-glow-from-ambient-25-opacity-to-vivid-80-100-opacity-over-0-3s",
+      "title": "Upgrade all glowing UI highlights across the site to be more intense and visually polished: increase box-shadow spread and opacity on clan cards, character cards, episode cards, gallery thumbnails, and news cards to match the vivid neon-glow style seen on anime promotion sites. Add a persistent subtle ambient glow (not just on hover) on section headings using text-shadow in moon blue (#4fc3f7) or fiery gold (#fbbf24). Add a glowing horizontal divider line (gradient from transparent → moon blue → transparent) between major sections to act as a visual separator. Ensure all interactive card hover states transition glow from ambient (25% opacity) to vivid (80–100% opacity) over 0.3s.",
+      "reqIds": [
+        "REQ-22"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-refine-and-expand-smooth-scrolling-animations-across-the-entire-site-to-match-anime-promotion-site-quality-1-use-staggered-scroll-triggered-entrance-animations-for-card-grids-each-card-in-a-grid-fades-in-with-a-100ms-delay-offset-from-the-previous-2-add-a-subtle-horizontal-slide-in-from-alternating-sides-for-the-about-section-text-paragraphs-odd-paragraphs-from-left-even-from-right-3-implement-a-count-up-or-shimmer-reveal-animation-on-the-episode-status-badges-when-they-scroll-into-view-4-add-a-scroll-progress-indicator-bar-thin-moon-blue-glowing-line-at-the-very-top-of-the-viewport-fixed-to-the-page-reuse-the-existing-usescrollfadein-hook-pattern-and-extend-it-or-add-a-new-usestaggeredfadein-hook-as-needed",
+      "title": "Refine and expand smooth scrolling animations across the entire site to match anime promotion site quality: (1) Use staggered scroll-triggered entrance animations for card grids (each card in a grid fades in with a 100ms delay offset from the previous). (2) Add a subtle horizontal slide-in from alternating sides for the About section text paragraphs (odd paragraphs from left, even from right). (3) Implement a count-up or shimmer reveal animation on the episode status badges when they scroll into view. (4) Add a scroll-progress indicator bar (thin moon-blue glowing line) at the very top of the viewport fixed to the page. Reuse the existing useScrollFadeIn hook pattern and extend it or add a new useStaggeredFadeIn hook as needed.",
+      "reqIds": [
+        "REQ-23"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-enhance-the-navbar-to-match-the-polished-look-of-official-anime-promotion-site-navigation-add-a-glowing-moon-blue-underline-indicator-that-slides-smoothly-to-highlight-the-currently-active-visible-section-link-using-intersectionobserver-to-detect-the-active-section-add-a-subtle-shimmer-or-glow-sweep-animation-on-the-brand-logo-text-on-hover-ensure-the-mobile-hamburger-menu-has-a-smooth-slide-down-animation-with-a-glassmorphism-dark-backdrop-add-a-very-subtle-animated-background-gradient-shift-slow-hue-rotation-or-breathing-glow-to-the-navbar-when-the-user-has-scrolled-past-the-hero-section",
+      "title": "Enhance the Navbar to match the polished look of official anime promotion site navigation: add a glowing moon-blue underline indicator that slides smoothly to highlight the currently active/visible section link (using IntersectionObserver to detect the active section). Add a subtle shimmer or glow sweep animation on the brand logo text on hover. Ensure the mobile hamburger menu has a smooth slide-down animation with a glassmorphism dark backdrop. Add a very subtle animated background gradient shift (slow hue rotation or breathing glow) to the navbar when the user has scrolled past the hero section.",
+      "reqIds": [
+        "REQ-24"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-internet-identity-based-authentication-guard-for-the-admin-dashboard-the-admin-route-should-only-be-accessible-after-the-user-logs-in-via-internet-identity-if-the-user-is-not-authenticated-display-a-login-screen-with-the-site-s-dark-glassmorphism-styling-the-whispers-of-the-white-moon-branding-and-a-prominent-login-with-internet-identity-button-using-the-existing-useinternetidentity-hook",
+      "title": "Implement Internet Identity-based authentication guard for the admin dashboard. The admin route should only be accessible after the user logs in via Internet Identity. If the user is not authenticated, display a login screen with the site's dark glassmorphism styling, the 'Whispers Of The White Moon' branding, and a prominent 'Login with Internet Identity' button using the existing useInternetIdentity hook.",
+      "reqIds": [
+        "REQ-25"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-dedicated-admin-dashboard-layout-at-the-route-admin-with-a-fixed-sidebar-navigation-on-desktop-collapsible-on-mobile-and-a-main-content-area-the-sidebar-must-include-navigation-links-to-five-management-sections-episodes-characters-news-gallery-and-clans-use-the-site-s-dark-cinematic-theme-deep-black-0a0a0f-dark-navy-0d0d1a-backgrounds-glassmorphism-card-panels-cinzel-font-for-headings-moon-blue-4fc3f7-active-link-highlights-and-fiery-gold-fbbf24-accents-include-the-site-logo-name-in-the-sidebar-header-and-a-logout-button-at-the-bottom",
+      "title": "Create a dedicated admin dashboard layout at the route /admin with a fixed sidebar navigation on desktop (collapsible on mobile) and a main content area. The sidebar must include navigation links to five management sections: Episodes, Characters, News, Gallery, and Clans. Use the site's dark cinematic theme: deep black (#0a0a0f) / dark navy (#0d0d1a) backgrounds, glassmorphism card panels, Cinzel font for headings, moon blue (#4fc3f7) active link highlights, and fiery gold (#fbbf24) accents. Include the site logo/name in the sidebar header and a logout button at the bottom.",
+      "reqIds": [
+        "REQ-26"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-episodes-management-panel-inside-the-admin-dashboard-display-all-episodes-in-a-dark-styled-table-card-list-with-columns-for-episode-number-title-status-and-duration-include-an-add-episode-button-that-opens-a-glassmorphism-modal-form-with-fields-episode-number-title-summary-release-status-dropdown-released-coming-soon-in-production-and-duration-each-row-must-have-edit-and-delete-action-buttons-on-save-call-the-backend-update-create-functions-and-refresh-the-list-via-react-query-pre-populate-the-list-with-the-existing-static-episode-data-on-first-load-if-backend-is-empty",
+      "title": "Build the Episodes management panel inside the admin dashboard. Display all episodes in a dark-styled table/card list with columns for episode number, title, status, and duration. Include an 'Add Episode' button that opens a glassmorphism modal form with fields: episode number, title, summary, release status (dropdown: Released / Coming Soon / In Production), and duration. Each row must have Edit and Delete action buttons. On save, call the backend update/create functions and refresh the list via React Query. Pre-populate the list with the existing static episode data on first load if backend is empty.",
+      "reqIds": [
+        "REQ-28"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-characters-management-panel-inside-the-admin-dashboard-display-all-characters-in-a-card-grid-with-their-name-clan-affiliation-role-title-and-initials-avatar-include-an-add-character-button-that-opens-a-modal-form-with-fields-name-clan-dropdown-populated-from-clan-list-role-title-bio-and-initials-each-card-must-have-edit-and-delete-action-buttons-on-save-call-the-backend-functions-and-refresh-via-react-query",
+      "title": "Build the Characters management panel inside the admin dashboard. Display all characters in a card grid with their name, clan affiliation, role/title, and initials avatar. Include an 'Add Character' button that opens a modal form with fields: name, clan (dropdown populated from clan list), role/title, bio, and initials. Each card must have Edit and Delete action buttons. On save, call the backend functions and refresh via React Query.",
+      "reqIds": [
+        "REQ-29"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-news-dev-log-management-panel-inside-the-admin-dashboard-display-all-news-entries-as-a-list-sorted-by-date-descending-showing-title-date-category-tag-and-a-truncated-body-preview-include-an-add-entry-button-that-opens-a-modal-form-with-fields-title-date-date-picker-category-dropdown-dev-log-episode-announcement-season-update-and-body-text-textarea-each-entry-must-have-edit-and-delete-action-buttons-on-save-call-the-backend-functions-and-refresh-via-react-query",
+      "title": "Build the News & Dev Log management panel inside the admin dashboard. Display all news entries as a list sorted by date descending, showing title, date, category tag, and a truncated body preview. Include an 'Add Entry' button that opens a modal form with fields: title, date (date picker), category (dropdown: Dev Log / Episode Announcement / Season Update), and body text (textarea). Each entry must have Edit and Delete action buttons. On save, call the backend functions and refresh via React Query.",
+      "reqIds": [
+        "REQ-30"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-gallery-management-panel-inside-the-admin-dashboard-display-all-gallery-image-entries-in-a-grid-showing-thumbnail-placeholder-title-alt-text-and-category-include-an-add-image-button-that-opens-a-modal-form-with-fields-title-alt-text-category-dropdown-concept-art-fight-scenes-character-designs-and-image-path-url-each-entry-must-have-edit-and-delete-action-buttons-on-save-call-the-backend-functions-and-refresh-via-react-query",
+      "title": "Build the Gallery management panel inside the admin dashboard. Display all gallery image entries in a grid showing thumbnail placeholder, title, alt text, and category. Include an 'Add Image' button that opens a modal form with fields: title, alt text, category (dropdown: Concept Art / Fight Scenes / Character Designs), and image path/URL. Each entry must have Edit and Delete action buttons. On save, call the backend functions and refresh via React Query.",
+      "reqIds": [
+        "REQ-31"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-build-the-clans-management-panel-inside-the-admin-dashboard-display-all-seven-clans-in-a-card-list-showing-clan-name-color-scheme-indicator-and-description-include-an-edit-button-per-clan-clans-should-not-be-deletable-to-protect-site-structure-the-edit-modal-must-include-fields-name-description-symbol-icon-text-and-primary-color-on-save-call-the-backend-update-function-and-refresh-via-react-query",
+      "title": "Build the Clans management panel inside the admin dashboard. Display all seven clans in a card list showing clan name, color scheme indicator, and description. Include an Edit button per clan (clans should not be deletable to protect site structure). The edit modal must include fields: name, description, symbol/icon text, and primary color. On save, call the backend update function and refresh via React Query.",
+      "reqIds": [
+        "REQ-32"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-data-layer-usequeries-ts-and-relevant-hooks-to-fetch-content-from-the-backend-canister-for-all-five-managed-content-types-episodes-characters-news-gallery-clans-when-authenticated-falling-back-to-the-existing-static-data-arrays-when-the-backend-returns-empty-results-wire-up-the-main-site-s-public-facing-sections-episodes-characters-news-gallery-clans-to-use-this-dynamic-data-source-so-that-admin-changes-are-immediately-reflected-on-the-public-site",
+      "title": "Update the frontend data layer (useQueries.ts and relevant hooks) to fetch content from the backend canister for all five managed content types (episodes, characters, news, gallery, clans) when authenticated, falling back to the existing static data arrays when the backend returns empty results. Wire up the main site's public-facing sections (Episodes, Characters, News, Gallery, Clans) to use this dynamic data source so that admin changes are immediately reflected on the public site.",
+      "reqIds": [
+        "REQ-33"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-episodes-management-panel-in-the-admin-dashboard-frontend-src-components-admin-panels-episodespanel-tsx-to-add-thumbnail-image-url-and-video-link-input-fields-to-the-add-edit-modal-form-display-the-thumbnail-as-a-small-preview-image-if-a-valid-url-is-provided-within-the-episode-list-table-rows-display-the-video-link-as-a-clickable-external-link-icon-in-each-row-wire-both-new-fields-through-the-existing-usequeries-ts-mutation-hooks-for-createepisode-and-updateepisode",
+      "title": "Update the Episodes management panel in the admin dashboard (frontend/src/components/admin/panels/EpisodesPanel.tsx) to add 'Thumbnail Image URL' and 'Video Link' input fields to the add/edit modal form. Display the thumbnail as a small preview image (if a valid URL is provided) within the episode list/table rows. Display the video link as a clickable external link icon in each row. Wire both new fields through the existing useQueries.ts mutation hooks for createEpisode and updateEpisode.",
+      "reqIds": [
+        "REQ-35"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-rebuild-the-gallery-management-panel-frontend-src-components-admin-panels-gallerypanel-tsx-to-support-file-upload-via-both-a-file-picker-input-and-a-drag-and-drop-zone-when-an-admin-drops-or-selects-an-image-file-read-it-as-a-base64-string-and-preview-it-inline-before-saving-on-save-encode-the-image-and-call-the-backend-creategalleryimage-updategalleryimage-mutation-with-the-image-data-retain-all-existing-fields-title-alt-text-category-dropdown-concept-art-fight-scenes-character-designs-image-path-url-as-an-alternative-to-file-upload-each-gallery-entry-card-must-retain-edit-and-delete-action-buttons-refresh-the-gallery-list-via-react-query-after-any-mutation",
+      "title": "Rebuild the Gallery management panel (frontend/src/components/admin/panels/GalleryPanel.tsx) to support file upload via both a file picker input and a drag-and-drop zone. When an admin drops or selects an image file, read it as a base64 string and preview it inline before saving. On save, encode the image and call the backend createGalleryImage/updateGalleryImage mutation with the image data. Retain all existing fields (title, alt text, category dropdown: Concept Art / Fight Scenes / Character Designs, image path/URL as an alternative to file upload). Each gallery entry card must retain Edit and Delete action buttons. Refresh the gallery list via React Query after any mutation.",
+      "reqIds": [
+        "REQ-37"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-floating-action-button-to-the-public-facing-gallery-section-frontend-src-components-gallery-tsx-that-is-visible-only-when-the-user-is-authenticated-as-an-admin-via-the-useinternetidentity-hook-when-clicked-this-button-opens-the-gallery-upload-modal-same-form-as-in-the-admin-panel-allowing-the-authenticated-owner-to-upload-a-new-image-directly-from-the-public-gallery-page-the-button-must-be-styled-consistently-with-the-site-s-dark-glassmorphism-theme-positioned-at-the-bottom-right-of-the-gallery-section-header-using-a-fiery-gold-fbbf24-glow-border-and-moon-blue-4fc3f7-icon",
+      "title": "Add a floating '+' action button to the public-facing Gallery section (frontend/src/components/Gallery.tsx) that is visible only when the user is authenticated as an admin via the useInternetIdentity hook. When clicked, this button opens the gallery upload modal (same form as in the admin panel) allowing the authenticated owner to upload a new image directly from the public gallery page. The button must be styled consistently with the site's dark glassmorphism theme — positioned at the bottom-right of the gallery section header, using a fiery gold (#fbbf24) glow border and moon blue (#4fc3f7) icon.",
+      "reqIds": [
+        "REQ-38"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-frontend-data-layer-frontend-src-hooks-usequeries-ts-to-include-a-query-for-fetching-individual-gallery-image-blob-data-from-the-backend-using-the-new-getgalleryimagedata-function-when-a-gallery-image-entry-has-image-data-stored-in-the-canister-no-imagepath-url-construct-a-data-url-from-the-blob-and-use-it-as-the-image-src-in-both-the-public-gallery-component-and-the-admin-gallerypanel-thumbnails",
+      "title": "Update the frontend data layer (frontend/src/hooks/useQueries.ts) to include a query for fetching individual gallery image blob data from the backend (using the new getGalleryImageData function). When a gallery image entry has image data stored in the canister (no imagePath URL), construct a data URL from the blob and use it as the image src in both the public Gallery component and the admin GalleryPanel thumbnails.",
+      "reqIds": [
+        "REQ-39"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-visible-admin-login-entry-point-to-the-public-facing-site-this-should-be-a-discreet-link-or-button-e-g-in-the-footer-or-as-a-small-fixed-floating-element-labelled-admin-that-navigates-the-user-to-the-admin-route-it-should-be-styled-subtly-to-match-the-dark-cinematic-theme-without-disrupting-the-public-site-s-aesthetics-use-a-low-opacity-glassmorphism-style-that-brightens-on-hover",
+      "title": "Add a visible 'Admin' login entry point to the public-facing site. This should be a discreet link or button (e.g., in the footer or as a small fixed/floating element) labelled 'Admin' that navigates the user to the /admin route. It should be styled subtly to match the dark cinematic theme without disrupting the public site's aesthetics — use a low-opacity glassmorphism style that brightens on hover.",
+      "reqIds": [
+        "REQ-40"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-admindashboard-component-frontend-src-components-admin-admindashboard-tsx-display-the-currently-authenticated-user-s-internet-identity-principal-id-retrieve-the-principal-from-the-existing-useinternetidentity-hook-e-g-identity-getprincipal-totext-render-it-as-a-clearly-labelled-copyable-text-element-styled-as-a-small-glassmorphism-info-card-consistent-with-the-dark-cinematic-theme-deep-black-navy-background-moon-blue-4fc3f7-border-glow-cinzel-or-rajdhani-font-include-a-copy-icon-button-next-to-the-principal-string-that-copies-the-value-to-the-clipboard-and-briefly-shows-a-copied-confirmation-place-this-principal-id-display-in-a-visible-but-unobtrusive-location-on-the-dashboard-such-as-the-sidebar-footer-above-or-near-the-logout-button-or-in-a-top-right-user-info-area-of-the-main-content-header",
+      "title": "In the AdminDashboard component (frontend/src/components/admin/AdminDashboard.tsx), display the currently authenticated user's Internet Identity principal ID. Retrieve the principal from the existing useInternetIdentity hook (e.g., identity.getPrincipal().toText()). Render it as a clearly labelled, copyable text element — styled as a small glassmorphism info card consistent with the dark cinematic theme (deep black/navy background, moon blue #4fc3f7 border glow, Cinzel or Rajdhani font). Include a 'Copy' icon button next to the principal string that copies the value to the clipboard and briefly shows a 'Copied!' confirmation. Place this principal ID display in a visible but unobtrusive location on the dashboard, such as the sidebar footer (above or near the logout button) or in a top-right user info area of the main content header.",
+      "reqIds": [
+        "REQ-42"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-public-facing-admin-entry-point-the-discreet-link-button-added-to-the-footer-or-as-a-floating-element-in-a-previous-feature-so-that-it-is-only-rendered-when-the-current-user-s-principal-is-in-the-backend-admin-whitelist-non-authenticated-visitors-and-authenticated-users-whose-principal-is-not-in-the-admin-whitelist-must-not-see-the-admin-link-button-at-all-use-the-existing-useinternetidentity-hook-to-retrieve-the-current-identity-principal-and-the-existing-backend-access-control-check-e-g-the-isadmin-or-equivalent-query-from-usequeries-ts-to-conditionally-render-the-element",
+      "title": "Update the public-facing 'Admin' entry point (the discreet link/button added to the footer or as a floating element in a previous feature) so that it is only rendered when the current user's principal is in the backend admin whitelist. Non-authenticated visitors and authenticated users whose principal is NOT in the admin whitelist must not see the 'Admin' link/button at all. Use the existing useInternetIdentity hook to retrieve the current identity/principal and the existing backend access-control check (e.g., the isAdmin or equivalent query) from useQueries.ts to conditionally render the element.",
+      "reqIds": [
+        "REQ-44"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-update-the-admin-route-guard-in-frontend-src-pages-admin-tsx-so-that-after-successful-internet-identity-authentication-the-backend-is-queried-to-confirm-whether-the-authenticated-principal-has-admin-privileges-if-the-authenticated-user-is-not-an-admin-i-e-not-in-the-backend-whitelist-redirect-them-away-from-admin-or-display-an-access-denied-screen-styled-with-the-dark-glassmorphism-theme-instead-of-rendering-the-admindashboard-this-prevents-non-admin-authenticated-users-from-accessing-the-dashboard-even-if-they-navigate-to-admin-directly",
+      "title": "Update the admin route guard in frontend/src/pages/Admin.tsx so that after successful Internet Identity authentication, the backend is queried to confirm whether the authenticated principal has admin privileges. If the authenticated user is NOT an admin (i.e., not in the backend whitelist), redirect them away from /admin or display an 'Access Denied' screen styled with the dark glassmorphism theme, instead of rendering the AdminDashboard. This prevents non-admin authenticated users from accessing the dashboard even if they navigate to /admin directly.",
+      "reqIds": [
+        "REQ-45"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-public-facing-gallery-section-frontend-src-components-gallery-tsx-add-a-action-button-positioned-near-the-gallery-section-heading-that-is-only-rendered-when-the-current-user-is-authenticated-and-recognized-as-an-admin-via-the-existing-useinternetidentity-hook-and-the-isadmin-backend-check-from-usequeries-ts-when-clicked-this-button-opens-the-gallery-upload-modal-supporting-both-a-file-picker-input-and-a-drag-and-drop-zone-identical-in-behaviour-and-fields-to-the-one-in-the-admin-gallerypanel-title-alt-text-category-dropdown-concept-art-fight-scenes-character-designs-image-file-upload-or-url-fallback-on-save-call-the-existing-creategalleryimage-mutation-and-refresh-the-gallery-list-via-react-query-the-button-must-be-styled-consistently-with-the-site-s-dark-glassmorphism-theme-a-fiery-gold-fbbf24-glow-border-and-moon-blue-4fc3f7-icon-with-a-hover-pulse-animation",
+      "title": "In the public-facing Gallery section (frontend/src/components/Gallery.tsx), add a '+' action button positioned near the Gallery section heading that is only rendered when the current user is authenticated and recognized as an admin (via the existing useInternetIdentity hook and the isAdmin backend check from useQueries.ts). When clicked, this button opens the gallery upload modal — supporting both a file picker input and a drag-and-drop zone — identical in behaviour and fields to the one in the admin GalleryPanel (title, alt text, category dropdown: Concept Art / Fight Scenes / Character Designs, image file upload or URL fallback). On save, call the existing createGalleryImage mutation and refresh the gallery list via React Query. The button must be styled consistently with the site's dark glassmorphism theme: a fiery gold (#fbbf24) glow border and moon blue (#4fc3f7) '+' icon, with a hover pulse animation.",
+      "reqIds": [
+        "REQ-46"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-delete-all-existing-gallery-entries-from-the-backend-canister-call-the-delete-mutation-for-every-existing-gallery-image-record-and-from-the-static-frontend-data-file-frontend-src-data-gallery-ts-replacing-the-static-array-with-a-single-entry-pointing-to-the-newly-added-image-asset-at-frontend-public-assets-generated-bestest-dim-900x1200-png-the-entry-should-have-title-character-design-sheet-category-character-designs-and-appropriate-alt-text",
+      "title": "Delete all existing gallery entries from the backend canister (call the delete mutation for every existing gallery image record) and from the static frontend data file (frontend/src/data/gallery.ts), replacing the static array with a single entry pointing to the newly added image asset at 'frontend/public/assets/generated/bestest.dim_900x1200.png'. The entry should have title 'Character Design Sheet', category 'Character Designs', and appropriate alt text.",
+      "reqIds": [
+        "REQ-47"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-new-world-map-section-to-the-public-facing-site-frontend-src-components-worldmap-tsx-with-a-matching-anchor-id-world-map-render-the-uploaded-fantasy-world-map-image-frontend-public-assets-generated-world-map-dim-1320x880-png-as-the-full-width-background-of-the-section-overlay-interactive-clickable-hotspot-markers-on-top-of-the-map-image-for-the-following-named-territories-and-locations-derived-from-the-map-moon-clan-territory-frozen-tides-sun-clan-territory-cinderhead-sands-fire-clan-territory-ashen-peaks-lightning-clan-territory-stormlands-earth-clan-territory-emerald-vale-water-clan-territory-azure-isles-and-the-whispering-sea-each-marker-should-be-a-small-glowing-pulsing-dot-styled-with-the-relevant-clan-s-color-moon-blue-for-moon-clan-golden-orange-for-sun-clan-red-orange-for-fire-clan-electric-blue-purple-for-lightning-clan-green-for-earth-clan-blue-cyan-for-water-clan-and-silvery-for-whispering-sea-position-markers-using-percentage-based-css-positioning-so-they-scale-correctly-with-the-map-image-at-all-breakpoints",
+      "title": "Add a new 'World Map' section to the public-facing site (frontend/src/components/WorldMap.tsx) with a matching anchor ID 'world-map'. Render the uploaded fantasy world map image (frontend/public/assets/generated/world-map.dim_1320x880.png) as the full-width background of the section. Overlay interactive clickable hotspot markers on top of the map image for the following named territories and locations derived from the map: Moon Clan territory ('Frozen Tides'), Sun Clan territory ('Cinderhead Sands'), Fire Clan territory ('Ashen Peaks'), Lightning Clan territory ('Stormlands'), Earth Clan territory ('Emerald Vale'), Water Clan territory ('Azure Isles'), and the 'Whispering Sea'. Each marker should be a small glowing pulsing dot styled with the relevant clan's color (moon blue for Moon Clan, golden/orange for Sun Clan, red/orange for Fire Clan, electric blue/purple for Lightning Clan, green for Earth Clan, blue/cyan for Water Clan, and silvery for Whispering Sea). Position markers using percentage-based CSS positioning so they scale correctly with the map image at all breakpoints.",
+      "reqIds": [
+        "REQ-49"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-implement-a-lore-information-modal-overlay-that-opens-when-the-user-clicks-any-hotspot-marker-on-the-world-map-each-location-must-have-its-own-lore-content-defined-in-a-static-data-file-frontend-src-data-worldmap-ts-the-data-file-should-include-entries-for-moon-clan-frozen-tides-icy-mountain-realm-shrouded-in-perpetual-moonlight-sun-clan-cinderhead-sands-vast-golden-desert-ruled-by-blazing-solar-energy-fire-clan-ashen-peaks-volcanic-highland-forged-by-ancient-eruptions-lightning-clan-stormlands-tempest-scarred-central-highlands-crackling-with-storm-energy-earth-clan-emerald-vale-lush-forested-valley-of-deep-roots-and-ancient-spirits-water-clan-azure-isles-island-archipelago-surrounded-by-mystical-tidal-currents-and-whispering-sea-the-mythic-ocean-said-to-carry-the-voices-of-fallen-ancestors-each-lore-entry-should-include-location-name-clan-affiliation-or-neutral-a-2-3-sentence-lore-description-and-a-notable-landmark-or-lore-fact-the-modal-must-be-styled-with-the-site-s-dark-glassmorphism-aesthetic-semi-transparent-dark-background-moon-blue-4fc3f7-or-clan-specific-glow-border-cinzel-font-for-the-heading-rajdhani-for-body-text-include-a-close-button-and-fade-in-out-smoothly",
+      "title": "Implement a lore information modal/overlay that opens when the user clicks any hotspot marker on the world map. Each location must have its own lore content defined in a static data file (frontend/src/data/worldMap.ts). The data file should include entries for: Moon Clan / Frozen Tides (icy mountain realm shrouded in perpetual moonlight), Sun Clan / Cinderhead Sands (vast golden desert ruled by blazing solar energy), Fire Clan / Ashen Peaks (volcanic highland forged by ancient eruptions), Lightning Clan / Stormlands (tempest-scarred central highlands crackling with storm energy), Earth Clan / Emerald Vale (lush forested valley of deep roots and ancient spirits), Water Clan / Azure Isles (island archipelago surrounded by mystical tidal currents), and Whispering Sea (the mythic ocean said to carry the voices of fallen ancestors). Each lore entry should include: location name, clan affiliation (or 'Neutral'), a 2–3 sentence lore description, and a notable landmark or lore fact. The modal must be styled with the site's dark glassmorphism aesthetic (semi-transparent dark background, moon blue #4fc3f7 or clan-specific glow border, Cinzel font for the heading, Rajdhani for body text), include a close button, and fade in/out smoothly.",
+      "reqIds": [
+        "REQ-50"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-world-map-nav-link-to-the-existing-navbar-frontend-src-components-navbar-tsx-smooth-scroll-anchor-link-list-inserting-it-between-clans-and-episodes-in-the-navigation-order-so-users-can-navigate-directly-to-the-world-map-section-ensure-the-active-section-tracking-via-intersectionobserver-includes-the-world-map-section-id",
+      "title": "Add the 'World Map' nav link to the existing Navbar (frontend/src/components/Navbar.tsx) smooth-scroll anchor link list, inserting it between 'Clans' and 'Episodes' in the navigation order, so users can navigate directly to the world map section. Ensure the active section tracking via IntersectionObserver includes the 'world-map' section ID.",
+      "reqIds": [
+        "REQ-51"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-integrate-the-new-worldmap-section-component-into-the-main-page-in-frontend-src-app-tsx-or-frontend-src-pages-home-tsx-if-that-exists-between-the-clans-section-and-the-episodes-section",
+      "title": "Integrate the new WorldMap section component into the main page in frontend/src/App.tsx (or frontend/src/pages/Home.tsx if that exists) between the Clans section and the Episodes section.",
+      "reqIds": [
+        "REQ-52"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-create-a-new-donation-page-component-at-frontend-src-pages-donation-tsx-and-register-it-as-a-route-at-donate-in-frontend-src-app-tsx-the-page-must-be-entirely-separate-from-the-public-facing-site-no-navbar-no-footer-no-scroll-sections-the-page-content-must-include-1-a-moon-emoji-header-icon-2-the-heading-support-whispers-of-the-white-moon-3-a-subheading-paragraph-help-bring-the-story-animation-and-characters-to-life-every-donation-helps-support-development-voice-acting-art-and-future-episodes-4-a-donate-via-cash-app-section-with-a-fire-emoji-label-a-dollar-sign-emoji-icon-and-the-cash-app-handle-displayed-as-bold-copyable-text-wotwm-and-5-a-large-prominent-return-button-styled-with-a-vivid-blue-background-e-g-2196f3-or-a-bright-sky-blue-white-text-glowing-blue-box-shadow-and-rounded-corners-that-navigates-the-user-back-to-the-public-site-root-route-when-clicked-style-the-entire-page-consistently-with-the-site-s-dark-cinematic-glassmorphism-theme-deep-black-navy-background-0a0a0f-0d0d1a-cinzel-font-for-headings-rajdhani-for-body-text-semi-transparent-glassmorphism-card-panel-containing-the-donation-content-and-fiery-gold-fbbf24-accent-borders-or-highlights-the-return-button-must-be-visually-large-and-impossible-to-miss-at-minimum-200px-wide-with-generous-padding",
+      "title": "Create a new Donation page component at frontend/src/pages/Donation.tsx and register it as a route at /donate in frontend/src/App.tsx. The page must be entirely separate from the public-facing site (no Navbar, no Footer, no scroll sections). The page content must include: (1) a moon emoji header icon (🌙), (2) the heading 'Support Whispers Of The White Moon', (3) a subheading paragraph: 'Help bring the story, animation, and characters to life. Every donation helps support development, voice acting, art, and future episodes.', (4) a 'Donate Via Cash App' section with a fire emoji (🔥) label, a dollar-sign emoji (💵) icon, and the Cash App handle displayed as bold copyable text: '$WOTWM', and (5) a large, prominent 'Return' button styled with a vivid blue background (e.g., #2196f3 or a bright sky blue), white text, glowing blue box-shadow, and rounded corners that navigates the user back to the public site root route ('/') when clicked. Style the entire page consistently with the site's dark cinematic glassmorphism theme: deep black/navy background (#0a0a0f / #0d0d1a), Cinzel font for headings, Rajdhani for body text, semi-transparent glassmorphism card panel containing the donation content, and fiery gold (#fbbf24) accent borders or highlights. The Return button must be visually large and impossible to miss — at minimum 200px wide with generous padding.",
+      "reqIds": [
+        "REQ-53"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-the-uploaded-image-thanks-png-as-a-static-asset-at-frontend-public-assets-generated-thanks-dim-1320x880-png-and-use-it-as-the-full-page-background-of-the-donation-page-frontend-src-pages-donation-tsx-set-it-as-a-css-background-image-covering-the-entire-page-background-size-cover-background-position-center-background-repeat-no-repeat-on-the-outermost-page-wrapper-apply-a-dark-semi-transparent-overlay-e-g-rgba-10-10-15-0-55-on-top-of-the-background-image-so-that-the-foreground-glassmorphism-card-and-all-text-remain-clearly-legible-do-not-alter-or-modify-the-image-itself-in-any-way",
+      "title": "Add the uploaded image 'thanks!.png' as a static asset at 'frontend/public/assets/generated/thanks.dim_1320x880.png' and use it as the full-page background of the Donation page (frontend/src/pages/Donation.tsx). Set it as a CSS background-image covering the entire page (background-size: cover, background-position: center, background-repeat: no-repeat) on the outermost page wrapper. Apply a dark semi-transparent overlay (e.g., rgba(10, 10, 15, 0.55)) on top of the background image so that the foreground glassmorphism card and all text remain clearly legible. Do not alter or modify the image itself in any way.",
+      "reqIds": [
+        "REQ-54"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-fixed-floating-donate-button-to-the-public-facing-site-visible-on-all-public-pages-e-g-rendered-in-app-tsx-outside-the-route-content-or-in-the-main-layout-the-button-must-1-be-styled-with-a-vivid-green-background-e-g-22c55e-and-white-bold-text-with-a-green-glow-box-shadow-consistent-with-the-site-s-glassmorphism-aesthetic-2-animate-with-a-continuous-side-to-side-bouncing-swaying-keyframe-animation-translatex-left-and-right-0-8-1-2s-ease-in-out-infinite-alternate-3-be-fixed-positioned-so-it-stays-visible-as-the-user-scrolls-e-g-bottom-right-or-bottom-center-of-the-viewport-above-the-fold-4-navigate-the-user-to-the-donate-route-when-clicked-using-the-existing-tanstack-router-navigation",
+      "title": "Add a fixed floating 'Donate' button to the public-facing site (visible on all public pages, e.g. rendered in App.tsx outside the route content or in the main layout). The button must: (1) be styled with a vivid green background (e.g. #22c55e) and white bold text, with a green glow box-shadow consistent with the site's glassmorphism aesthetic; (2) animate with a continuous side-to-side bouncing/swaying keyframe animation (translateX left and right, ~0.8–1.2s ease-in-out infinite alternate); (3) be fixed-positioned so it stays visible as the user scrolls (e.g. bottom-right or bottom-center of the viewport, above the fold); (4) navigate the user to the /donate route when clicked using the existing TanStack Router navigation.",
+      "reqIds": [
+        "REQ-55"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-add-a-supporter-rewards-section-below-the-existing-donation-content-cash-app-handle-block-on-the-donation-page-frontend-src-pages-donation-tsx-display-five-supporter-tiers-as-vertically-stacked-or-responsive-grid-glassmorphism-cards-each-showing-the-tier-emoji-icon-tier-name-price-range-and-a-bulleted-list-of-perks-the-five-tiers-and-their-perks-are-1-moon-clan-supporter-1-to-5-official-moon-clan-supporter-title-2-flame-warrior-supporter-6-to-15-everything-from-moon-clan-tier-quicker-contact-responses-official-fire-clan-supporter-title-3-water-guardian-supporter-16-to-30-user-name-secretly-added-to-anime-official-water-clan-supporter-title-4-royal-sun-supporter-31-to-75-everything-from-previous-tiers-user-name-listed-in-episode-credits-supporter-section-added-to-anime-own-character-5-legendary-balance-supporter-76-everything-from-previous-tiers-special-thank-you-message-from-the-creator-team-chance-to-have-an-important-anime-character-ultimate-supporter-recognition-each-card-must-use-the-dark-glassmorphism-aesthetic-semi-transparent-dark-background-subtle-border-glow-consistent-with-the-rest-of-the-donation-page-apply-clan-associated-accent-colors-for-each-tier-s-border-glow-moon-blue-4fc3f7-for-moon-clan-tier-red-orange-for-flame-warrior-tier-blue-cyan-for-water-guardian-tier-golden-orange-for-royal-sun-tier-and-prismatic-fiery-gold-fbbf24-for-legendary-balance-tier-use-cinzel-font-for-tier-names-and-rajdhani-for-perk-text-add-a-section-heading-supporter-rewards-styled-with-a-fiery-gold-fbbf24-glow-accent-above-the-tier-cards",
+      "title": "Add a 'Supporter Rewards' section below the existing donation content (Cash App handle block) on the Donation page (frontend/src/pages/Donation.tsx). Display five supporter tiers as vertically stacked or responsive grid glassmorphism cards, each showing the tier emoji icon, tier name, price range, and a bulleted list of perks. The five tiers and their perks are: (1) 🌑 Moon Clan Supporter — $1 to $5: 'Official Moon Clan Supporter title'; (2) 🔥 Flame Warrior Supporter — $6 to $15: 'Everything from Moon Clan tier', 'Quicker contact responses', 'Official Fire Clan Supporter title'; (3) 🌊 Water Guardian Supporter — $16 to $30: 'User-Name secretly added to Anime', 'Official Water Clan Supporter title'; (4) ☀️ Royal Sun Supporter — $31 to $75: 'Everything from previous tiers', 'User-Name listed in episode credits (Supporter Section)', 'Added to anime (own Character)'; (5) 👑 Legendary Balance Supporter — $76+: 'Everything from previous tiers', 'Special thank-you message from the creator team', 'Chance to have an important Anime character', 'Ultimate supporter recognition'. Each card must use the dark glassmorphism aesthetic (semi-transparent dark background, subtle border glow) consistent with the rest of the Donation page. Apply clan-associated accent colors for each tier's border/glow: moon blue (#4fc3f7) for Moon Clan tier, red-orange for Flame Warrior tier, blue-cyan for Water Guardian tier, golden/orange for Royal Sun tier, and prismatic/fiery gold (#fbbf24) for Legendary Balance tier. Use Cinzel font for tier names and Rajdhani for perk text. Add a section heading 'Supporter Rewards' styled with a fiery gold (#fbbf24) glow accent above the tier cards.",
+      "reqIds": [
+        "REQ-56"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-remove-the-built-with-using-caffeine-ai-attribution-text-from-all-locations-where-it-appears-in-the-frontend-e-g-footer-component-any-page-layout-or-index-html-do-not-replace-it-with-any-other-attribution-or-placeholder-text",
+      "title": "Remove the 'Built with ♥ using caffeine.ai' attribution text from all locations where it appears in the frontend (e.g., Footer component, any page layout, or index.html). Do not replace it with any other attribution or placeholder text.",
+      "reqIds": [
+        "REQ-57"
+      ],
+      "version": 1
+    }
+  ],
+  "new_feature_requests": [
+    {
+      "id": "AR-1",
+      "summary": "Hero section with dramatic title, cinematic dark background, and CTA button",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-2",
+      "summary": "7 elemental clan cards with icons, descriptions, and glowing hover effects",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-3",
+      "summary": "About/synopsis section with story description and dark background",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-4",
+      "summary": "Characters section with featured character cards from different clans",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-5",
+      "summary": "Footer with social links and copyright info",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-6",
+      "summary": "Scroll animations, floating glow effects, particle background, and smooth transitions",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-7",
+      "summary": "Dark theme with navy, black, deep purple backgrounds; glowing moon blue and fiery gold accents; anime streaming/promo site feel",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-8",
+      "summary": "Smooth fade transitions and parallax scrolling effects throughout the site",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-9",
+      "summary": "Top navigation bar with sections: Home, Story, Characters, Clans, Episodes, Gallery, News/Updates",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-10",
+      "summary": "Episodes page: Season 1 episode tracker with episode titles, short summaries, and release status",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-11",
+      "summary": "Gallery page: image gallery for concept art, fight scenes, and character designs with clickable thumbnails that expand into full view",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-12",
+      "summary": "News/Dev Log section: creator can post animation progress, updates, and announcements about new episodes or seasons",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-13",
+      "summary": "Enhance site to feel like official anime promotion sites: dramatic hero sections, layered backgrounds, glowing UI highlights, and smooth scrolling animations",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-14",
+      "summary": "Secure admin dashboard to manage episodes, characters, news updates, gallery images, and clan information with dark theme matching main site",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-17",
+      "summary": "Implement backend Motoko actor functions to store and serve managed content for episodes, characters, news entries, gallery image metadata, and clan information. Provide CRUD operations (create, read, update, delete) for each content type. Use stable variables to persist data across upgrades. Return content as structured record types matching the existing frontend data interfaces (Episode, Character, NewsEntry, GalleryImage, Clan).",
+      "reqIds": [
+        "REQ-27"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-18",
+      "summary": "Enhanced episode admin controls: add/edit/delete episodes with fields for title, summary, release status, thumbnail image, and video link",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-19",
+      "summary": "Gallery upload controls: image upload (file picker or drag-and-drop), deletion, and categorization (concept art, fight scenes, character designs); + button visible to admins/owners only",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-20",
+      "summary": "Extend the backend Motoko actor's Episode data type to include two additional optional fields: `thumbnailUrl: ?Text` (for a thumbnail image URL or path) and `videoLink: ?Text` (for an external video link). Update the existing episode CRUD functions to accept and return these new fields. Ensure backward compatibility with existing stored episode records.",
+      "reqIds": [
+        "REQ-34"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-22",
+      "summary": "Extend the backend Motoko actor's Gallery data type to support storing uploaded image data as a Blob or base64-encoded Text field (`imageData: ?Blob`) alongside the existing image path/URL field, to allow direct in-canister image storage for uploaded files. Add or update gallery CRUD functions to accept this field. The existing `imagePath` field should remain for URL-based images.",
+      "reqIds": [
+        "REQ-36"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-24",
+      "summary": "Ensure the /admin route is fully guarded by Internet Identity authentication using the existing useInternetIdentity hook and the existing AdminLogin page (frontend/src/pages/AdminLogin.tsx). Unauthenticated visitors to /admin must be shown the AdminLogin screen with the 'Whispers Of The White Moon' branding and a 'Login with Internet Identity' button. Only after successful authentication should the AdminDashboard component be rendered.",
+      "reqIds": [
+        "REQ-41"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-25",
+      "summary": "Display the logged-in user's principal ID on the admin dashboard page so admins can copy and share it",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-26",
+      "summary": "Add principal b5iwx-hiq66-jp6nm-xlzdm-ho4ih-2oe47-htivv-tzyve-32r47-rzi2y-eqe to the backend admin whitelist so that user has admin access to the dashboard",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-27",
+      "summary": "Add the principal 'b5iwx-hiq66-jp6nm-xlzdm-ho4ih-2oe47-htivv-tzyve-32r47-rzi2y-eqe' to the backend admin whitelist in the Motoko actor (backend/main.mo) so that this user is granted admin access to the dashboard.",
+      "reqIds": [
+        "REQ-43"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-28",
+      "summary": "Restrict the admin login area so it is only visible/accessible to authorized admin principals; non-admin users should not see or be able to reach the admin login page",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-29",
+      "summary": "Delete all existing gallery entries and add a specific user-provided image as the sole gallery item",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-31",
+      "summary": "Render the newly added gallery image (frontend/public/assets/generated/bestest.dim_900x1200.png) in the public-facing Gallery section as the sole thumbnail card. Ensure the lightbox/modal opens this image at full size when the thumbnail is clicked, consistent with the existing gallery lightbox behaviour and the site's dark glassmorphism styling.",
+      "reqIds": [
+        "REQ-48"
+      ],
+      "status": "pending"
+    },
+    {
+      "id": "AR-32",
+      "summary": "Add an interactive world map section showing clan territories and important locations; clicking a location opens a lore information overlay/modal",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-33",
+      "summary": "Add a separate Donation page/tab at a distinct route with the 'Support Whispers Of The White Moon' content, Cash App handle $WOTWM, a large blue 'Return' button to go back to the public site, and styling consistent with the dark cinematic theme.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-34",
+      "summary": "Use the existing gallery image (bestest.dim_900x1200.png) as the background of the Donation page without modifying the image itself",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-35",
+      "summary": "Add a green donate button that bounces side to side and navigates to the /donate page when clicked",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-36",
+      "summary": "Add a tiered rewards/perks section below the donation content on the Donation page, listing 5 supporter tiers: Moon Clan Supporter ($1-$5), Flame Warrior Supporter ($6-$15), Water Guardian Supporter ($16-$30), Royal Sun Supporter ($31-$75), and Legendary Balance Supporter ($76+), each with their respective perks/benefits styled consistently with the dark glassmorphism theme.",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-37",
+      "summary": "Remove the 'Built with ♥ using caffeine.ai' attribution text from the site",
+      "reqIds": [],
+      "status": "pending"
+    }
+  ],
+  "gameProjectType": "none",
+  "projectName": "Whispers Of The White Moon",
+  "clarification_mode": "instant",
+  "clarification_rounds": 0
+}

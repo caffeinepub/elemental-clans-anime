@@ -1,0 +1,23 @@
+{
+  "kind": "implementation_plan",
+  "version": "1.0",
+  "title": "Remove caffeine.ai attribution text from frontend",
+  "requirements": [
+    {
+      "id": "REQ-57",
+      "summary": "Remove the 'Built with ♥ using caffeine.ai' attribution text from all frontend locations without leaving placeholder gaps or whitespace",
+      "acceptanceCriteria": [
+        "The text 'Built with ♥ using caffeine.ai' (or any variation) is not visible anywhere on the public-facing site, the donation page, or the admin dashboard.",
+        "No empty placeholder element or whitespace gap is left in place of the removed text.",
+        "All other footer and page content remains unchanged."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Footer.tsx",
+          "operation": "modify",
+          "description": "Remove the 'Built with ♥ using caffeine.ai' text element and any surrounding container elements that would leave whitespace or gaps. Ensure no empty divs, paragraphs, or spacing elements remain after removal. All other footer content (logo, navigation links, social icons, admin link) must remain unchanged."
+        }
+      ]
+    }
+  ]
+}

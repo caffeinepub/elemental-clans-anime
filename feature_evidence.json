@@ -1,0 +1,25 @@
+{
+  "kind": "feature_evidence_report",
+  "features": [
+    {
+      "featureId": "feature-remove-the-built-with-using-caffeine-ai-attribution-text-from-all-locations-where-it-appears-in-the-frontend-e-g-footer-component-any-page-layout-or-index-html-do-not-replace-it-with-any-other-attribution-or-placeholder-text",
+      "featureTitle": "Remove the 'Built with ♥ using caffeine.ai' attribution text from all locations where it appears in the frontend (e.g., Footer component, any page layout, or index.html). Do not replace it with any other attribution or placeholder text.",
+      "files": [
+        "frontend/src/components/Footer.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-57"
+      ],
+      "confidence": "high"
+    }
+  ]
+}
