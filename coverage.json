@@ -1,7 +1,7 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-24T18:40:16.779Z",
+  "generatedAt": "2026-02-24T20:52:34.364Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
@@ -11,14 +11,14 @@
     "implemented": 1,
     "items": [
       {
-        "id": "REQ-57",
-        "summary": "Remove the 'Built with ♥ using caffeine.ai' attribution text from all locations where it appears in the frontend (e.g., Footer component, any page layout, or index.html). Do not replace it with any other attribution or placeholder text.",
+        "id": "REQ-59",
+        "summary": "In the public-facing Gallery section (frontend/src/components/Gallery.tsx), add an Internet Identity login/logout button positioned inline next to the Gallery section heading. Use the existing useInternetIdentity hook to determine authentication state. When the user is not logged in, render a 'Login' button that triggers the login flow via the hook's login method. When the user is already logged in, render a 'Logout' button that triggers the logout method. Style the button consistently with the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, Cinzel or Rajdhani font, with a hover pulse/glow animation. The button must not disrupt the existing gallery heading layout — position it as an inline element to the right of the 'Gallery' section title.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Footer.tsx"
+          "frontend/src/components/Gallery.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Footer.tsx"
+          "frontend/src/components/Gallery.tsx"
         ]
       }
     ]
@@ -28,7 +28,8 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/Footer.tsx",
+    "frontend/src/components/Gallery.tsx",
+    "frontend/src/index.css",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

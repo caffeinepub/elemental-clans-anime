@@ -1,21 +1,24 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Remove caffeine.ai attribution text from frontend",
+  "title": "Add Internet Identity login button next to Gallery section heading",
   "requirements": [
     {
-      "id": "REQ-57",
-      "summary": "Remove the 'Built with ♥ using caffeine.ai' attribution text from all frontend locations without leaving placeholder gaps or whitespace",
+      "id": "REQ-59",
+      "summary": "Add an Internet Identity login/logout button inline next to the Gallery section heading, styled with dark glassmorphism aesthetic and moon blue glow",
       "acceptanceCriteria": [
-        "The text 'Built with ♥ using caffeine.ai' (or any variation) is not visible anywhere on the public-facing site, the donation page, or the admin dashboard.",
-        "No empty placeholder element or whitespace gap is left in place of the removed text.",
-        "All other footer and page content remains unchanged."
+        "A login/logout button is rendered inline next to the Gallery section heading in frontend/src/components/Gallery.tsx.",
+        "When the user is unauthenticated, the button shows 'Login' and triggers the Internet Identity login flow via the useInternetIdentity hook when clicked.",
+        "When the user is authenticated, the button shows 'Logout' and triggers the logout method via the useInternetIdentity hook when clicked.",
+        "The button uses the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, and a hover pulse/glow animation.",
+        "The button does not disrupt the existing Gallery section heading layout — it appears to the right of the 'Gallery' title text.",
+        "The button uses Cinzel or Rajdhani font consistent with the rest of the site."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Footer.tsx",
+          "path": "frontend/src/components/Gallery.tsx",
           "operation": "modify",
-          "description": "Remove the 'Built with ♥ using caffeine.ai' text element and any surrounding container elements that would leave whitespace or gaps. Ensure no empty divs, paragraphs, or spacing elements remain after removal. All other footer content (logo, navigation links, social icons, admin link) must remain unchanged."
+          "description": "Modify the Gallery section heading layout to include an inline Internet Identity login/logout button positioned to the right of the 'Gallery' title. Import and use the useInternetIdentity hook to determine authentication state. When unauthenticated, render a 'Login' button that calls the hook's login method on click. When authenticated, render a 'Logout' button that calls the hook's logout method and clears the query cache on click. Style the button with a semi-transparent dark background (e.g., bg-black/20), moon blue border with glow effect (border border-moon-blue shadow-[0_0_15px_rgba(79,195,247,0.5)]), Cinzel or Rajdhani font, and add a hover state with pulse/glow animation (hover:shadow-[0_0_25px_rgba(79,195,247,0.7)] transition-all). Position the button using flexbox within the section heading container to keep it inline and ensure it does not disrupt the existing Gallery title layout."
         }
       ]
     }

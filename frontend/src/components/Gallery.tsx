@@ -5,12 +5,13 @@ import { galleryImages as staticGalleryImages } from '../data/gallery';
 import type { GalleryImage } from '../backend';
 import { GalleryCategory } from '../backend';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
+import { useQueryClient } from '@tanstack/react-query';
 import {
   useGetAllGalleryImages,
   getGalleryImageSrc,
   useIsCallerAdmin,
 } from '../hooks/useQueries';
-import { X, Plus, ImageIcon } from 'lucide-react';
+import { X, Plus, ImageIcon, LogIn, LogOut, Loader2 } from 'lucide-react';
 import GalleryUploadModal from './GalleryUploadModal';
 
 type FilterCategory = GalleryCategory | 'All';
@@ -56,9 +57,10 @@ export default function Gallery() {
   const [lightboxImage, setLightboxImage] = useState<GalleryImage | null>(null);
   const [showUploadModal, setShowUploadModal] = useState(false);
 
-  const { identity } = useInternetIdentity();
+  const { identity, login, clear, isLoggingIn } = useInternetIdentity();
   const isAuthenticated = !!identity;
   const { data: isAdmin } = useIsCallerAdmin();
+  const queryClient = useQueryClient();
 
   const { data: backendImages } = useGetAllGalleryImages();
 
@@ -77,8 +79,25 @@ export default function Gallery() {
 
   const { setRef, visible } = useStaggeredFadeIn(filtered.length, 80);
 
-  // Only render the button in the DOM for authenticated admins
+  // Only render the admin upload button for authenticated admins
   const showAdminButton = isAuthenticated && isAdmin === true;
+
+  const handleAuthClick = async () => {
+    if (isAuthenticated) {
+      await clear();
+      queryClient.clear();
+    } else {
+      try {
+        await login();
+      } catch (error: unknown) {
+        const err = error as Error;
+        if (err?.message === 'User is already authenticated') {
+          await clear();
+          setTimeout(() => login(), 300);
+        }
+      }
+    }
+  };
 
   return (
     <section
@@ -96,6 +115,39 @@ export default function Gallery() {
             <h2 className="font-cinzel text-3xl md:text-4xl text-[oklch(0.85_0.18_55)] tracking-widest uppercase">
               Gallery
             </h2>
+
+            {/* Internet Identity Login/Logout Button */}
+            <button
+              onClick={handleAuthClick}
+              disabled={isLoggingIn}
+              title={isAuthenticated ? 'Logout' : 'Login'}
+              className="gallery-auth-btn flex items-center gap-1.5 px-3 py-1.5 rounded-full font-rajdhani text-sm tracking-wide transition-all duration-300 disabled:opacity-60 disabled:cursor-not-allowed"
+              style={{
+                border: '1px solid oklch(0.65 0.18 220)',
+                boxShadow: '0 0 12px oklch(0.65 0.18 220 / 0.45), 0 0 24px oklch(0.65 0.18 220 / 0.15)',
+                background: 'oklch(0.12 0.04 260 / 0.6)',
+                backdropFilter: 'blur(8px)',
+                color: 'oklch(0.82 0.12 220)',
+              }}
+            >
+              {isLoggingIn ? (
+                <>
+                  <Loader2 size={14} className="animate-spin" />
+                  <span>Logging in…</span>
+                </>
+              ) : isAuthenticated ? (
+                <>
+                  <LogOut size={14} />
+                  <span>Logout</span>
+                </>
+              ) : (
+                <>
+                  <LogIn size={14} />
+                  <span>Login</span>
+                </>
+              )}
+            </button>
+
             {showAdminButton && (
               <button
                 onClick={() => setShowUploadModal(true)}

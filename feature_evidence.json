@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-remove-the-built-with-using-caffeine-ai-attribution-text-from-all-locations-where-it-appears-in-the-frontend-e-g-footer-component-any-page-layout-or-index-html-do-not-replace-it-with-any-other-attribution-or-placeholder-text",
-      "featureTitle": "Remove the 'Built with ♥ using caffeine.ai' attribution text from all locations where it appears in the frontend (e.g., Footer component, any page layout, or index.html). Do not replace it with any other attribution or placeholder text.",
+      "featureId": "feature-in-the-public-facing-gallery-section-frontend-src-components-gallery-tsx-add-an-internet-identity-login-logout-button-positioned-inline-next-to-the-gallery-section-heading-use-the-existing-useinternetidentity-hook-to-determine-authentication-state-when-the-user-is-not-logged-in-render-a-login-button-that-triggers-the-login-flow-via-the-hook-s-login-method-when-the-user-is-already-logged-in-render-a-logout-button-that-triggers-the-logout-method-style-the-button-consistently-with-the-site-s-dark-glassmorphism-aesthetic-semi-transparent-dark-background-moon-blue-4fc3f7-border-glow-cinzel-or-rajdhani-font-with-a-hover-pulse-glow-animation-the-button-must-not-disrupt-the-existing-gallery-heading-layout-position-it-as-an-inline-element-to-the-right-of-the-gallery-section-title",
+      "featureTitle": "In the public-facing Gallery section (frontend/src/components/Gallery.tsx), add an Internet Identity login/logout button positioned inline next to the Gallery section heading. Use the existing useInternetIdentity hook to determine authentication state. When the user is not logged in, render a 'Login' button that triggers the login flow via the hook's login method. When the user is already logged in, render a 'Logout' button that triggers the logout method. Style the button consistently with the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, Cinzel or Rajdhani font, with a hover pulse/glow animation. The button must not disrupt the existing gallery heading layout — position it as an inline element to the right of the 'Gallery' section title.",
       "files": [
-        "frontend/src/components/Footer.tsx"
+        "frontend/src/components/Gallery.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,7 +17,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-57"
+        "REQ-59"
       ],
       "confidence": "high"
     }

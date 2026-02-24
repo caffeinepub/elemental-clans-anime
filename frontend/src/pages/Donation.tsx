@@ -265,24 +265,6 @@ export default function Donation() {
           ))}
         </div>
       </div>
-
-      {/* Footer attribution */}
-      <p
-        className="relative z-10 font-rajdhani text-xs text-center mt-10 mb-0"
-        style={{ color: 'oklch(0.65 0.03 260)' }}
-      >
-        Built with{' '}
-        <span style={{ color: 'oklch(0.65 0.2 15)' }}>♥</span> using{' '}
-        <a
-          href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname || 'unknown-app')}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          style={{ color: 'oklch(0.6 0.1 250)' }}
-          className="hover:underline"
-        >
-          caffeine.ai
-        </a>
-      </p>
     </div>
   );
 }

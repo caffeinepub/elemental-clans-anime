@@ -1,36 +1,38 @@
 {
   "kind": "build_request",
-  "title": "Remove 'Built with ♥ using caffeine.ai' attribution text",
-  "projectName": "Whispers Of The White Moon",
+  "title": "Add Internet Identity login button next to Gallery section heading",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-57",
-      "text": "Remove the 'Built with ♥ using caffeine.ai' attribution text from all locations where it appears in the frontend (e.g., Footer component, any page layout, or index.html). Do not replace it with any other attribution or placeholder text.",
+      "id": "REQ-59",
+      "text": "In the public-facing Gallery section (frontend/src/components/Gallery.tsx), add an Internet Identity login/logout button positioned inline next to the Gallery section heading. Use the existing useInternetIdentity hook to determine authentication state. When the user is not logged in, render a 'Login' button that triggers the login flow via the hook's login method. When the user is already logged in, render a 'Logout' button that triggers the logout method. Style the button consistently with the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, Cinzel or Rajdhani font, with a hover pulse/glow animation. The button must not disrupt the existing gallery heading layout — position it as an inline element to the right of the 'Gallery' section title.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-1"
         ],
         "quotes": [
-          "remove \"Built with ♥ using caffeine.ai\""
+          "add internet identity login right next to gallery"
         ]
       },
       "acceptanceCriteria": [
-        "The text 'Built with ♥ using caffeine.ai' (or any variation) is not visible anywhere on the public-facing site, the donation page, or the admin dashboard.",
-        "No empty placeholder element or whitespace gap is left in place of the removed text.",
-        "All other footer and page content remains unchanged."
+        "A login/logout button is rendered inline next to the Gallery section heading in frontend/src/components/Gallery.tsx.",
+        "When the user is unauthenticated, the button shows 'Login' and triggers the Internet Identity login flow via the useInternetIdentity hook when clicked.",
+        "When the user is authenticated, the button shows 'Logout' and triggers the logout method via the useInternetIdentity hook when clicked.",
+        "The button uses the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, and a hover pulse/glow animation.",
+        "The button does not disrupt the existing Gallery section heading layout — it appears to the right of the 'Gallery' title text.",
+        "The button uses Cinzel or Rajdhani font consistent with the rest of the site."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files listed under frontend.immutablePaths.",
-    "Do not alter any other footer content, layout, or styling beyond removing the attribution text."
+    "Do not modify any file listed under frontend.immutablePaths, including frontend/src/hooks/useInternetIdentity.ts.",
+    "Use the existing useInternetIdentity hook exclusively — do not introduce any new authentication library or flow."
   ],
   "nonGoals": [
-    "Adding any replacement attribution or branding text.",
-    "Modifying the backend.",
-    "Any visual redesign of the footer or other sections."
+    "Adding a new authentication system or replacing Internet Identity.",
+    "Moving or redesigning the Gallery section layout beyond placing the button next to the heading.",
+    "Adding login buttons to any other section besides Gallery."
   ],
   "imageRequirements": {
     "required": [],

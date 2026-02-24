@@ -1,6 +1,6 @@
 {
   "schemaVersion": "1.0.0",
-  "projectStateVersion": 39,
+  "projectStateVersion": 43,
   "summary": "Anime series website for 'Whispers Of The White Moon' featuring 7 elemental clans. Dark/cinematic aesthetic with navy, black, and deep purple backgrounds; glowing moon blue and fiery gold accent colors; anime streaming/promotion site feel. Smooth fade transitions and parallax scrolling. Built with HTML, CSS, and JavaScript. Now adding a secure admin dashboard for content management (episodes, characters, news, gallery, clans) matching the dark site theme.",
   "architectural_notes": [
     "Pure HTML/CSS/JS — no frameworks required",
@@ -420,6 +420,22 @@
         "REQ-57"
       ],
       "version": 1
+    },
+    {
+      "id": "feature-remove-the-built-with-using-caffeine-ai-attribution-text-from-the-donation-page-frontend-src-pages-donation-tsx-if-it-appears-anywhere-in-that-component-do-not-replace-it-with-any-other-attribution-or-placeholder-text",
+      "title": "Remove the 'Built with ♥ using caffeine.ai' attribution text from the Donation page (frontend/src/pages/Donation.tsx) if it appears anywhere in that component. Do not replace it with any other attribution or placeholder text.",
+      "reqIds": [
+        "REQ-58"
+      ],
+      "version": 1
+    },
+    {
+      "id": "feature-in-the-public-facing-gallery-section-frontend-src-components-gallery-tsx-add-an-internet-identity-login-logout-button-positioned-inline-next-to-the-gallery-section-heading-use-the-existing-useinternetidentity-hook-to-determine-authentication-state-when-the-user-is-not-logged-in-render-a-login-button-that-triggers-the-login-flow-via-the-hook-s-login-method-when-the-user-is-already-logged-in-render-a-logout-button-that-triggers-the-logout-method-style-the-button-consistently-with-the-site-s-dark-glassmorphism-aesthetic-semi-transparent-dark-background-moon-blue-4fc3f7-border-glow-cinzel-or-rajdhani-font-with-a-hover-pulse-glow-animation-the-button-must-not-disrupt-the-existing-gallery-heading-layout-position-it-as-an-inline-element-to-the-right-of-the-gallery-section-title",
+      "title": "In the public-facing Gallery section (frontend/src/components/Gallery.tsx), add an Internet Identity login/logout button positioned inline next to the Gallery section heading. Use the existing useInternetIdentity hook to determine authentication state. When the user is not logged in, render a 'Login' button that triggers the login flow via the hook's login method. When the user is already logged in, render a 'Logout' button that triggers the logout method. Style the button consistently with the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, Cinzel or Rajdhani font, with a hover pulse/glow animation. The button must not disrupt the existing gallery heading layout — position it as an inline element to the right of the 'Gallery' section title.",
+      "reqIds": [
+        "REQ-59"
+      ],
+      "version": 1
     }
   ],
   "new_feature_requests": [
@@ -624,6 +640,12 @@
     {
       "id": "AR-37",
       "summary": "Remove the 'Built with ♥ using caffeine.ai' attribution text from the site",
+      "reqIds": [],
+      "status": "pending"
+    },
+    {
+      "id": "AR-38",
+      "summary": "Add an Internet Identity login button next to the Gallery section heading on the public-facing site, so users can authenticate directly from the gallery area",
       "reqIds": [],
       "status": "pending"
     }
