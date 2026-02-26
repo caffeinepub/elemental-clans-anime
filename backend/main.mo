@@ -7,9 +7,10 @@ import Blob "mo:core/Blob";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 import MixinStorage "blob-storage/Mixin";
+import List "mo:core/List";
+import Migration "migration";
 
-
-
+(with migration = Migration.run)
 actor {
   let accessControlState = AccessControl.initState();
 
@@ -20,8 +21,11 @@ actor {
   type EpisodeNumber = Nat;
 
   public type UserProfile = {
-    name : Text;
-    email : Text;
+    username : Text;
+    avatarUrl : Text;
+    matchedClanId : ?Text;
+    matchedCharacterId : ?Text;
+    unlockedBadges : [Text];
   };
 
   public type Episode = {
@@ -96,7 +100,7 @@ actor {
   let clans = Map.empty<Text, Clan>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
-  // USER PROFILE MAGIC
+  // USER PROFILE FUNCTIONS
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can get their profile");
@@ -118,7 +122,7 @@ actor {
     userProfiles.add(caller, profile);
   };
 
-  // EPISODE MAGIC
+  // EPISODE FUNCTIONS
   public shared ({ caller }) func addEpisode(episode : Episode) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can add episodes");
@@ -149,44 +153,30 @@ actor {
     episodes.remove(id);
   };
 
-  public query ({ caller }) func getEpisode(id : Text) : async ?Episode {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve episodes");
-    };
+  // Public content readable by anyone including guests - no auth check needed
+  public query func getEpisode(id : Text) : async ?Episode {
     episodes.get(id);
   };
 
-  public query ({ caller }) func getAllEpisodes() : async [Episode] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve episodes");
-    };
+  public query func getAllEpisodes() : async [Episode] {
     episodes.values().toArray();
   };
 
-  public query ({ caller }) func getEpisodesByStatus(status : EpisodeStatus) : async [Episode] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve episodes");
-    };
+  public query func getEpisodesByStatus(status : EpisodeStatus) : async [Episode] {
     episodes.values().filter(func(episode) { episode.status == status }).toArray();
   };
 
-  public query ({ caller }) func searchEpisodes(searchTerm : Text) : async [Episode] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve episodes");
-    };
+  public query func searchEpisodes(searchTerm : Text) : async [Episode] {
     episodes.values().filter(func(episode) {
       episode.title.contains(#text searchTerm) or episode.summary.contains(#text searchTerm)
     }).toArray();
   };
 
-  public query ({ caller }) func getEpisodeCount() : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve episodes");
-    };
+  public query func getEpisodeCount() : async Nat {
     episodes.size();
   };
 
-  // CHARACTER MAGIC
+  // CHARACTER FUNCTIONS
   public shared ({ caller }) func addCharacter(character : Character) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can add characters");
@@ -217,37 +207,26 @@ actor {
     characters.remove(id);
   };
 
-  public query ({ caller }) func getCharacter(id : Text) : async ?Character {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve characters");
-    };
+  // Public content readable by anyone including guests - no auth check needed
+  public query func getCharacter(id : Text) : async ?Character {
     characters.get(id);
   };
 
-  public query ({ caller }) func getAllCharacters() : async [Character] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve characters");
-    };
+  public query func getAllCharacters() : async [Character] {
     characters.values().toArray();
   };
 
-  public query ({ caller }) func searchCharactersByName(searchTerm : Text) : async [Character] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve characters");
-    };
+  public query func searchCharactersByName(searchTerm : Text) : async [Character] {
     characters.values().filter(func(character) {
       character.name.contains(#text searchTerm)
     }).toArray();
   };
 
-  public query ({ caller }) func getCharacterCount() : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve characters");
-    };
+  public query func getCharacterCount() : async Nat {
     characters.size();
   };
 
-  // NEWS MAGIC
+  // NEWS FUNCTIONS
   public shared ({ caller }) func addNewsEntry(entry : NewsEntry) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can add news entries");
@@ -278,35 +257,24 @@ actor {
     newsEntries.remove(id);
   };
 
-  public query ({ caller }) func getNewsEntry(id : Text) : async ?NewsEntry {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve news entries");
-    };
+  // Public content readable by anyone including guests - no auth check needed
+  public query func getNewsEntry(id : Text) : async ?NewsEntry {
     newsEntries.get(id);
   };
 
-  public query ({ caller }) func getAllNewsEntries() : async [NewsEntry] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve news entries");
-    };
+  public query func getAllNewsEntries() : async [NewsEntry] {
     newsEntries.values().toArray();
   };
 
-  public query ({ caller }) func getNewsEntriesByCategory(category : NewsCategory) : async [NewsEntry] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve news entries");
-    };
+  public query func getNewsEntriesByCategory(category : NewsCategory) : async [NewsEntry] {
     newsEntries.values().filter(func(entry) { entry.category == category }).toArray();
   };
 
-  public query ({ caller }) func getNewsEntryCount() : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve news entries");
-    };
+  public query func getNewsEntryCount() : async Nat {
     newsEntries.size();
   };
 
-  // GALLERY MAGIC
+  // GALLERY FUNCTIONS
   public shared ({ caller }) func addGalleryImage(image : GalleryImage) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can add gallery images");
@@ -337,35 +305,24 @@ actor {
     galleryImages.remove(id);
   };
 
-  public query ({ caller }) func getGalleryImage(id : Text) : async ?GalleryImage {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve gallery images");
-    };
+  // Public content readable by anyone including guests - no auth check needed
+  public query func getGalleryImage(id : Text) : async ?GalleryImage {
     galleryImages.get(id);
   };
 
-  public query ({ caller }) func getAllGalleryImages() : async [GalleryImage] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve gallery images");
-    };
+  public query func getAllGalleryImages() : async [GalleryImage] {
     galleryImages.values().toArray();
   };
 
-  public query ({ caller }) func getGalleryImagesByCategory(category : GalleryCategory) : async [GalleryImage] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve gallery images");
-    };
+  public query func getGalleryImagesByCategory(category : GalleryCategory) : async [GalleryImage] {
     galleryImages.values().filter(func(image) { image.category == category }).toArray();
   };
 
-  public query ({ caller }) func getGalleryImageCount() : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve gallery images");
-    };
+  public query func getGalleryImageCount() : async Nat {
     galleryImages.size();
   };
 
-  // CLAN MAGIC
+  // CLAN FUNCTIONS
   public shared ({ caller }) func addClan(clan : Clan) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can add clans");
@@ -386,31 +343,20 @@ actor {
     clans.add(clan.id, clan);
   };
 
-  public query ({ caller }) func getClan(id : Text) : async ?Clan {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve clans");
-    };
+  // Public content readable by anyone including guests - no auth check needed
+  public query func getClan(id : Text) : async ?Clan {
     clans.get(id);
   };
 
-  public query ({ caller }) func getAllClans() : async [Clan] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve clans");
-    };
+  public query func getAllClans() : async [Clan] {
     clans.values().toArray();
   };
 
-  public query ({ caller }) func getClansByColor(color : Text) : async [Clan] {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve clans");
-    };
+  public query func getClansByColor(color : Text) : async [Clan] {
     clans.values().filter(func(clan) { clan.primaryColor == color }).toArray();
   };
 
-  public query ({ caller }) func getClanCount() : async Nat {
-    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
-      Runtime.trap("Unauthorized: Only users can retrieve clans");
-    };
+  public query func getClanCount() : async Nat {
     clans.size();
   };
 

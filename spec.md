@@ -1,12 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Add an Internet Identity login/logout button inline next to the Gallery section heading.
+**Goal:** Add a player profile page with clan-based theming, a badge system, and backend profile persistence for the Whispers Of The White Moon app.
 
 **Planned changes:**
-- In `Gallery.tsx`, import and use the existing `useInternetIdentity` hook to get authentication state and login/logout methods.
-- Render a "Login" button next to the Gallery heading when unauthenticated, and a "Logout" button when authenticated.
-- Style the button with the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (`#4fc3f7`) border glow, Cinzel or Rajdhani font, and a hover pulse/glow animation.
-- Position the button inline to the right of the "Gallery" title without disrupting the existing heading layout.
+- Extend the backend (main.mo) to store and retrieve user profile data (username, avatar URL, clan ID, character ID, unlocked badge IDs) per Internet Identity principal using stable storage
+- Add `useGetProfile` and `useUpdateProfile` React Query hooks in `useQueries.ts` for reading and updating the authenticated user's profile
+- Create a `/profile` route and `ProfilePage` component with a character card layout (avatar left, user details right on desktop; stacked on mobile)
+- Implement dynamic clan-based theming on the profile page using clan colors from `frontend/src/data/clans.ts` (background gradient, borders, glows, highlights)
+- Add a badge section below the character card showing only unlocked badges from a static list of at least 6 defined badges; locked badges are fully hidden; empty state shown when none are unlocked
+- Add a "Profile" navigation link to the Navbar that is only visible to authenticated users, linking to `/profile`
 
-**User-visible outcome:** Users can log in or log out via Internet Identity directly from the Gallery section heading area.
+**User-visible outcome:** Authenticated users can visit their profile page, which displays their username, matched clan and character in a styled character card, applies their clan's color theme throughout the page, and shows any badges they have unlocked. A profile link appears in the navbar when logged in.

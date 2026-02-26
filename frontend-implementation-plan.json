@@ -1,24 +1,99 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Add Internet Identity login button next to Gallery section heading",
+  "title": "Player Profile Page with Clan Theming and Badge System",
   "requirements": [
     {
-      "id": "REQ-59",
-      "summary": "Add an Internet Identity login/logout button inline next to the Gallery section heading, styled with dark glassmorphism aesthetic and moon blue glow",
+      "id": "REQ-2",
+      "summary": "Add React Query hooks for fetching and updating the authenticated user's profile from the backend",
       "acceptanceCriteria": [
-        "A login/logout button is rendered inline next to the Gallery section heading in frontend/src/components/Gallery.tsx.",
-        "When the user is unauthenticated, the button shows 'Login' and triggers the Internet Identity login flow via the useInternetIdentity hook when clicked.",
-        "When the user is authenticated, the button shows 'Logout' and triggers the logout method via the useInternetIdentity hook when clicked.",
-        "The button uses the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, and a hover pulse/glow animation.",
-        "The button does not disrupt the existing Gallery section heading layout — it appears to the right of the 'Gallery' title text.",
-        "The button uses Cinzel or Rajdhani font consistent with the rest of the site."
+        "useGetProfile returns the user's profile data when authenticated.",
+        "useUpdateProfile mutation updates profile fields and invalidates the profile query on success.",
+        "Hooks follow the existing pattern in frontend/src/hooks/useQueries.ts."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Gallery.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Modify the Gallery section heading layout to include an inline Internet Identity login/logout button positioned to the right of the 'Gallery' title. Import and use the useInternetIdentity hook to determine authentication state. When unauthenticated, render a 'Login' button that calls the hook's login method on click. When authenticated, render a 'Logout' button that calls the hook's logout method and clears the query cache on click. Style the button with a semi-transparent dark background (e.g., bg-black/20), moon blue border with glow effect (border border-moon-blue shadow-[0_0_15px_rgba(79,195,247,0.5)]), Cinzel or Rajdhani font, and add a hover state with pulse/glow animation (hover:shadow-[0_0_25px_rgba(79,195,247,0.7)] transition-all). Position the button using flexbox within the section heading container to keep it inline and ensure it does not disrupt the existing Gallery title layout."
+          "description": "Add useGetProfile query hook that calls actor.getCallerUserProfile() and is enabled only when actor is available. Add useUpdateProfile mutation hook that calls actor.saveCallerUserProfile(profile) and invalidates the 'currentUserProfile' query key on success. Follow the existing pattern used for episodes, characters, and news queries."
+        }
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "summary": "Create a new /profile route and ProfilePage component with character card layout",
+      "acceptanceCriteria": [
+        "A /profile route is registered in App.tsx.",
+        "On desktop, avatar is displayed on the left and user details on the right within a card.",
+        "On mobile (< 768px), the layout stacks vertically with avatar on top.",
+        "Username, clan name, and character name are clearly visible in the card."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ProfilePage.tsx",
+          "operation": "create",
+          "description": "Create ProfilePage component that fetches the user's profile using useGetProfile hook. Render a character card layout with avatar on the left and user details (username, matched clan name, matched character name) on the right. Use getAllClans and getAllCharacters queries to resolve clanId and characterId to their display names. Apply responsive CSS Grid or Flexbox so the card stacks vertically on mobile (<768px) with avatar on top. Show a loading spinner while profile data is fetching. If no profile exists, display a friendly message prompting the user to complete their profile setup."
+        },
+        {
+          "path": "frontend/src/App.tsx",
+          "operation": "modify",
+          "description": "Register a new /profile route in the router configuration that renders the ProfilePage component. Place the route after the /donate route and ensure it is accessible when the user is authenticated."
+        }
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "summary": "Implement automatic clan-based theming on the ProfilePage using clan colors from existing data",
+      "acceptanceCriteria": [
+        "Each of the seven clans produces a visually distinct background gradient and accent color on the profile page.",
+        "Clan color is sourced from the existing clans data (frontend/src/data/clans.ts).",
+        "Accent color is applied to borders, glow effects, and highlighted text within the profile.",
+        "If no clan is matched, a neutral default theme is shown."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/pages/ProfilePage.tsx",
+          "operation": "modify",
+          "description": "When the user's matchedClanId is loaded, look up the clan's primaryColor from the clans data (frontend/src/data/clans.ts). Apply the primaryColor as an accent color to borders, box shadows (glow effects), and highlighted text within the profile card using inline styles or CSS custom properties. Generate a background gradient derived from the primaryColor (e.g., a radial or linear gradient with the clan color and a darker shade). If matchedClanId is null or undefined, apply a neutral default theme (e.g., moon-blue or void colors from the existing palette). Ensure the theme updates dynamically if the profile data changes."
+        }
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "summary": "Add a badge section below the character card on the ProfilePage that displays only unlocked badges",
+      "acceptanceCriteria": [
+        "A badge definitions list with at least 6 badges is defined as static data.",
+        "Only badges whose IDs appear in the user's unlockedBadges array are rendered.",
+        "Each displayed badge shows its icon and name.",
+        "If no badges are unlocked, a friendly empty-state message is shown.",
+        "Locked badges are completely hidden from view."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/data/badges.ts",
+          "operation": "create",
+          "description": "Define and export a Badge interface with fields: id (string), name (string), icon (string or emoji), and description (string). Export a static array of at least 6 badge definitions (e.g., 'First Login', 'Clan Member', 'Episode Viewer', 'Lore Explorer', 'Gallery Contributor', 'Legendary Supporter'). Use thematic names and emojis that fit the anime series setting."
+        },
+        {
+          "path": "frontend/src/pages/ProfilePage.tsx",
+          "operation": "modify",
+          "description": "Import the badge definitions from frontend/src/data/badges.ts. Below the character card, render a badges section. Filter the badge definitions array to include only badges whose IDs are present in the user's unlockedBadges array from the profile. Display each unlocked badge with its icon and name in a responsive grid. If the unlockedBadges array is empty, show a friendly empty-state message (e.g., 'No badges unlocked yet. Keep exploring!'). Do not render locked badges."
+        }
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "summary": "Add a profile link to the Navbar that is visible only when the user is authenticated",
+      "acceptanceCriteria": [
+        "Authenticated users see a 'Profile' link in the Navbar (desktop and mobile menu).",
+        "Unauthenticated users do not see the Profile link.",
+        "Clicking the link navigates to /profile."
+      ],
+      "file_operations": [
+        {
+          "path": "frontend/src/components/Navbar.tsx",
+          "operation": "modify",
+          "description": "Import useInternetIdentity hook to check authentication state. Conditionally render a 'Profile' navigation link in both the desktop nav links list and the mobile menu when identity is present (user is authenticated). The link should navigate to /profile using smooth scroll or React Router Link. If the user is not authenticated, hide the Profile link entirely. Place the Profile link between the existing nav items and the Admin link (if visible)."
         }
       ]
     }

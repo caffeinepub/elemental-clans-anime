@@ -2,10 +2,11 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-in-the-public-facing-gallery-section-frontend-src-components-gallery-tsx-add-an-internet-identity-login-logout-button-positioned-inline-next-to-the-gallery-section-heading-use-the-existing-useinternetidentity-hook-to-determine-authentication-state-when-the-user-is-not-logged-in-render-a-login-button-that-triggers-the-login-flow-via-the-hook-s-login-method-when-the-user-is-already-logged-in-render-a-logout-button-that-triggers-the-logout-method-style-the-button-consistently-with-the-site-s-dark-glassmorphism-aesthetic-semi-transparent-dark-background-moon-blue-4fc3f7-border-glow-cinzel-or-rajdhani-font-with-a-hover-pulse-glow-animation-the-button-must-not-disrupt-the-existing-gallery-heading-layout-position-it-as-an-inline-element-to-the-right-of-the-gallery-section-title",
-      "featureTitle": "In the public-facing Gallery section (frontend/src/components/Gallery.tsx), add an Internet Identity login/logout button positioned inline next to the Gallery section heading. Use the existing useInternetIdentity hook to determine authentication state. When the user is not logged in, render a 'Login' button that triggers the login flow via the hook's login method. When the user is already logged in, render a 'Logout' button that triggers the logout method. Style the button consistently with the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, Cinzel or Rajdhani font, with a hover pulse/glow animation. The button must not disrupt the existing gallery heading layout — position it as an inline element to the right of the 'Gallery' section title.",
+      "featureId": "feature-create-a-new-profile-route-and-profilepage-component-the-top-section-must-render-as-a-character-card-layout-the-user-s-avatar-on-the-left-and-their-details-username-matched-clan-name-matched-character-name-on-the-right-the-page-must-be-responsive-and-collapse-to-a-stacked-layout-on-mobile",
+      "featureTitle": "Create a new /profile route and ProfilePage component. The top section must render as a character card layout: the user's avatar on the left and their details (username, matched clan name, matched character name) on the right. The page must be responsive and collapse to a stacked layout on mobile.",
       "files": [
-        "frontend/src/components/Gallery.tsx"
+        "frontend/src/App.tsx",
+        "frontend/src/pages/ProfilePage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,7 +18,68 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-59"
+        "REQ-3"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-implement-automatic-clan-based-theming-on-the-profilepage-when-the-user-s-matched-clan-is-loaded-apply-that-clan-s-primary-color-as-the-profile-page-accent-color-borders-glows-highlights-and-derive-a-matching-background-gradient-use-the-clan-color-data-already-defined-in-frontend-src-data-clans-ts-theme-must-update-dynamically-if-the-user-s-clan-changes",
+      "featureTitle": "Implement automatic clan-based theming on the ProfilePage. When the user's matched clan is loaded, apply that clan's primary color as the profile page accent color (borders, glows, highlights) and derive a matching background gradient. Use the clan color data already defined in frontend/src/data/clans.ts. Theme must update dynamically if the user's clan changes.",
+      "files": [
+        "frontend/src/pages/ProfilePage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-4"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-badge-section-below-the-character-card-on-the-profilepage-define-a-static-set-of-available-badges-at-minimum-6-with-a-name-icon-emoji-and-description-each-display-only-the-badges-present-in-the-user-s-unlockedbadges-array-locked-badges-must-not-be-shown",
+      "featureTitle": "Add a badge section below the character card on the ProfilePage. Define a static set of available badges (at minimum 6) with a name, icon/emoji, and description each. Display only the badges present in the user's unlockedBadges array. Locked badges must not be shown.",
+      "files": [
+        "frontend/src/data/badges.ts",
+        "frontend/src/pages/ProfilePage.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-5"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-a-profile-link-to-the-navbar-when-the-user-is-authenticated-via-internet-identity-show-a-profile-navigation-link-that-routes-to-profile-when-unauthenticated-hide-the-link",
+      "featureTitle": "Add a profile link to the Navbar. When the user is authenticated via Internet Identity, show a 'Profile' navigation link that routes to /profile. When unauthenticated, hide the link.",
+      "files": [
+        "frontend/src/components/Navbar.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-6"
       ],
       "confidence": "high"
     }

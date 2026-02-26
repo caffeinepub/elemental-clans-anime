@@ -1,35 +1,98 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-24T20:52:34.364Z",
+  "generatedAt": "2026-02-26T20:44:32.943Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 1,
-    "implemented": 1,
+    "total": 6,
+    "implemented": 4,
     "items": [
       {
-        "id": "REQ-59",
-        "summary": "In the public-facing Gallery section (frontend/src/components/Gallery.tsx), add an Internet Identity login/logout button positioned inline next to the Gallery section heading. Use the existing useInternetIdentity hook to determine authentication state. When the user is not logged in, render a 'Login' button that triggers the login flow via the hook's login method. When the user is already logged in, render a 'Logout' button that triggers the logout method. Style the button consistently with the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, Cinzel or Rajdhani font, with a hover pulse/glow animation. The button must not disrupt the existing gallery heading layout — position it as an inline element to the right of the 'Gallery' section title.",
+        "id": "REQ-1",
+        "summary": "Extend the backend user profile data model to store: username, avatar URL, matched clan ID, matched character ID, and an array of unlocked badge IDs. Expose query and update functions so the frontend can read and write a user's full profile by their Internet Identity principal.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-2",
+        "summary": "Add React Query hooks in useQueries.ts for fetching (useGetProfile) and updating (useUpdateProfile) the authenticated user's profile from the backend. The fetch hook should run automatically when the user is authenticated via Internet Identity.",
+        "status": "missing",
+        "plannedFiles": [
+          "frontend/src/hooks/useQueries.ts"
+        ],
+        "matchedFiles": []
+      },
+      {
+        "id": "REQ-3",
+        "summary": "Create a new /profile route and ProfilePage component. The top section must render as a character card layout: the user's avatar on the left and their details (username, matched clan name, matched character name) on the right. The page must be responsive and collapse to a stacked layout on mobile.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Gallery.tsx"
+          "frontend/src/pages/ProfilePage.tsx",
+          "frontend/src/App.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/Gallery.tsx"
+          "frontend/src/pages/ProfilePage.tsx",
+          "frontend/src/App.tsx"
+        ]
+      },
+      {
+        "id": "REQ-4",
+        "summary": "Implement automatic clan-based theming on the ProfilePage. When the user's matched clan is loaded, apply that clan's primary color as the profile page accent color (borders, glows, highlights) and derive a matching background gradient. Use the clan color data already defined in frontend/src/data/clans.ts. Theme must update dynamically if the user's clan changes.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/pages/ProfilePage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/pages/ProfilePage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-5",
+        "summary": "Add a badge section below the character card on the ProfilePage. Define a static set of available badges (at minimum 6) with a name, icon/emoji, and description each. Display only the badges present in the user's unlockedBadges array. Locked badges must not be shown.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/data/badges.ts",
+          "frontend/src/pages/ProfilePage.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/data/badges.ts",
+          "frontend/src/pages/ProfilePage.tsx"
+        ]
+      },
+      {
+        "id": "REQ-6",
+        "summary": "Add a profile link to the Navbar. When the user is authenticated via Internet Identity, show a 'Profile' navigation link that routes to /profile. When unauthenticated, hide the link.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/Navbar.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/Navbar.tsx"
         ]
       }
     ]
   },
   "changedFiles": [
+    "backend/main.mo",
+    "backend/migration.mo",
     "build-request.json",
+    "build-template/README.md",
+    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/components/Gallery.tsx",
-    "frontend/src/index.css",
+    "frontend/src/App.tsx",
+    "frontend/src/backend.d.ts",
+    "frontend/src/backend.ts",
+    "frontend/src/components/Navbar.tsx",
+    "frontend/src/data/badges.ts",
+    "frontend/src/declarations/backend.did.d.ts",
+    "frontend/src/declarations/backend.did.js",
+    "frontend/src/pages/ProfilePage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

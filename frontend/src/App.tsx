@@ -22,6 +22,7 @@ import ScrollProgressBar from './components/ScrollProgressBar';
 import FloatingDonateButton from './components/FloatingDonateButton';
 import Admin from './pages/Admin';
 import Donation from './pages/Donation';
+import ProfilePage from './pages/ProfilePage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -84,7 +85,13 @@ const donateRoute = createRoute({
   component: Donation,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, adminRoute, donateRoute]);
+const profileRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/profile',
+  component: ProfilePage,
+});
+
+const routeTree = rootRoute.addChildren([indexRoute, adminRoute, donateRoute, profileRoute]);
 
 const router = createRouter({ routeTree });
 

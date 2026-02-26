@@ -1,5 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, Moon } from 'lucide-react';
+import { Menu, X, Moon, User } from 'lucide-react';
+import { Link } from '@tanstack/react-router';
+import { useInternetIdentity } from '../hooks/useInternetIdentity';
 
 const navLinks = [
   { label: 'Home', href: '#home' },
@@ -20,6 +22,8 @@ export default function Navbar() {
   const [activeSection, setActiveSection] = useState('home');
   const indicatorRef = useRef<HTMLDivElement>(null);
   const navLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
+  const { identity } = useInternetIdentity();
+  const isAuthenticated = !!identity;
 
   useEffect(() => {
     const handleScroll = () => {
@@ -103,6 +107,18 @@ export default function Navbar() {
                 {link.label}
               </a>
             ))}
+
+            {/* Profile link — authenticated only */}
+            {isAuthenticated && (
+              <Link
+                to="/profile"
+                className="flex items-center gap-1.5 px-3 py-2 text-xs font-rajdhani font-semibold tracking-widest uppercase transition-colors duration-300 text-silver/70 hover:text-moon-blue"
+              >
+                <User className="w-3.5 h-3.5" />
+                Profile
+              </Link>
+            )}
+
             {/* Sliding underline indicator */}
             <div
               ref={indicatorRef}
@@ -127,7 +143,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       <div
         className={`md:hidden mobile-menu-glass overflow-hidden transition-all duration-400 ease-in-out ${
-          menuOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+          menuOpen ? 'max-h-[28rem] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="px-4 py-3 flex flex-col gap-1">
@@ -145,6 +161,18 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
+
+          {/* Profile link in mobile menu — authenticated only */}
+          {isAuthenticated && (
+            <Link
+              to="/profile"
+              onClick={() => setMenuOpen(false)}
+              className="flex items-center gap-2 px-3 py-2 text-sm font-rajdhani font-semibold tracking-widest uppercase transition-colors duration-200 rounded text-moon-blue bg-moon-blue/10 hover:bg-moon-blue/15"
+            >
+              <User className="w-4 h-4" />
+              Profile
+            </Link>
+          )}
         </div>
       </div>
     </nav>

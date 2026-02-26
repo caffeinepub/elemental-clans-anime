@@ -85,8 +85,11 @@ export const UserRole = IDL.Variant({
   'guest' : IDL.Null,
 });
 export const UserProfile = IDL.Record({
-  'name' : IDL.Text,
-  'email' : IDL.Text,
+  'matchedClanId' : IDL.Opt(IDL.Text),
+  'username' : IDL.Text,
+  'matchedCharacterId' : IDL.Opt(IDL.Text),
+  'unlockedBadges' : IDL.Vec(IDL.Text),
+  'avatarUrl' : IDL.Text,
 });
 
 export const idlService = IDL.Service({
@@ -260,7 +263,13 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
-  const UserProfile = IDL.Record({ 'name' : IDL.Text, 'email' : IDL.Text });
+  const UserProfile = IDL.Record({
+    'matchedClanId' : IDL.Opt(IDL.Text),
+    'username' : IDL.Text,
+    'matchedCharacterId' : IDL.Opt(IDL.Text),
+    'unlockedBadges' : IDL.Vec(IDL.Text),
+    'avatarUrl' : IDL.Text,
+  });
   
   return IDL.Service({
     '_caffeineStorageBlobIsLive' : IDL.Func(

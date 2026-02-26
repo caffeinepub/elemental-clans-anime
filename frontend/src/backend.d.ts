@@ -53,8 +53,11 @@ export interface GalleryImage {
 }
 export type EpisodeId = string;
 export interface UserProfile {
-    name: string;
-    email: string;
+    matchedClanId?: string;
+    username: string;
+    matchedCharacterId?: string;
+    unlockedBadges: Array<string>;
+    avatarUrl: string;
 }
 export enum EpisodeStatus {
     InProduction = "InProduction",

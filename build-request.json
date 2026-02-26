@@ -1,38 +1,137 @@
 {
   "kind": "build_request",
-  "title": "Add Internet Identity login button next to Gallery section heading",
+  "title": "Player Profile Page with Clan Theming and Badge System",
+  "projectName": "Whispers Of The White Moon",
   "priority": "normal",
   "requirements": [
     {
-      "id": "REQ-59",
-      "text": "In the public-facing Gallery section (frontend/src/components/Gallery.tsx), add an Internet Identity login/logout button positioned inline next to the Gallery section heading. Use the existing useInternetIdentity hook to determine authentication state. When the user is not logged in, render a 'Login' button that triggers the login flow via the hook's login method. When the user is already logged in, render a 'Logout' button that triggers the logout method. Style the button consistently with the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, Cinzel or Rajdhani font, with a hover pulse/glow animation. The button must not disrupt the existing gallery heading layout — position it as an inline element to the right of the 'Gallery' section title.",
-      "target": "frontend",
+      "id": "REQ-1",
+      "text": "Extend the backend user profile data model to store: username, avatar URL, matched clan ID, matched character ID, and an array of unlocked badge IDs. Expose query and update functions so the frontend can read and write a user's full profile by their Internet Identity principal.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-1"
+          "msg-10"
         ],
         "quotes": [
-          "add internet identity login right next to gallery"
+          "Store user data so their profile loads correctly when they return."
         ]
       },
       "acceptanceCriteria": [
-        "A login/logout button is rendered inline next to the Gallery section heading in frontend/src/components/Gallery.tsx.",
-        "When the user is unauthenticated, the button shows 'Login' and triggers the Internet Identity login flow via the useInternetIdentity hook when clicked.",
-        "When the user is authenticated, the button shows 'Logout' and triggers the logout method via the useInternetIdentity hook when clicked.",
-        "The button uses the site's dark glassmorphism aesthetic: semi-transparent dark background, moon blue (#4fc3f7) border glow, and a hover pulse/glow animation.",
-        "The button does not disrupt the existing Gallery section heading layout — it appears to the right of the 'Gallery' title text.",
-        "The button uses Cinzel or Rajdhani font consistent with the rest of the site."
+        "Backend stores username, avatarUrl, clanId, characterId, and unlockedBadges[] per principal.",
+        "A getProfile(principal) query returns the stored profile or a default empty state.",
+        "An updateProfile(...) call persists changes and returns the updated profile.",
+        "Profile data survives canister upgrades (stable storage used)."
+      ]
+    },
+    {
+      "id": "REQ-2",
+      "text": "Add React Query hooks in useQueries.ts for fetching (useGetProfile) and updating (useUpdateProfile) the authenticated user's profile from the backend. The fetch hook should run automatically when the user is authenticated via Internet Identity.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "Store user data so their profile loads correctly when they return."
+        ]
+      },
+      "acceptanceCriteria": [
+        "useGetProfile returns the user's profile data when authenticated.",
+        "useUpdateProfile mutation updates profile fields and invalidates the profile query on success.",
+        "Hooks follow the existing pattern in frontend/src/hooks/useQueries.ts."
+      ]
+    },
+    {
+      "id": "REQ-3",
+      "text": "Create a new /profile route and ProfilePage component. The top section must render as a character card layout: the user's avatar on the left and their details (username, matched clan name, matched character name) on the right. The page must be responsive and collapse to a stacked layout on mobile.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "The top section should look like a character card with the avatar on one side and user details on the other.",
+          "Keep the layout clean, responsive, and expandable for future features."
+        ]
+      },
+      "acceptanceCriteria": [
+        "A /profile route is registered in App.tsx.",
+        "On desktop, avatar is displayed on the left and user details on the right within a card.",
+        "On mobile (< 768px), the layout stacks vertically with avatar on top.",
+        "Username, clan name, and character name are clearly visible in the card."
+      ]
+    },
+    {
+      "id": "REQ-4",
+      "text": "Implement automatic clan-based theming on the ProfilePage. When the user's matched clan is loaded, apply that clan's primary color as the profile page accent color (borders, glows, highlights) and derive a matching background gradient. Use the clan color data already defined in frontend/src/data/clans.ts. Theme must update dynamically if the user's clan changes.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "Automatically theme the profile based on the user's matched clan by changing background colors and accent colors."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Each of the seven clans produces a visually distinct background gradient and accent color on the profile page.",
+        "Clan color is sourced from the existing clans data (frontend/src/data/clans.ts).",
+        "Accent color is applied to borders, glow effects, and highlighted text within the profile.",
+        "If no clan is matched, a neutral default theme is shown."
+      ]
+    },
+    {
+      "id": "REQ-5",
+      "text": "Add a badge section below the character card on the ProfilePage. Define a static set of available badges (at minimum 6) with a name, icon/emoji, and description each. Display only the badges present in the user's unlockedBadges array. Locked badges must not be shown.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "Include a badge section that shows unlocked badges and hides locked ones.",
+          "Unlocked badges"
+        ]
+      },
+      "acceptanceCriteria": [
+        "A badge definitions list with at least 6 badges is defined as static data.",
+        "Only badges whose IDs appear in the user's unlockedBadges array are rendered.",
+        "Each displayed badge shows its icon and name.",
+        "If no badges are unlocked, a friendly empty-state message is shown.",
+        "Locked badges are completely hidden from view."
+      ]
+    },
+    {
+      "id": "REQ-6",
+      "text": "Add a profile link to the Navbar. When the user is authenticated via Internet Identity, show a 'Profile' navigation link that routes to /profile. When unauthenticated, hide the link.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-10"
+        ],
+        "quotes": [
+          "Keep the layout clean, responsive, and expandable for future features."
+        ]
+      },
+      "acceptanceCriteria": [
+        "Authenticated users see a 'Profile' link in the Navbar (desktop and mobile menu).",
+        "Unauthenticated users do not see the Profile link.",
+        "Clicking the link navigates to /profile."
       ]
     }
   ],
   "constraints": [
-    "Do not modify any file listed under frontend.immutablePaths, including frontend/src/hooks/useInternetIdentity.ts.",
-    "Use the existing useInternetIdentity hook exclusively — do not introduce any new authentication library or flow."
+    "Do not modify any files listed in frontend.immutablePaths.",
+    "All Motoko logic must remain in backend/main.mo (single-actor architecture).",
+    "Clan color data must be sourced from the existing frontend/src/data/clans.ts definitions — do not duplicate or hardcode clan colors.",
+    "Profile page must use Internet Identity as the sole authentication mechanism."
   ],
   "nonGoals": [
-    "Adding a new authentication system or replacing Internet Identity.",
-    "Moving or redesigning the Gallery section layout beyond placing the button next to the heading.",
-    "Adding login buttons to any other section besides Gallery."
+    "No admin UI for assigning clans, characters, or badges to users in this iteration.",
+    "No locked badge display (greyed-out or blurred) — locked badges are fully hidden.",
+    "No social features (friend lists, profile sharing, etc.).",
+    "No profile photo upload — avatar URL field only.",
+    "No gamification logic for earning badges automatically."
   ],
   "imageRequirements": {
     "required": [],

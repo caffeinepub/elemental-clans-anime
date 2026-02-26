@@ -64,7 +64,13 @@ export interface NewsEntry {
   'category' : NewsCategory,
 }
 export type Time = bigint;
-export interface UserProfile { 'name' : string, 'email' : string }
+export interface UserProfile {
+  'matchedClanId' : [] | [string],
+  'username' : string,
+  'matchedCharacterId' : [] | [string],
+  'unlockedBadges' : Array<string>,
+  'avatarUrl' : string,
+}
 export type UserRole = { 'admin' : null } |
   { 'user' : null } |
   { 'guest' : null };
