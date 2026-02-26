@@ -23,6 +23,7 @@ import FloatingDonateButton from './components/FloatingDonateButton';
 import Admin from './pages/Admin';
 import Donation from './pages/Donation';
 import ProfilePage from './pages/ProfilePage';
+import QuizResultPage from './pages/QuizResultPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -91,7 +92,19 @@ const profileRoute = createRoute({
   component: ProfilePage,
 });
 
-const routeTree = rootRoute.addChildren([indexRoute, adminRoute, donateRoute, profileRoute]);
+const quizResultRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/quiz-result',
+  component: QuizResultPage,
+});
+
+const routeTree = rootRoute.addChildren([
+  indexRoute,
+  adminRoute,
+  donateRoute,
+  profileRoute,
+  quizResultRoute,
+]);
 
 const router = createRouter({ routeTree });
 

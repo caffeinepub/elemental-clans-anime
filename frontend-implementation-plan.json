@@ -1,99 +1,109 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Player Profile Page with Clan Theming and Badge System",
+  "title": "Implement Badge System (Character Match, Clan Loyalty, Rare/Secret Badges)",
   "requirements": [
     {
       "id": "REQ-2",
-      "summary": "Add React Query hooks for fetching and updating the authenticated user's profile from the backend",
+      "summary": "Expand static badge data to include all 13 badges with metadata",
       "acceptanceCriteria": [
-        "useGetProfile returns the user's profile data when authenticated.",
-        "useUpdateProfile mutation updates profile fields and invalidates the profile query on success.",
-        "Hooks follow the existing pattern in frontend/src/hooks/useQueries.ts."
+        "All 13 badges are defined in badges.ts with id, name, icon, tagline, category, and unlock condition metadata",
+        "Character Match Badges reference the correct character IDs (Haruna, Raizen, Selene, Valerinon)",
+        "Clan Loyalty Badges reference the correct clan IDs",
+        "Rare badges have unlock rules: Eclipse Soul requires Sun+Moon traits, Stormheart requires Water+Flame traits, Wild Card Spirit requires evenly spread trait scores"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/data/badges.ts",
           "operation": "modify",
-          "description": "Add useGetProfile query hook that calls actor.getCallerUserProfile() and is enabled only when actor is available. Add useUpdateProfile mutation hook that calls actor.saveCallerUserProfile(profile) and invalidates the 'currentUserProfile' query key on success. Follow the existing pattern used for episodes, characters, and news queries."
+          "description": "Expand the Badge interface to include category ('character' | 'clan' | 'rare'), tagline, and unlockCondition fields. Add all 13 badges: Character Match Badges (Shadow Seer for Haruna, Wrath Guardian for Raizen, Memory Keeper for Selene, Royal Strategist for Valerinon, Balance King for perfect balance), Clan Loyalty Badges (Moon Clan Initiate, Flame Clan Vanguard, Water Clan Guardian, Sun Clan Noble, Balance Clan Chosen), and Rare/Secret Badges (Eclipse Soul for Sun+Moon traits, Stormheart for Water+Flame traits, Wild Card Spirit for evenly spread traits). Each badge must include its emoji icon, name, tagline, category, and unlock condition metadata (requiredCharacterId, requiredClanId, or unlockRule)."
         }
       ]
     },
     {
       "id": "REQ-3",
-      "summary": "Create a new /profile route and ProfilePage component with character card layout",
+      "summary": "Add badge unlock logic to quiz result flow",
       "acceptanceCriteria": [
-        "A /profile route is registered in App.tsx.",
-        "On desktop, avatar is displayed on the left and user details on the right within a card.",
-        "On mobile (< 768px), the layout stacks vertically with avatar on top.",
-        "Username, clan name, and character name are clearly visible in the card."
+        "After quiz completion, character match badges are automatically evaluated and unlocked if conditions are met",
+        "Clan loyalty badges are unlocked based on the resulting clan or majority of answers",
+        "Eclipse Soul is unlocked when Sun and Moon trait scores are both above a defined threshold",
+        "Stormheart is unlocked when Water and Flame trait scores are both above a defined threshold",
+        "Wild Card Spirit is unlocked when all trait scores are within a narrow range (e.g., max difference ≤ 15%)",
+        "Balance King is unlocked only on a perfect balance result",
+        "`unlockBadge` is called for each newly earned badge when the user is authenticated"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/pages/ProfilePage.tsx",
+          "path": "frontend/src/hooks/useBadgeUnlockLogic.ts",
           "operation": "create",
-          "description": "Create ProfilePage component that fetches the user's profile using useGetProfile hook. Render a character card layout with avatar on the left and user details (username, matched clan name, matched character name) on the right. Use getAllClans and getAllCharacters queries to resolve clanId and characterId to their display names. Apply responsive CSS Grid or Flexbox so the card stacks vertically on mobile (<768px) with avatar on top. Show a loading spinner while profile data is fetching. If no profile exists, display a friendly message prompting the user to complete their profile setup."
+          "description": "Create a custom hook that evaluates which badges a user has earned based on quiz results. The hook accepts quiz result data (matched character, matched clan, trait scores) and returns an array of earned badge IDs. Logic: (1) Character Match — check if the matched character ID corresponds to a character badge in badges.ts and include its ID; (2) Clan Loyalty — check if the matched clan ID corresponds to a clan badge and include its ID; (3) Rare/Secret — Eclipse Soul if both Sun and Moon trait scores exceed a threshold (e.g., 70%), Stormheart if both Water and Flame trait scores exceed a threshold (e.g., 70%), Wild Card Spirit if the difference between max and min trait scores is within 15%, Balance King if all trait scores are exactly equal. Use the static badges array from badges.ts to look up badge IDs by their unlock conditions."
         },
         {
-          "path": "frontend/src/App.tsx",
-          "operation": "modify",
-          "description": "Register a new /profile route in the router configuration that renders the ProfilePage component. Place the route after the /donate route and ensure it is accessible when the user is authenticated."
+          "path": "frontend/src/pages/QuizResultPage.tsx",
+          "operation": "create",
+          "description": "Create a quiz result page that displays the user's matched character and clan, renders the result using clan-themed styling, and triggers badge unlock logic. On mount or result change, call the useBadgeUnlockLogic hook to determine earned badges, then call useUnlockBadge mutation for each newly earned badge (only when the user is authenticated). Track which badges were just unlocked in this session to display celebration notifications. Include a summary of the quiz result with the character bio, clan description, and a CTA to view the full profile or retake the quiz."
         }
       ]
     },
     {
       "id": "REQ-4",
-      "summary": "Implement automatic clan-based theming on the ProfilePage using clan colors from existing data",
+      "summary": "Display earned badges on the user's profile page",
       "acceptanceCriteria": [
-        "Each of the seven clans produces a visually distinct background gradient and accent color on the profile page.",
-        "Clan color is sourced from the existing clans data (frontend/src/data/clans.ts).",
-        "Accent color is applied to borders, glow effects, and highlighted text within the profile.",
-        "If no clan is matched, a neutral default theme is shown."
+        "Profile page shows a Badges section with three categorized sub-sections",
+        "All 13 badges are visible on the profile (locked or unlocked)",
+        "Unlocked badges display with full color, icon, name, and tagline",
+        "Locked badges are visually dimmed with a lock overlay, name shown but tagline optionally hidden or shown as '???'",
+        "Rare/Secret badge icons and names are visible when locked to entice users to discover them",
+        "Unlocked badges use clan-appropriate or golden glow styling"
       ],
       "file_operations": [
         {
           "path": "frontend/src/pages/ProfilePage.tsx",
           "operation": "modify",
-          "description": "When the user's matchedClanId is loaded, look up the clan's primaryColor from the clans data (frontend/src/data/clans.ts). Apply the primaryColor as an accent color to borders, box shadows (glow effects), and highlighted text within the profile card using inline styles or CSS custom properties. Generate a background gradient derived from the primaryColor (e.g., a radial or linear gradient with the clan color and a darker shade). If matchedClanId is null or undefined, apply a neutral default theme (e.g., moon-blue or void colors from the existing palette). Ensure the theme updates dynamically if the profile data changes."
+          "description": "Add a Badges section to the profile page below the existing profile card. Fetch the user's unlocked badge IDs using the useGetUnlockedBadges query hook. Import the full badges array from badges.ts and render three sub-sections: Character Match Badges, Clan Loyalty Badges, and Rare & Secret Badges. For each badge in the array, check if its ID is in the unlocked list. If unlocked, display the badge with full color, icon, name, and tagline, styled with a clan-appropriate glow (using the clan's primaryColor from clans.ts) or a golden glow for rare badges. If locked, display the badge dimmed with reduced opacity, a lock icon overlay, and show the name but hide or replace the tagline with '???'. Ensure all 13 badges are visible (locked or unlocked) to encourage re-engagement."
+        },
+        {
+          "path": "frontend/src/components/BadgeCard.tsx",
+          "operation": "create",
+          "description": "Create a reusable BadgeCard component that accepts a badge object and a locked boolean prop. When locked is false, render the badge with full color, icon, name, and tagline, applying a glow effect (clan-colored or golden for rare badges). When locked is true, render the badge with reduced opacity, a lock icon overlay, and show the name but hide or replace the tagline with '???'. Use Tailwind CSS for styling and apply conditional glow classes based on the badge's category and associated clan or rare status."
         }
       ]
     },
     {
       "id": "REQ-5",
-      "summary": "Add a badge section below the character card on the ProfilePage that displays only unlocked badges",
+      "summary": "Display badge unlock celebration/notification after quiz completion",
       "acceptanceCriteria": [
-        "A badge definitions list with at least 6 badges is defined as static data.",
-        "Only badges whose IDs appear in the user's unlockedBadges array are rendered.",
-        "Each displayed badge shows its icon and name.",
-        "If no badges are unlocked, a friendly empty-state message is shown.",
-        "Locked badges are completely hidden from view."
+        "A notification/toast appears for each newly unlocked badge after quiz completion",
+        "Notification shows the badge icon, name, and tagline",
+        "Rare badge (Eclipse Soul, Stormheart, Wild Card Spirit, Balance King) notifications have a distinct and more dramatic animation",
+        "Notifications are dismissible and auto-dismiss after a few seconds"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/data/badges.ts",
+          "path": "frontend/src/components/BadgeUnlockToast.tsx",
           "operation": "create",
-          "description": "Define and export a Badge interface with fields: id (string), name (string), icon (string or emoji), and description (string). Export a static array of at least 6 badge definitions (e.g., 'First Login', 'Clan Member', 'Episode Viewer', 'Lore Explorer', 'Gallery Contributor', 'Legendary Supporter'). Use thematic names and emojis that fit the anime series setting."
+          "description": "Create a BadgeUnlockToast component that displays a styled toast notification for a newly unlocked badge. Accept badge object and onDismiss callback as props. Render the badge icon, name, and tagline in a card with a slide-in animation. For rare badges (category 'rare'), apply a more dramatic reveal animation (e.g., shimmer, pulse, or scale effect). Auto-dismiss the toast after 5 seconds using a useEffect timer. Include a close button for manual dismissal. Use Tailwind CSS and keyframe animations for the visual effects."
         },
         {
-          "path": "frontend/src/pages/ProfilePage.tsx",
+          "path": "frontend/src/pages/QuizResultPage.tsx",
           "operation": "modify",
-          "description": "Import the badge definitions from frontend/src/data/badges.ts. Below the character card, render a badges section. Filter the badge definitions array to include only badges whose IDs are present in the user's unlockedBadges array from the profile. Display each unlocked badge with its icon and name in a responsive grid. If the unlockedBadges array is empty, show a friendly empty-state message (e.g., 'No badges unlocked yet. Keep exploring!'). Do not render locked badges."
+          "description": "After determining earned badges and calling useUnlockBadge, render a BadgeUnlockToast component for each newly unlocked badge. Maintain a local state array of toasts to display and remove them after they auto-dismiss or are manually dismissed. Stack multiple toasts vertically in a fixed position (e.g., top-right corner) if the user unlocks multiple badges at once."
         }
       ]
     },
     {
       "id": "REQ-6",
-      "summary": "Add a profile link to the Navbar that is visible only when the user is authenticated",
+      "summary": "Add mutation and query hooks for badge operations",
       "acceptanceCriteria": [
-        "Authenticated users see a 'Profile' link in the Navbar (desktop and mobile menu).",
-        "Unauthenticated users do not see the Profile link.",
-        "Clicking the link navigates to /profile."
+        "`useGetUnlockedBadges` fetches the authenticated user's unlocked badge IDs from the backend",
+        "`useUnlockBadge` calls the backend `unlockBadge` function and invalidates the unlocked badges query on success",
+        "Both hooks follow the existing patterns in `useQueries.ts`"
       ],
       "file_operations": [
         {
-          "path": "frontend/src/components/Navbar.tsx",
+          "path": "frontend/src/hooks/useQueries.ts",
           "operation": "modify",
-          "description": "Import useInternetIdentity hook to check authentication state. Conditionally render a 'Profile' navigation link in both the desktop nav links list and the mobile menu when identity is present (user is authenticated). The link should navigate to /profile using smooth scroll or React Router Link. If the user is not authenticated, hide the Profile link entirely. Place the Profile link between the existing nav items and the Admin link (if visible)."
+          "description": "Add a useGetUnlockedBadges query hook that calls actor.getUnlockedBadges() to fetch the authenticated user's unlocked badge IDs. Use queryKey ['unlockedBadges'] and enable the query only when actor is available. Add a useUnlockBadge mutation hook that calls actor.unlockBadge(badgeId) and invalidates the 'unlockedBadges' and 'currentUserProfile' queries on success. Both hooks follow the existing patterns in useQueries.ts, including error handling and query client invalidation."
         }
       ]
     }

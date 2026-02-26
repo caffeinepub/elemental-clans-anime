@@ -51,14 +51,14 @@ export interface GalleryImage {
     category: GalleryCategory;
     altText: string;
 }
-export type EpisodeId = string;
-export interface UserProfile {
+export interface UserProfileView {
     matchedClanId?: string;
     username: string;
     matchedCharacterId?: string;
     unlockedBadges: Array<string>;
     avatarUrl: string;
 }
+export type EpisodeId = string;
 export enum EpisodeStatus {
     InProduction = "InProduction",
     Released = "Released",
@@ -95,7 +95,7 @@ export interface backendInterface {
     getAllEpisodes(): Promise<Array<Episode>>;
     getAllGalleryImages(): Promise<Array<GalleryImage>>;
     getAllNewsEntries(): Promise<Array<NewsEntry>>;
-    getCallerUserProfile(): Promise<UserProfile | null>;
+    getCallerUserProfile(): Promise<UserProfileView | null>;
     getCallerUserRole(): Promise<UserRole>;
     getCharacter(id: string): Promise<Character | null>;
     getCharacterCount(): Promise<bigint>;
@@ -111,12 +111,14 @@ export interface backendInterface {
     getNewsEntriesByCategory(category: NewsCategory): Promise<Array<NewsEntry>>;
     getNewsEntry(id: string): Promise<NewsEntry | null>;
     getNewsEntryCount(): Promise<bigint>;
-    getUserProfile(user: Principal): Promise<UserProfile | null>;
+    getUnlockedBadges(): Promise<Array<string>>;
+    getUserProfile(user: Principal): Promise<UserProfileView | null>;
     isCallerAdmin(): Promise<boolean>;
     resetData(): Promise<void>;
-    saveCallerUserProfile(profile: UserProfile): Promise<void>;
+    saveCallerUserProfile(profile: UserProfileView): Promise<void>;
     searchCharactersByName(searchTerm: string): Promise<Array<Character>>;
     searchEpisodes(searchTerm: string): Promise<Array<Episode>>;
+    unlockBadge(badgeId: string): Promise<void>;
     updateCharacter(character: Character): Promise<void>;
     updateClan(clan: Clan): Promise<void>;
     updateEpisode(episode: Episode): Promise<void>;

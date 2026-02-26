@@ -1,12 +1,13 @@
 import React, { useState } from 'react';
 import { Link } from '@tanstack/react-router';
-import { ArrowLeft, User, Shield, Sword, Star, Edit3, Save, X, Loader2 } from 'lucide-react';
+import { ArrowLeft, User, Shield, Sword, Star, Edit3, Save, X, Loader2, Lock, Trophy } from 'lucide-react';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
-import { useGetCallerUserProfile, useSaveCallerUserProfile } from '../hooks/useQueries';
+import { useGetCallerUserProfile, useSaveCallerUserProfile, useGetUnlockedBadges } from '../hooks/useQueries';
 import { clans } from '../data/clans';
 import { characters } from '../data/characters';
-import { badges } from '../data/badges';
-import type { UserProfile } from '../backend';
+import { badges, characterBadges, clanBadges, rareBadges } from '../data/badges';
+import BadgeCard from '../components/BadgeCard';
+import type { UserProfileView } from '../backend';
 
 // ── Clan theme helper ─────────────────────────────────────────────────────────
 function getClanTheme(clanId?: string | null) {
@@ -92,7 +93,6 @@ function ProfileAvatar({
           {initials}
         </span>
       )}
-      {/* Shimmer overlay */}
       <div
         className="absolute inset-0 rounded-full pointer-events-none"
         style={{
@@ -110,9 +110,9 @@ function EditProfileModal({
   onSave,
   isSaving,
 }: {
-  profile: UserProfile;
+  profile: UserProfileView;
   onClose: () => void;
-  onSave: (updated: UserProfile) => void;
+  onSave: (updated: UserProfileView) => void;
   isSaving: boolean;
 }) {
   const [username, setUsername] = useState(profile.username);
@@ -147,7 +147,7 @@ function EditProfileModal({
       >
         <button
           onClick={onClose}
-          className="absolute top-4 right-4 text-silver/50 hover:text-white transition-colors"
+          className="absolute top-4 right-4 text-white/30 hover:text-white transition-colors"
         >
           <X className="w-5 h-5" />
         </button>
@@ -158,7 +158,7 @@ function EditProfileModal({
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <label className="block font-rajdhani text-xs text-silver/60 tracking-widest uppercase mb-1">
+            <label className="block font-rajdhani text-xs text-white/40 tracking-widest uppercase mb-1">
               Username
             </label>
             <input
@@ -172,7 +172,7 @@ function EditProfileModal({
           </div>
 
           <div>
-            <label className="block font-rajdhani text-xs text-silver/60 tracking-widest uppercase mb-1">
+            <label className="block font-rajdhani text-xs text-white/40 tracking-widest uppercase mb-1">
               Avatar URL
             </label>
             <input
@@ -185,7 +185,7 @@ function EditProfileModal({
           </div>
 
           <div>
-            <label className="block font-rajdhani text-xs text-silver/60 tracking-widest uppercase mb-1">
+            <label className="block font-rajdhani text-xs text-white/40 tracking-widest uppercase mb-1">
               Matched Clan
             </label>
             <select
@@ -204,7 +204,7 @@ function EditProfileModal({
           </div>
 
           <div>
-            <label className="block font-rajdhani text-xs text-silver/60 tracking-widest uppercase mb-1">
+            <label className="block font-rajdhani text-xs text-white/40 tracking-widest uppercase mb-1">
               Matched Character
             </label>
             <select
@@ -226,7 +226,7 @@ function EditProfileModal({
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 py-2 rounded-lg font-rajdhani text-sm font-semibold tracking-widest text-silver/70 hover:text-white transition-colors"
+              className="flex-1 py-2 rounded-lg font-rajdhani text-sm font-semibold tracking-widest text-white/50 hover:text-white transition-colors"
               style={{ border: '1px solid rgba(255,255,255,0.1)' }}
             >
               CANCEL
@@ -255,11 +255,113 @@ function EditProfileModal({
   );
 }
 
+// ── Badge Section ─────────────────────────────────────────────────────────────
+function BadgesSection({ unlockedIds }: { unlockedIds: string[] }) {
+  const unlockedSet = new Set(unlockedIds);
+  const totalUnlocked = unlockedIds.filter(id => badges.find(b => b.id === id)).length;
+
+  return (
+    <div
+      className="rounded-2xl overflow-hidden"
+      style={{
+        background: 'rgba(255,255,255,0.02)',
+        border: '1px solid rgba(255,255,255,0.08)',
+      }}
+    >
+      {/* Section header */}
+      <div
+        className="h-0.5 w-full"
+        style={{
+          background: 'linear-gradient(90deg, transparent, rgba(245,200,66,0.6), transparent)',
+        }}
+      />
+      <div className="p-6 md:p-8">
+        <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center gap-3">
+            <Trophy className="w-5 h-5 text-yellow-400/70" />
+            <h2 className="font-cinzel text-lg font-bold text-white tracking-widest">
+              BADGES
+            </h2>
+          </div>
+          <span className="font-rajdhani text-xs tracking-widest text-white/40">
+            {totalUnlocked} / {badges.length} UNLOCKED
+          </span>
+        </div>
+
+        {/* ── Character Match Badges ─────────────────────────────────────── */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm">⭐</span>
+            <h3 className="font-cinzel text-xs font-bold text-white/70 tracking-widest uppercase">
+              Character Match
+            </h3>
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            {characterBadges.map(badge => (
+              <BadgeCard
+                key={badge.id}
+                badge={badge}
+                locked={!unlockedSet.has(badge.id)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* ── Clan Loyalty Badges ────────────────────────────────────────── */}
+        <div className="mb-8">
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm">🌌</span>
+            <h3 className="font-cinzel text-xs font-bold text-white/70 tracking-widest uppercase">
+              Clan Loyalty
+            </h3>
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+          </div>
+          <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-3">
+            {clanBadges.map(badge => (
+              <BadgeCard
+                key={badge.id}
+                badge={badge}
+                locked={!unlockedSet.has(badge.id)}
+              />
+            ))}
+          </div>
+        </div>
+
+        {/* ── Rare / Secret Badges ──────────────────────────────────────── */}
+        <div>
+          <div className="flex items-center gap-2 mb-4">
+            <span className="text-sm">👑</span>
+            <h3 className="font-cinzel text-xs font-bold text-white/70 tracking-widest uppercase">
+              Rare &amp; Secret
+            </h3>
+            <div className="flex-1 h-px" style={{ background: 'rgba(255,255,255,0.06)' }} />
+          </div>
+          <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            {rareBadges.map(badge => (
+              <BadgeCard
+                key={badge.id}
+                badge={badge}
+                locked={!unlockedSet.has(badge.id)}
+                size="md"
+              />
+            ))}
+          </div>
+          <p className="font-rajdhani text-xs text-white/25 text-center mt-4 tracking-wide">
+            Rare badges are unlocked through special quiz outcomes. Can you find them all?
+          </p>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 // ── Main ProfilePage ──────────────────────────────────────────────────────────
 export default function ProfilePage() {
   const { identity } = useInternetIdentity();
   const isAuthenticated = !!identity;
   const { data: profile, isLoading, isFetched } = useGetCallerUserProfile();
+  const { data: unlockedBadgeIds = [] } = useGetUnlockedBadges();
   const saveProfile = useSaveCallerUserProfile();
   const [editOpen, setEditOpen] = useState(false);
 
@@ -271,11 +373,7 @@ export default function ProfilePage() {
     ? characters.find(c => c.id === profile.matchedCharacterId)
     : null;
 
-  const unlockedBadges = badges.filter(b =>
-    profile?.unlockedBadges?.includes(b.id)
-  );
-
-  const handleSave = async (updated: UserProfile) => {
+  const handleSave = async (updated: UserProfileView) => {
     await saveProfile.mutateAsync(updated);
     setEditOpen(false);
   };
@@ -295,14 +393,16 @@ export default function ProfilePage() {
             boxShadow: '0 0 40px rgba(168,200,240,0.08)',
           }}
         >
-          <div className="w-16 h-16 rounded-full bg-moon-blue/10 flex items-center justify-center mx-auto mb-4"
-            style={{ border: '1px solid rgba(79,195,247,0.3)' }}>
+          <div
+            className="w-16 h-16 rounded-full bg-moon-blue/10 flex items-center justify-center mx-auto mb-4"
+            style={{ border: '1px solid rgba(79,195,247,0.3)' }}
+          >
             <User className="w-8 h-8 text-moon-blue" />
           </div>
           <h2 className="font-cinzel text-xl font-bold text-white mb-2 tracking-widest">
             WARRIOR PROFILE
           </h2>
-          <p className="font-rajdhani text-silver/60 text-sm mb-6 leading-relaxed">
+          <p className="font-rajdhani text-white/50 text-sm mb-6 leading-relaxed">
             You must be logged in to view your profile. Join the world of Aethoria and claim your clan.
           </p>
           <Link
@@ -326,7 +426,7 @@ export default function ProfilePage() {
       >
         <div className="flex flex-col items-center gap-4">
           <Loader2 className="w-10 h-10 text-moon-blue animate-spin" />
-          <p className="font-rajdhani text-silver/50 tracking-widest text-sm">LOADING PROFILE...</p>
+          <p className="font-rajdhani text-white/40 tracking-widest text-sm">LOADING PROFILE...</p>
         </div>
       </div>
     );
@@ -351,7 +451,7 @@ export default function ProfilePage() {
           <h2 className="font-cinzel text-xl font-bold text-white mb-2 tracking-widest">
             BEGIN YOUR JOURNEY
           </h2>
-          <p className="font-rajdhani text-silver/60 text-sm mb-6 leading-relaxed">
+          <p className="font-rajdhani text-white/50 text-sm mb-6 leading-relaxed">
             Your warrior profile has not been created yet. Set up your identity and choose your clan.
           </p>
           <button
@@ -361,7 +461,7 @@ export default function ProfilePage() {
                 avatarUrl: '',
                 matchedClanId: undefined,
                 matchedCharacterId: undefined,
-                unlockedBadges: ['first_login'],
+                unlockedBadges: [],
               });
             }}
             disabled={saveProfile.isPending}
@@ -403,25 +503,24 @@ export default function ProfilePage() {
       <div className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 pt-6">
         <Link
           to="/"
-          className="inline-flex items-center gap-2 font-rajdhani text-xs font-semibold tracking-widest text-silver/50 hover:text-white transition-colors group"
+          className="inline-flex items-center gap-2 font-rajdhani text-xs font-semibold tracking-widest text-white/40 hover:text-white transition-colors group"
         >
           <ArrowLeft className="w-4 h-4 group-hover:-translate-x-1 transition-transform" />
           BACK TO HOME
         </Link>
       </div>
 
-      <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-8 pb-16">
+      <main className="relative z-10 max-w-4xl mx-auto px-4 sm:px-6 py-8 pb-16 space-y-8">
 
         {/* ── Character Card ─────────────────────────────────────────────── */}
         <div
-          className="rounded-2xl overflow-hidden mb-8"
+          className="rounded-2xl overflow-hidden"
           style={{
             background: theme.cardBg,
             border: `1px solid rgba(${theme.glowColorRgb},0.25)`,
             boxShadow: `0 0 40px rgba(${theme.glowColorRgb},0.12), 0 4px 24px rgba(0,0,0,0.5)`,
           }}
         >
-          {/* Card header stripe */}
           <div
             className="h-1 w-full"
             style={{
@@ -463,7 +562,7 @@ export default function ProfilePage() {
               <div className="flex-1 text-center md:text-left">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 mb-4">
                   <div>
-                    <p className="font-rajdhani text-xs tracking-widest text-silver/40 uppercase mb-1">
+                    <p className="font-rajdhani text-xs tracking-widest text-white/40 uppercase mb-1">
                       Warrior Name
                     </p>
                     <h1
@@ -475,17 +574,10 @@ export default function ProfilePage() {
                   </div>
                   <button
                     onClick={() => setEditOpen(true)}
-                    className="self-center md:self-start flex items-center gap-2 px-4 py-2 rounded-lg font-rajdhani text-xs font-semibold tracking-widest transition-all"
+                    className="self-center md:self-start flex items-center gap-2 px-4 py-2 rounded-lg font-rajdhani text-xs font-semibold tracking-widest text-white/60 hover:text-white transition-all"
                     style={{
-                      background: `rgba(${theme.glowColorRgb},0.1)`,
-                      border: `1px solid rgba(${theme.glowColorRgb},0.25)`,
-                      color: theme.glowColor,
-                    }}
-                    onMouseEnter={e => {
-                      (e.currentTarget as HTMLButtonElement).style.background = `rgba(${theme.glowColorRgb},0.2)`;
-                    }}
-                    onMouseLeave={e => {
-                      (e.currentTarget as HTMLButtonElement).style.background = `rgba(${theme.glowColorRgb},0.1)`;
+                      background: 'rgba(255,255,255,0.04)',
+                      border: '1px solid rgba(255,255,255,0.1)',
                     }}
                   >
                     <Edit3 className="w-3.5 h-3.5" />
@@ -493,82 +585,36 @@ export default function ProfilePage() {
                   </button>
                 </div>
 
-                {/* Stats grid */}
-                <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-                  {/* Clan */}
-                  <div
-                    className="rounded-xl p-4"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.06)',
-                    }}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Shield className="w-3.5 h-3.5" style={{ color: theme.glowColor }} />
-                      <span className="font-rajdhani text-xs tracking-widest text-silver/40 uppercase">
-                        Matched Clan
+                {/* Stats row */}
+                <div className="flex flex-wrap justify-center md:justify-start gap-4 mb-4">
+                  {matchedClan && (
+                    <div className="flex items-center gap-2">
+                      <Shield className="w-4 h-4" style={{ color: theme.glowColor }} />
+                      <span className="font-rajdhani text-sm text-white/70">
+                        {matchedClan.name}
                       </span>
                     </div>
-                    {matchedClan ? (
-                      <div className="flex items-center gap-2">
-                        <img
-                          src={matchedClan.iconPath}
-                          alt={matchedClan.name}
-                          className="w-6 h-6 object-contain"
-                          style={{ filter: `drop-shadow(0 0 6px ${matchedClan.glowColor})` }}
-                        />
-                        <span
-                          className="font-cinzel text-sm font-bold"
-                          style={{ color: theme.glowColor }}
-                        >
-                          {matchedClan.name}
-                        </span>
-                      </div>
-                    ) : (
-                      <span className="font-rajdhani text-sm text-silver/30 italic">
-                        No clan matched yet
-                      </span>
-                    )}
-                  </div>
-
-                  {/* Character */}
-                  <div
-                    className="rounded-xl p-4"
-                    style={{
-                      background: 'rgba(255,255,255,0.03)',
-                      border: '1px solid rgba(255,255,255,0.06)',
-                    }}
-                  >
-                    <div className="flex items-center gap-2 mb-2">
-                      <Sword className="w-3.5 h-3.5" style={{ color: theme.glowColor }} />
-                      <span className="font-rajdhani text-xs tracking-widest text-silver/40 uppercase">
-                        Matched Character
+                  )}
+                  {matchedCharacter && (
+                    <div className="flex items-center gap-2">
+                      <Sword className="w-4 h-4" style={{ color: theme.glowColor }} />
+                      <span className="font-rajdhani text-sm text-white/70">
+                        {matchedCharacter.name}
                       </span>
                     </div>
-                    {matchedCharacter ? (
-                      <div>
-                        <p
-                          className="font-cinzel text-sm font-bold"
-                          style={{ color: theme.glowColor }}
-                        >
-                          {matchedCharacter.name}
-                        </p>
-                        <p className="font-rajdhani text-xs text-silver/40 mt-0.5">
-                          {matchedCharacter.title}
-                        </p>
-                      </div>
-                    ) : (
-                      <span className="font-rajdhani text-sm text-silver/30 italic">
-                        No character matched yet
-                      </span>
-                    )}
+                  )}
+                  <div className="flex items-center gap-2">
+                    <Trophy className="w-4 h-4 text-yellow-400/60" />
+                    <span className="font-rajdhani text-sm text-white/70">
+                      {unlockedBadgeIds.length} Badge{unlockedBadgeIds.length !== 1 ? 's' : ''}
+                    </span>
                   </div>
                 </div>
 
                 {/* Clan tagline */}
                 {matchedClan && (
                   <p
-                    className="mt-4 font-rajdhani text-sm italic tracking-wider"
+                    className="font-cinzel text-xs tracking-widest italic"
                     style={{ color: `rgba(${theme.glowColorRgb},0.6)` }}
                   >
                     "{matchedClan.tagline}"
@@ -577,108 +623,52 @@ export default function ProfilePage() {
               </div>
             </div>
           </div>
-
-          {/* Card footer stripe */}
-          <div
-            className="h-px w-full"
-            style={{
-              background: `linear-gradient(90deg, transparent, rgba(${theme.glowColorRgb},0.3), transparent)`,
-            }}
-          />
         </div>
+
+        {/* ── Character bio card ─────────────────────────────────────────── */}
+        {matchedCharacter && (
+          <div
+            className="rounded-xl p-5"
+            style={{
+              background: `rgba(${theme.glowColorRgb},0.04)`,
+              border: `1px solid rgba(${theme.glowColorRgb},0.15)`,
+            }}
+          >
+            <p className="font-rajdhani text-xs tracking-widest text-white/40 uppercase mb-2">
+              Matched Character
+            </p>
+            <div className="flex items-start gap-4">
+              <div
+                className="w-12 h-12 rounded-full flex items-center justify-center font-cinzel font-bold text-sm flex-shrink-0"
+                style={{
+                  background: `rgba(${theme.glowColorRgb},0.15)`,
+                  border: `1px solid rgba(${theme.glowColorRgb},0.3)`,
+                  color: theme.glowColor,
+                }}
+              >
+                {matchedCharacter.initials}
+              </div>
+              <div>
+                <p className="font-cinzel text-sm font-bold text-white mb-0.5">
+                  {matchedCharacter.name}
+                </p>
+                <p
+                  className="font-rajdhani text-xs tracking-widest mb-2"
+                  style={{ color: `rgba(${theme.glowColorRgb},0.7)` }}
+                >
+                  {matchedCharacter.title}
+                </p>
+                <p className="font-rajdhani text-sm text-white/60 leading-relaxed">
+                  {matchedCharacter.bio}
+                </p>
+              </div>
+            </div>
+          </div>
+        )}
 
         {/* ── Badges Section ─────────────────────────────────────────────── */}
-        <div>
-          <div className="flex items-center gap-3 mb-5">
-            <Star className="w-4 h-4" style={{ color: theme.glowColor }} />
-            <h2
-              className="font-cinzel text-sm font-bold tracking-widest uppercase"
-              style={{ color: theme.glowColor, textShadow: `0 0 15px rgba(${theme.glowColorRgb},0.5)` }}
-            >
-              Unlocked Badges
-            </h2>
-            <div
-              className="flex-1 h-px"
-              style={{ background: `linear-gradient(90deg, rgba(${theme.glowColorRgb},0.3), transparent)` }}
-            />
-            <span
-              className="font-rajdhani text-xs tracking-widest"
-              style={{ color: `rgba(${theme.glowColorRgb},0.5)` }}
-            >
-              {unlockedBadges.length} / {badges.length}
-            </span>
-          </div>
+        <BadgesSection unlockedIds={unlockedBadgeIds} />
 
-          {unlockedBadges.length === 0 ? (
-            <div
-              className="rounded-xl p-8 text-center"
-              style={{
-                background: 'rgba(255,255,255,0.02)',
-                border: '1px solid rgba(255,255,255,0.05)',
-              }}
-            >
-              <div className="text-4xl mb-3">🌑</div>
-              <p className="font-cinzel text-sm text-silver/40 tracking-widest mb-1">
-                NO BADGES UNLOCKED YET
-              </p>
-              <p className="font-rajdhani text-xs text-silver/25 tracking-wider">
-                Keep exploring Aethoria to earn your first badge.
-              </p>
-            </div>
-          ) : (
-            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3">
-              {unlockedBadges.map(badge => (
-                <div
-                  key={badge.id}
-                  className="rounded-xl p-4 flex flex-col items-center text-center gap-2 group transition-all duration-300"
-                  style={{
-                    background: `rgba(${theme.glowColorRgb},0.06)`,
-                    border: `1px solid rgba(${theme.glowColorRgb},0.2)`,
-                  }}
-                  onMouseEnter={e => {
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = `0 0 20px rgba(${theme.glowColorRgb},0.2)`;
-                    (e.currentTarget as HTMLDivElement).style.borderColor = `rgba(${theme.glowColorRgb},0.4)`;
-                  }}
-                  onMouseLeave={e => {
-                    (e.currentTarget as HTMLDivElement).style.boxShadow = 'none';
-                    (e.currentTarget as HTMLDivElement).style.borderColor = `rgba(${theme.glowColorRgb},0.2)`;
-                  }}
-                >
-                  <span className="text-3xl">{badge.icon}</span>
-                  <div>
-                    <p
-                      className="font-cinzel text-xs font-bold tracking-wider"
-                      style={{ color: theme.glowColor }}
-                    >
-                      {badge.name}
-                    </p>
-                    <p className="font-rajdhani text-xs text-silver/40 mt-1 leading-relaxed">
-                      {badge.description}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
-
-        {/* ── Footer attribution ─────────────────────────────────────────── */}
-        <div className="mt-12 pt-6 border-t border-white/5 text-center">
-          <p className="font-rajdhani text-xs text-silver/20 tracking-wider">
-            © {new Date().getFullYear()} Whispers Of The White Moon.{' '}
-            Built with{' '}
-            <span className="text-red-400/60">♥</span>{' '}
-            using{' '}
-            <a
-              href={`https://caffeine.ai/?utm_source=Caffeine-footer&utm_medium=referral&utm_content=${encodeURIComponent(window.location.hostname)}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="text-moon-blue/40 hover:text-moon-blue/70 transition-colors"
-            >
-              caffeine.ai
-            </a>
-          </p>
-        </div>
       </main>
 
       {/* Edit modal */}

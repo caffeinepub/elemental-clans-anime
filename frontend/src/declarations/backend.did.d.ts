@@ -64,7 +64,7 @@ export interface NewsEntry {
   'category' : NewsCategory,
 }
 export type Time = bigint;
-export interface UserProfile {
+export interface UserProfileView {
   'matchedClanId' : [] | [string],
   'username' : string,
   'matchedCharacterId' : [] | [string],
@@ -117,7 +117,7 @@ export interface _SERVICE {
   'getAllEpisodes' : ActorMethod<[], Array<Episode>>,
   'getAllGalleryImages' : ActorMethod<[], Array<GalleryImage>>,
   'getAllNewsEntries' : ActorMethod<[], Array<NewsEntry>>,
-  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfile]>,
+  'getCallerUserProfile' : ActorMethod<[], [] | [UserProfileView]>,
   'getCallerUserRole' : ActorMethod<[], UserRole>,
   'getCharacter' : ActorMethod<[string], [] | [Character]>,
   'getCharacterCount' : ActorMethod<[], bigint>,
@@ -136,12 +136,14 @@ export interface _SERVICE {
   'getNewsEntriesByCategory' : ActorMethod<[NewsCategory], Array<NewsEntry>>,
   'getNewsEntry' : ActorMethod<[string], [] | [NewsEntry]>,
   'getNewsEntryCount' : ActorMethod<[], bigint>,
-  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfile]>,
+  'getUnlockedBadges' : ActorMethod<[], Array<string>>,
+  'getUserProfile' : ActorMethod<[Principal], [] | [UserProfileView]>,
   'isCallerAdmin' : ActorMethod<[], boolean>,
   'resetData' : ActorMethod<[], undefined>,
-  'saveCallerUserProfile' : ActorMethod<[UserProfile], undefined>,
+  'saveCallerUserProfile' : ActorMethod<[UserProfileView], undefined>,
   'searchCharactersByName' : ActorMethod<[string], Array<Character>>,
   'searchEpisodes' : ActorMethod<[string], Array<Episode>>,
+  'unlockBadge' : ActorMethod<[string], undefined>,
   'updateCharacter' : ActorMethod<[Character], undefined>,
   'updateClan' : ActorMethod<[Clan], undefined>,
   'updateEpisode' : ActorMethod<[Episode], undefined>,

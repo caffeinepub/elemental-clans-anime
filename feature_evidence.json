@@ -2,11 +2,31 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-create-a-new-profile-route-and-profilepage-component-the-top-section-must-render-as-a-character-card-layout-the-user-s-avatar-on-the-left-and-their-details-username-matched-clan-name-matched-character-name-on-the-right-the-page-must-be-responsive-and-collapse-to-a-stacked-layout-on-mobile",
-      "featureTitle": "Create a new /profile route and ProfilePage component. The top section must render as a character card layout: the user's avatar on the left and their details (username, matched clan name, matched character name) on the right. The page must be responsive and collapse to a stacked layout on mobile.",
+      "featureId": "feature-expand-the-static-badge-data-in-frontend-src-data-badges-ts-to-include-all-13-badges-character-match-badges-shadow-seer-wrath-guardian-memory-keeper-royal-strategist-balance-king-clan-loyalty-badges-moon-clan-initiate-flame-clan-vanguard-water-clan-guardian-sun-clan-noble-balance-clan-chosen-and-rare-secret-badges-eclipse-soul-stormheart-wild-card-spirit-each-badge-must-have-id-name-icon-emoji-tagline-description-category-character-clan-rare-and-unlock-condition-metadata-e-g-requiredcharacterid-requiredclanid-or-unlockrule-for-rare-badges",
+      "featureTitle": "Expand the static badge data in `frontend/src/data/badges.ts` to include all 13 badges: Character Match Badges (Shadow Seer, Wrath Guardian, Memory Keeper, Royal Strategist, Balance King), Clan Loyalty Badges (Moon Clan Initiate, Flame Clan Vanguard, Water Clan Guardian, Sun Clan Noble, Balance Clan Chosen), and Rare/Secret Badges (Eclipse Soul, Stormheart, Wild Card Spirit). Each badge must have: id, name, icon (emoji), tagline/description, category ('character' | 'clan' | 'rare'), and unlock condition metadata (e.g., requiredCharacterId, requiredClanId, or unlockRule for rare badges).",
       "files": [
-        "frontend/src/App.tsx",
-        "frontend/src/pages/ProfilePage.tsx"
+        "frontend/src/data/badges.ts"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-2"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-add-badge-unlock-logic-to-the-frontend-quiz-result-flow-after-a-quiz-result-is-determined-evaluate-which-badges-the-user-has-earned-and-call-the-backend-unlockbadge-mutation-for-each-earned-badge-logic-must-check-1-character-match-if-the-matched-character-corresponds-to-a-badge-unlock-it-2-clan-loyalty-if-the-matched-clan-or-the-majority-of-answers-belong-to-a-clan-unlock-the-corresponding-clan-badge-3-rare-secret-eclipse-soul-if-both-sun-and-moon-trait-scores-are-high-stormheart-if-both-water-and-flame-trait-scores-are-high-wild-card-spirit-if-all-trait-scores-are-within-a-close-range-of-each-other-also-unlock-balance-king-if-the-quiz-result-is-a-perfect-balance-across-all-traits",
+      "featureTitle": "Add badge unlock logic to the frontend quiz result flow. After a quiz result is determined, evaluate which badges the user has earned and call the backend `unlockBadge` mutation for each earned badge. Logic must check: (1) Character Match — if the matched character corresponds to a badge, unlock it; (2) Clan Loyalty — if the matched clan or the majority of answers belong to a clan, unlock the corresponding clan badge; (3) Rare/Secret — Eclipse Soul if both Sun and Moon trait scores are high, Stormheart if both Water and Flame trait scores are high, Wild Card Spirit if all trait scores are within a close range of each other. Also unlock Balance King if the quiz result is a perfect balance across all traits.",
+      "files": [
+        "frontend/src/hooks/useBadgeUnlockLogic.ts",
+        "frontend/src/pages/QuizResultPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -23,9 +43,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-implement-automatic-clan-based-theming-on-the-profilepage-when-the-user-s-matched-clan-is-loaded-apply-that-clan-s-primary-color-as-the-profile-page-accent-color-borders-glows-highlights-and-derive-a-matching-background-gradient-use-the-clan-color-data-already-defined-in-frontend-src-data-clans-ts-theme-must-update-dynamically-if-the-user-s-clan-changes",
-      "featureTitle": "Implement automatic clan-based theming on the ProfilePage. When the user's matched clan is loaded, apply that clan's primary color as the profile page accent color (borders, glows, highlights) and derive a matching background gradient. Use the clan color data already defined in frontend/src/data/clans.ts. Theme must update dynamically if the user's clan changes.",
+      "featureId": "feature-display-earned-badges-on-the-user-s-profile-page-frontend-src-pages-profilepage-tsx-show-a-badges-section-with-three-sub-sections-character-match-badges-clan-loyalty-badges-and-rare-secret-badges-for-each-badge-display-its-icon-name-and-tagline-locked-badges-should-appear-dimmed-greyed-out-with-a-lock-icon-overlay-so-users-can-see-what-they-haven-t-earned-yet-encouraging-re-engagement-unlocked-badges-should-be-visually-highlighted-with-the-clan-s-themed-glow-color-or-a-golden-glow-for-rare-badges",
+      "featureTitle": "Display earned badges on the user's profile page (`frontend/src/pages/ProfilePage.tsx`). Show a badges section with three sub-sections: Character Match Badges, Clan Loyalty Badges, and Rare & Secret Badges. For each badge, display its icon, name, and tagline. Locked badges should appear dimmed/greyed out with a lock icon overlay so users can see what they haven't earned yet (encouraging re-engagement). Unlocked badges should be visually highlighted with the clan's themed glow color or a golden glow for rare badges.",
       "files": [
+        "frontend/src/components/BadgeCard.tsx",
         "frontend/src/pages/ProfilePage.tsx"
       ],
       "components": [
@@ -43,11 +64,11 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-badge-section-below-the-character-card-on-the-profilepage-define-a-static-set-of-available-badges-at-minimum-6-with-a-name-icon-emoji-and-description-each-display-only-the-badges-present-in-the-user-s-unlockedbadges-array-locked-badges-must-not-be-shown",
-      "featureTitle": "Add a badge section below the character card on the ProfilePage. Define a static set of available badges (at minimum 6) with a name, icon/emoji, and description each. Display only the badges present in the user's unlockedBadges array. Locked badges must not be shown.",
+      "featureId": "feature-after-a-quiz-result-is-processed-and-badges-are-unlocked-display-a-badge-unlock-celebration-notification-to-the-user-for-each-newly-earned-badge-show-a-styled-toast-or-modal-pop-up-with-the-badge-s-icon-name-and-tagline-rare-badge-unlocks-should-have-a-more-dramatic-reveal-animation-e-g-shimmer-or-pulse-effect",
+      "featureTitle": "After a quiz result is processed and badges are unlocked, display a badge unlock celebration/notification to the user. For each newly earned badge, show a styled toast or modal pop-up with the badge's icon, name, and tagline. Rare badge unlocks should have a more dramatic reveal animation (e.g., shimmer or pulse effect).",
       "files": [
-        "frontend/src/data/badges.ts",
-        "frontend/src/pages/ProfilePage.tsx"
+        "frontend/src/components/BadgeUnlockToast.tsx",
+        "frontend/src/pages/QuizResultPage.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -64,10 +85,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-profile-link-to-the-navbar-when-the-user-is-authenticated-via-internet-identity-show-a-profile-navigation-link-that-routes-to-profile-when-unauthenticated-hide-the-link",
-      "featureTitle": "Add a profile link to the Navbar. When the user is authenticated via Internet Identity, show a 'Profile' navigation link that routes to /profile. When unauthenticated, hide the link.",
+      "featureId": "feature-add-a-useunlockbadge-mutation-hook-and-a-usegetunlockedbadges-query-hook-to-frontend-src-hooks-usequeries-ts-wired-to-the-new-backend-unlockbadge-and-getunlockedbadges-functions-respectively",
+      "featureTitle": "Add a `useUnlockBadge` mutation hook and a `useGetUnlockedBadges` query hook to `frontend/src/hooks/useQueries.ts`, wired to the new backend `unlockBadge` and `getUnlockedBadges` functions respectively.",
       "files": [
-        "frontend/src/components/Navbar.tsx"
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",

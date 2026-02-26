@@ -1,6 +1,6 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { Episode, GalleryImage, Character, NewsEntry, Clan, UserProfile } from '../backend';
+import type { Episode, GalleryImage, Character, NewsEntry, Clan, UserProfileView } from '../backend';
 import { GalleryCategory, EpisodeStatus } from '../backend';
 
 // ── User Profile ─────────────────────────────────────────────────────────────
@@ -8,7 +8,7 @@ import { GalleryCategory, EpisodeStatus } from '../backend';
 export function useGetCallerUserProfile() {
   const { actor, isFetching: actorFetching } = useActor();
 
-  const query = useQuery<UserProfile | null>({
+  const query = useQuery<UserProfileView | null>({
     queryKey: ['currentUserProfile'],
     queryFn: async () => {
       if (!actor) throw new Error('Actor not available');
@@ -30,7 +30,7 @@ export function useSaveCallerUserProfile() {
   const queryClient = useQueryClient();
 
   return useMutation({
-    mutationFn: async (profile: UserProfile) => {
+    mutationFn: async (profile: UserProfileView) => {
       if (!actor) throw new Error('Actor not available');
       return actor.saveCallerUserProfile(profile);
     },
@@ -50,6 +50,38 @@ export function useIsCallerAdmin() {
       return actor.isCallerAdmin();
     },
     enabled: !!actor && !actorFetching,
+  });
+}
+
+// ── Badges ────────────────────────────────────────────────────────────────────
+
+export function useGetUnlockedBadges() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<string[]>({
+    queryKey: ['unlockedBadges'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getUnlockedBadges();
+    },
+    enabled: !!actor && !actorFetching,
+    retry: false,
+  });
+}
+
+export function useUnlockBadge() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (badgeId: string) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.unlockBadge(badgeId);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['unlockedBadges'] });
+      queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+    },
   });
 }
 
@@ -193,7 +225,6 @@ export function useDeleteGalleryImage() {
  */
 export function getGalleryImageSrc(image: GalleryImage): string {
   if (image.imageData && image.imageData.length > 0) {
-    // Copy into a plain ArrayBuffer to satisfy Blob constructor type requirements
     const buffer = image.imageData.buffer.slice(
       image.imageData.byteOffset,
       image.imageData.byteOffset + image.imageData.byteLength
@@ -346,7 +377,6 @@ export function useUpdateClan() {
   return useMutation({
     mutationFn: async (clan: Clan) => {
       if (!actor) throw new Error('Actor not available');
-      // Try update; if not found in backend, add it
       try {
         await actor.updateClan(clan);
       } catch (err) {

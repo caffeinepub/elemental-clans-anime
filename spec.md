@@ -1,14 +1,14 @@
 # Specification
 
 ## Summary
-**Goal:** Add a player profile page with clan-based theming, a badge system, and backend profile persistence for the Whispers Of The White Moon app.
+**Goal:** Implement a full badge system for Whispers Of The White Moon, allowing users to earn, store, and view badges based on their quiz results.
 
 **Planned changes:**
-- Extend the backend (main.mo) to store and retrieve user profile data (username, avatar URL, clan ID, character ID, unlocked badge IDs) per Internet Identity principal using stable storage
-- Add `useGetProfile` and `useUpdateProfile` React Query hooks in `useQueries.ts` for reading and updating the authenticated user's profile
-- Create a `/profile` route and `ProfilePage` component with a character card layout (avatar left, user details right on desktop; stacked on mobile)
-- Implement dynamic clan-based theming on the profile page using clan colors from `frontend/src/data/clans.ts` (background gradient, borders, glows, highlights)
-- Add a badge section below the character card showing only unlocked badges from a static list of at least 6 defined badges; locked badges are fully hidden; empty state shown when none are unlocked
-- Add a "Profile" navigation link to the Navbar that is only visible to authenticated users, linking to `/profile`
+- Extend the backend `UserProfile` type to store a list of unlocked badge IDs, and add `unlockBadge(badgeId)` and `getUnlockedBadges()` backend functions
+- Add `useUnlockBadge` mutation hook and `useGetUnlockedBadges` query hook in `useQueries.ts`
+- Define all 13 badges in `frontend/src/data/badges.ts` with id, name, icon (emoji), tagline, category, and unlock condition metadata — covering Character Match (Shadow Seer, Wrath Guardian, Memory Keeper, Royal Strategist, Balance King), Clan Loyalty (Moon Clan Initiate, Flame Clan Vanguard, Water Clan Guardian, Sun Clan Noble, Balance Clan Chosen), and Rare/Secret (Eclipse Soul, Stormheart, Wild Card Spirit)
+- After quiz completion, evaluate and trigger badge unlocks based on: matched character, matched/majority clan, trait score combinations (Eclipse Soul = high Sun+Moon, Stormheart = high Water+Flame, Wild Card Spirit = evenly spread scores, Balance King = perfect balance)
+- Display a Badges section on the Profile page with three sub-sections (Character Match, Clan Loyalty, Rare & Secret); unlocked badges show with full color and themed/golden glow, locked badges appear dimmed with a lock overlay
+- Show a toast/notification for each newly unlocked badge after quiz completion, with a more dramatic animation for rare badges
 
-**User-visible outcome:** Authenticated users can visit their profile page, which displays their username, matched clan and character in a styled character card, applies their clan's color theme throughout the page, and shows any badges they have unlocked. A profile link appears in the navbar when logged in.
+**User-visible outcome:** After completing the quiz, authenticated users automatically earn badges based on their results and see celebratory notifications. All 13 badges are visible on the profile page, with locked badges shown in a dimmed state to encourage retaking the quiz.

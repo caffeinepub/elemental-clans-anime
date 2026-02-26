@@ -4,10 +4,10 @@ import Time "mo:core/Time";
 import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
 import Blob "mo:core/Blob";
+import List "mo:core/List";
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 import MixinStorage "blob-storage/Mixin";
-import List "mo:core/List";
 import Migration "migration";
 
 (with migration = Migration.run)
@@ -21,6 +21,14 @@ actor {
   type EpisodeNumber = Nat;
 
   public type UserProfile = {
+    username : Text;
+    avatarUrl : Text;
+    matchedClanId : ?Text;
+    matchedCharacterId : ?Text;
+    unlockedBadges : List.List<Text>;
+  };
+
+  public type UserProfileView = {
     username : Text;
     avatarUrl : Text;
     matchedClanId : ?Text;
@@ -100,26 +108,77 @@ actor {
   let clans = Map.empty<Text, Clan>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
-  // USER PROFILE FUNCTIONS
-  public query ({ caller }) func getCallerUserProfile() : async ?UserProfile {
+  func toUserProfileView(profile : UserProfile) : UserProfileView {
+    {
+      profile with
+      unlockedBadges = profile.unlockedBadges.toArray();
+    };
+  };
+
+  public query ({ caller }) func getCallerUserProfile() : async ?UserProfileView {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can get their profile");
     };
-    userProfiles.get(caller);
+
+    switch (userProfiles.get(caller)) {
+      case (?profile) { ?toUserProfileView(profile) };
+      case (null) { null };
+    };
   };
 
-  public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfile {
+  public query ({ caller }) func getUserProfile(user : Principal) : async ?UserProfileView {
     if (caller != user and not AccessControl.isAdmin(accessControlState, caller)) {
       Runtime.trap("Unauthorized: Can only view your own profile");
     };
-    userProfiles.get(user);
+
+    switch (userProfiles.get(user)) {
+      case (?profile) { ?toUserProfileView(profile) };
+      case (null) { null };
+    };
   };
 
-  public shared ({ caller }) func saveCallerUserProfile(profile : UserProfile) : async () {
+  public shared ({ caller }) func saveCallerUserProfile(profile : UserProfileView) : async () {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can save profiles");
     };
-    userProfiles.add(caller, profile);
+
+    let internalProfile : UserProfile = {
+      profile with
+      unlockedBadges = List.fromArray(profile.unlockedBadges);
+    };
+    userProfiles.add(caller, internalProfile);
+  };
+
+  // BADGE MANAGEMENT
+  public shared ({ caller }) func unlockBadge(badgeId : Text) : async () {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can unlock badges");
+    };
+
+    switch (userProfiles.get(caller)) {
+      case (null) { Runtime.trap("User profile does not exist") };
+      case (?profile) {
+        let badges = profile.unlockedBadges;
+
+        if (badges.any(func(b) { b == badgeId })) {
+          Runtime.trap("Badge already unlocked");
+        };
+
+        badges.add(badgeId);
+        userProfiles.add(caller, { profile with unlockedBadges = badges });
+      };
+    };
+  };
+
+  public query ({ caller }) func getUnlockedBadges() : async [Text] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can get badges");
+    };
+
+    switch (userProfiles.get(caller)) {
+      case (null) { Runtime.trap("User profile does not exist") };
+      case (?profile) { profile.unlockedBadges.toArray() };
+    };
   };
 
   // EPISODE FUNCTIONS

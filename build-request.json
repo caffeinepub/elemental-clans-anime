@@ -1,137 +1,154 @@
 {
   "kind": "build_request",
-  "title": "Player Profile Page with Clan Theming and Badge System",
+  "title": "Implement Badge System (Character Match, Clan Loyalty, Rare/Secret Badges)",
   "projectName": "Whispers Of The White Moon",
   "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Extend the backend user profile data model to store: username, avatar URL, matched clan ID, matched character ID, and an array of unlocked badge IDs. Expose query and update functions so the frontend can read and write a user's full profile by their Internet Identity principal.",
+      "text": "Extend the backend UserProfile data type and actor to store a list of unlocked badge IDs per user. Add a backend function `unlockBadge(badgeId: Text)` that appends a badge ID to the caller's profile if not already present, and a function `getUnlockedBadges()` that returns the caller's current list of badge IDs.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-4"
         ],
         "quotes": [
-          "Store user data so their profile loads correctly when they return."
+          "Users earn these when they match a character",
+          "Unlocked by matching Haruna",
+          "These trigger based on the clan result OR majority of answers"
         ]
       },
       "acceptanceCriteria": [
-        "Backend stores username, avatarUrl, clanId, characterId, and unlockedBadges[] per principal.",
-        "A getProfile(principal) query returns the stored profile or a default empty state.",
-        "An updateProfile(...) call persists changes and returns the updated profile.",
-        "Profile data survives canister upgrades (stable storage used)."
+        "UserProfile type includes an `unlockedBadges: [Text]` field",
+        "`unlockBadge` adds the given badgeId to the caller's profile without duplicates",
+        "`getUnlockedBadges` returns all badge IDs unlocked by the authenticated caller",
+        "Unauthenticated calls to `unlockBadge` are rejected"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add React Query hooks in useQueries.ts for fetching (useGetProfile) and updating (useUpdateProfile) the authenticated user's profile from the backend. The fetch hook should run automatically when the user is authenticated via Internet Identity.",
+      "text": "Expand the static badge data in `frontend/src/data/badges.ts` to include all 13 badges: Character Match Badges (Shadow Seer, Wrath Guardian, Memory Keeper, Royal Strategist, Balance King), Clan Loyalty Badges (Moon Clan Initiate, Flame Clan Vanguard, Water Clan Guardian, Sun Clan Noble, Balance Clan Chosen), and Rare/Secret Badges (Eclipse Soul, Stormheart, Wild Card Spirit). Each badge must have: id, name, icon (emoji), tagline/description, category ('character' | 'clan' | 'rare'), and unlock condition metadata (e.g., requiredCharacterId, requiredClanId, or unlockRule for rare badges).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-4"
         ],
         "quotes": [
-          "Store user data so their profile loads correctly when they return."
+          "🌑 Shadow Seer Badge\nUnlocked by matching Haruna\nTagline: \"Master of hidden truths.\"",
+          "🔥 Wrath Guardian Badge\nUnlocked by matching Raizen\nTagline: \"Power fueled by loyalty.\"",
+          "🌊 Memory Keeper Badge\nUnlocked by matching Selene\nTagline: \"Protector of emotional tides.\"",
+          "☀️ Royal Strategist Badge\nUnlocked by matching Valerinon\nTagline: \"Guiding light in chaos.\"",
+          "⚖️ Balance King Badge\nUnlocked by rare perfect balance result\nTagline: \"Harmony above all.\"",
+          "🌑 Moon Clan Initiate\n🔥 Flame Clan Vanguard\n🌊 Water Clan Guardian\n☀️ Sun Clan Noble\n⚖️ Balance Clan Chosen",
+          "🌘 Eclipse Soul\n→ Unlock if someone shows both Sun + Moon traits",
+          "🌊🔥 Stormheart\n→ Unlock if Water + Flame traits are high",
+          "🎭 Wild Card Spirit\n→ Unlock if answers are evenly spread across everything"
         ]
       },
       "acceptanceCriteria": [
-        "useGetProfile returns the user's profile data when authenticated.",
-        "useUpdateProfile mutation updates profile fields and invalidates the profile query on success.",
-        "Hooks follow the existing pattern in frontend/src/hooks/useQueries.ts."
+        "All 13 badges are defined in badges.ts with id, name, icon, tagline, category, and unlock condition metadata",
+        "Character Match Badges reference the correct character IDs (Haruna, Raizen, Selene, Valerinon)",
+        "Clan Loyalty Badges reference the correct clan IDs",
+        "Rare badges have unlock rules: Eclipse Soul requires Sun+Moon traits, Stormheart requires Water+Flame traits, Wild Card Spirit requires evenly spread trait scores"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Create a new /profile route and ProfilePage component. The top section must render as a character card layout: the user's avatar on the left and their details (username, matched clan name, matched character name) on the right. The page must be responsive and collapse to a stacked layout on mobile.",
+      "text": "Add badge unlock logic to the frontend quiz result flow. After a quiz result is determined, evaluate which badges the user has earned and call the backend `unlockBadge` mutation for each earned badge. Logic must check: (1) Character Match — if the matched character corresponds to a badge, unlock it; (2) Clan Loyalty — if the matched clan or the majority of answers belong to a clan, unlock the corresponding clan badge; (3) Rare/Secret — Eclipse Soul if both Sun and Moon trait scores are high, Stormheart if both Water and Flame trait scores are high, Wild Card Spirit if all trait scores are within a close range of each other. Also unlock Balance King if the quiz result is a perfect balance across all traits.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-4"
         ],
         "quotes": [
-          "The top section should look like a character card with the avatar on one side and user details on the other.",
-          "Keep the layout clean, responsive, and expandable for future features."
+          "Users earn these when they match a character",
+          "These trigger based on the clan result OR majority of answers",
+          "Unlock if someone shows both Sun + Moon traits",
+          "Unlock if Water + Flame traits are high",
+          "Unlock if answers are evenly spread across everything",
+          "Unlocked by rare perfect balance result"
         ]
       },
       "acceptanceCriteria": [
-        "A /profile route is registered in App.tsx.",
-        "On desktop, avatar is displayed on the left and user details on the right within a card.",
-        "On mobile (< 768px), the layout stacks vertically with avatar on top.",
-        "Username, clan name, and character name are clearly visible in the card."
+        "After quiz completion, character match badges are automatically evaluated and unlocked if conditions are met",
+        "Clan loyalty badges are unlocked based on the resulting clan or majority of answers",
+        "Eclipse Soul is unlocked when Sun and Moon trait scores are both above a defined threshold",
+        "Stormheart is unlocked when Water and Flame trait scores are both above a defined threshold",
+        "Wild Card Spirit is unlocked when all trait scores are within a narrow range (e.g., max difference ≤ 15%)",
+        "Balance King is unlocked only on a perfect balance result",
+        "`unlockBadge` is called for each newly earned badge when the user is authenticated"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Implement automatic clan-based theming on the ProfilePage. When the user's matched clan is loaded, apply that clan's primary color as the profile page accent color (borders, glows, highlights) and derive a matching background gradient. Use the clan color data already defined in frontend/src/data/clans.ts. Theme must update dynamically if the user's clan changes.",
+      "text": "Display earned badges on the user's profile page (`frontend/src/pages/ProfilePage.tsx`). Show a badges section with three sub-sections: Character Match Badges, Clan Loyalty Badges, and Rare & Secret Badges. For each badge, display its icon, name, and tagline. Locked badges should appear dimmed/greyed out with a lock icon overlay so users can see what they haven't earned yet (encouraging re-engagement). Unlocked badges should be visually highlighted with the clan's themed glow color or a golden glow for rare badges.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-4"
         ],
         "quotes": [
-          "Automatically theme the profile based on the user's matched clan by changing background colors and accent colors."
+          "These make people want to retake the quiz (huge engagement boost)",
+          "🌑 Shadow Seer Badge",
+          "🎭 Wild Card Spirit"
         ]
       },
       "acceptanceCriteria": [
-        "Each of the seven clans produces a visually distinct background gradient and accent color on the profile page.",
-        "Clan color is sourced from the existing clans data (frontend/src/data/clans.ts).",
-        "Accent color is applied to borders, glow effects, and highlighted text within the profile.",
-        "If no clan is matched, a neutral default theme is shown."
+        "Profile page shows a Badges section with three categorized sub-sections",
+        "All 13 badges are visible on the profile (locked or unlocked)",
+        "Unlocked badges display with full color, icon, name, and tagline",
+        "Locked badges are visually dimmed with a lock overlay, name shown but tagline optionally hidden or shown as '???'",
+        "Rare/Secret badge icons and names are visible when locked to entice users to discover them",
+        "Unlocked badges use clan-appropriate or golden glow styling"
       ]
     },
     {
       "id": "REQ-5",
-      "text": "Add a badge section below the character card on the ProfilePage. Define a static set of available badges (at minimum 6) with a name, icon/emoji, and description each. Display only the badges present in the user's unlockedBadges array. Locked badges must not be shown.",
+      "text": "After a quiz result is processed and badges are unlocked, display a badge unlock celebration/notification to the user. For each newly earned badge, show a styled toast or modal pop-up with the badge's icon, name, and tagline. Rare badge unlocks should have a more dramatic reveal animation (e.g., shimmer or pulse effect).",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
+          "msg-4"
         ],
         "quotes": [
-          "Include a badge section that shows unlocked badges and hides locked ones.",
-          "Unlocked badges"
+          "These make people want to retake the quiz (huge engagement boost)"
         ]
       },
       "acceptanceCriteria": [
-        "A badge definitions list with at least 6 badges is defined as static data.",
-        "Only badges whose IDs appear in the user's unlockedBadges array are rendered.",
-        "Each displayed badge shows its icon and name.",
-        "If no badges are unlocked, a friendly empty-state message is shown.",
-        "Locked badges are completely hidden from view."
+        "A notification/toast appears for each newly unlocked badge after quiz completion",
+        "Notification shows the badge icon, name, and tagline",
+        "Rare badge (Eclipse Soul, Stormheart, Wild Card Spirit, Balance King) notifications have a distinct and more dramatic animation",
+        "Notifications are dismissible and auto-dismiss after a few seconds"
       ]
     },
     {
       "id": "REQ-6",
-      "text": "Add a profile link to the Navbar. When the user is authenticated via Internet Identity, show a 'Profile' navigation link that routes to /profile. When unauthenticated, hide the link.",
+      "text": "Add a `useUnlockBadge` mutation hook and a `useGetUnlockedBadges` query hook to `frontend/src/hooks/useQueries.ts`, wired to the new backend `unlockBadge` and `getUnlockedBadges` functions respectively.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-10"
-        ],
-        "quotes": [
-          "Keep the layout clean, responsive, and expandable for future features."
+          "msg-4"
         ]
       },
       "acceptanceCriteria": [
-        "Authenticated users see a 'Profile' link in the Navbar (desktop and mobile menu).",
-        "Unauthenticated users do not see the Profile link.",
-        "Clicking the link navigates to /profile."
+        "`useGetUnlockedBadges` fetches the authenticated user's unlocked badge IDs from the backend",
+        "`useUnlockBadge` calls the backend `unlockBadge` function and invalidates the unlocked badges query on success",
+        "Both hooks follow the existing patterns in `useQueries.ts`"
       ]
     }
   ],
   "constraints": [
-    "Do not modify any files listed in frontend.immutablePaths.",
-    "All Motoko logic must remain in backend/main.mo (single-actor architecture).",
-    "Clan color data must be sourced from the existing frontend/src/data/clans.ts definitions — do not duplicate or hardcode clan colors.",
-    "Profile page must use Internet Identity as the sole authentication mechanism."
+    "All Motoko logic must remain in the single backend/main.mo actor",
+    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui",
+    "Badge unlock logic must only trigger when the user is authenticated via Internet Identity",
+    "Locked rare/secret badges must still be visible (name and icon shown) to encourage re-engagement — do not fully hide them"
   ],
   "nonGoals": [
-    "No admin UI for assigning clans, characters, or badges to users in this iteration.",
-    "No locked badge display (greyed-out or blurred) — locked badges are fully hidden.",
-    "No social features (friend lists, profile sharing, etc.).",
-    "No profile photo upload — avatar URL field only.",
-    "No gamification logic for earning badges automatically."
+    "Leaderboards or badge comparison between users",
+    "Custom badge image assets (emoji icons are sufficient)",
+    "Admin panel management of badges",
+    "Social sharing of badges",
+    "Fixing profile page data persistence / Internet Identity sync issues (separate known issue)"
   ],
   "imageRequirements": {
     "required": [],

@@ -1,77 +1,81 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T20:44:32.943Z",
+  "generatedAt": "2026-02-26T20:58:41.684Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
     "total": 6,
-    "implemented": 4,
+    "implemented": 5,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Extend the backend user profile data model to store: username, avatar URL, matched clan ID, matched character ID, and an array of unlocked badge IDs. Expose query and update functions so the frontend can read and write a user's full profile by their Internet Identity principal.",
+        "summary": "Extend the backend UserProfile data type and actor to store a list of unlocked badge IDs per user. Add a backend function `unlockBadge(badgeId: Text)` that appends a badge ID to the caller's profile if not already present, and a function `getUnlockedBadges()` that returns the caller's current list of badge IDs.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Add React Query hooks in useQueries.ts for fetching (useGetProfile) and updating (useUpdateProfile) the authenticated user's profile from the backend. The fetch hook should run automatically when the user is authenticated via Internet Identity.",
-        "status": "missing",
+        "summary": "Expand the static badge data in `frontend/src/data/badges.ts` to include all 13 badges: Character Match Badges (Shadow Seer, Wrath Guardian, Memory Keeper, Royal Strategist, Balance King), Clan Loyalty Badges (Moon Clan Initiate, Flame Clan Vanguard, Water Clan Guardian, Sun Clan Noble, Balance Clan Chosen), and Rare/Secret Badges (Eclipse Soul, Stormheart, Wild Card Spirit). Each badge must have: id, name, icon (emoji), tagline/description, category ('character' | 'clan' | 'rare'), and unlock condition metadata (e.g., requiredCharacterId, requiredClanId, or unlockRule for rare badges).",
+        "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/data/badges.ts"
         ],
-        "matchedFiles": []
+        "matchedFiles": [
+          "frontend/src/data/badges.ts"
+        ]
       },
       {
         "id": "REQ-3",
-        "summary": "Create a new /profile route and ProfilePage component. The top section must render as a character card layout: the user's avatar on the left and their details (username, matched clan name, matched character name) on the right. The page must be responsive and collapse to a stacked layout on mobile.",
+        "summary": "Add badge unlock logic to the frontend quiz result flow. After a quiz result is determined, evaluate which badges the user has earned and call the backend `unlockBadge` mutation for each earned badge. Logic must check: (1) Character Match — if the matched character corresponds to a badge, unlock it; (2) Clan Loyalty — if the matched clan or the majority of answers belong to a clan, unlock the corresponding clan badge; (3) Rare/Secret — Eclipse Soul if both Sun and Moon trait scores are high, Stormheart if both Water and Flame trait scores are high, Wild Card Spirit if all trait scores are within a close range of each other. Also unlock Balance King if the quiz result is a perfect balance across all traits.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/ProfilePage.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/hooks/useBadgeUnlockLogic.ts",
+          "frontend/src/pages/QuizResultPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/ProfilePage.tsx",
-          "frontend/src/App.tsx"
+          "frontend/src/hooks/useBadgeUnlockLogic.ts",
+          "frontend/src/pages/QuizResultPage.tsx"
         ]
       },
       {
         "id": "REQ-4",
-        "summary": "Implement automatic clan-based theming on the ProfilePage. When the user's matched clan is loaded, apply that clan's primary color as the profile page accent color (borders, glows, highlights) and derive a matching background gradient. Use the clan color data already defined in frontend/src/data/clans.ts. Theme must update dynamically if the user's clan changes.",
+        "summary": "Display earned badges on the user's profile page (`frontend/src/pages/ProfilePage.tsx`). Show a badges section with three sub-sections: Character Match Badges, Clan Loyalty Badges, and Rare & Secret Badges. For each badge, display its icon, name, and tagline. Locked badges should appear dimmed/greyed out with a lock icon overlay so users can see what they haven't earned yet (encouraging re-engagement). Unlocked badges should be visually highlighted with the clan's themed glow color or a golden glow for rare badges.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/ProfilePage.tsx"
+          "frontend/src/pages/ProfilePage.tsx",
+          "frontend/src/components/BadgeCard.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/pages/ProfilePage.tsx"
+          "frontend/src/pages/ProfilePage.tsx",
+          "frontend/src/components/BadgeCard.tsx"
         ]
       },
       {
         "id": "REQ-5",
-        "summary": "Add a badge section below the character card on the ProfilePage. Define a static set of available badges (at minimum 6) with a name, icon/emoji, and description each. Display only the badges present in the user's unlockedBadges array. Locked badges must not be shown.",
+        "summary": "After a quiz result is processed and badges are unlocked, display a badge unlock celebration/notification to the user. For each newly earned badge, show a styled toast or modal pop-up with the badge's icon, name, and tagline. Rare badge unlocks should have a more dramatic reveal animation (e.g., shimmer or pulse effect).",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/data/badges.ts",
-          "frontend/src/pages/ProfilePage.tsx"
+          "frontend/src/components/BadgeUnlockToast.tsx",
+          "frontend/src/pages/QuizResultPage.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/data/badges.ts",
-          "frontend/src/pages/ProfilePage.tsx"
+          "frontend/src/components/BadgeUnlockToast.tsx",
+          "frontend/src/pages/QuizResultPage.tsx"
         ]
       },
       {
         "id": "REQ-6",
-        "summary": "Add a profile link to the Navbar. When the user is authenticated via Internet Identity, show a 'Profile' navigation link that routes to /profile. When unauthenticated, hide the link.",
+        "summary": "Add a `useUnlockBadge` mutation hook and a `useGetUnlockedBadges` query hook to `frontend/src/hooks/useQueries.ts`, wired to the new backend `unlockBadge` and `getUnlockedBadges` functions respectively.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/Navbar.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/components/Navbar.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ]
       }
     ]
@@ -80,19 +84,22 @@
     "backend/main.mo",
     "backend/migration.mo",
     "build-request.json",
-    "build-template/README.md",
-    "caffeine.lock.json",
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
     "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/Navbar.tsx",
+    "frontend/src/components/BadgeCard.tsx",
+    "frontend/src/components/BadgeUnlockToast.tsx",
     "frontend/src/data/badges.ts",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
+    "frontend/src/hooks/useBadgeUnlockLogic.ts",
+    "frontend/src/hooks/useQueries.ts",
+    "frontend/src/index.css",
     "frontend/src/pages/ProfilePage.tsx",
+    "frontend/src/pages/QuizResultPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",

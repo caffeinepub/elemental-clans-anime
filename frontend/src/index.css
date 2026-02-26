@@ -114,3 +114,36 @@
   from { transform: translateX(-10px); }
   to   { transform: translateX(10px); }
 }
+
+/* ── Badge animations ──────────────────────────────────────────────────────── */
+
+/* Rare badge shimmer sweep */
+.badge-rare-shimmer {
+  animation: badge-shimmer 3s ease-in-out infinite;
+}
+
+@keyframes badge-shimmer {
+  0%, 100% { opacity: 0.6; }
+  50%       { opacity: 1; }
+}
+
+/* Rare badge icon pulse */
+.badge-rare-pulse {
+  animation: badge-pulse 2s ease-in-out infinite;
+}
+
+@keyframes badge-pulse {
+  0%, 100% { transform: scale(1);    box-shadow: 0 0 15px rgba(224,64,251,0.3); }
+  50%       { transform: scale(1.08); box-shadow: 0 0 25px rgba(224,64,251,0.6); }
+}
+
+/* Badge toast progress bar drain */
+.badge-toast-progress {
+  animation: badge-progress-drain linear forwards;
+  width: 100%;
+}
+
+@keyframes badge-progress-drain {
+  from { width: 100%; }
+  to   { width: 0%; }
+}
