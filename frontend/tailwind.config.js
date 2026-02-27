@@ -110,6 +110,15 @@ export default {
             boxShadow: '0 0 35px 12px rgba(255,193,7,0.85), 0 0 14px 4px rgba(255,193,7,0.6)',
           },
         },
+        'quiz-answer-glow': {
+          '0%, 100%': { boxShadow: '0 0 8px rgba(168,200,240,0.2)' },
+          '50%': { boxShadow: '0 0 20px rgba(168,200,240,0.5), 0 0 40px rgba(168,200,240,0.2)' },
+        },
+        'balance-reveal': {
+          '0%': { opacity: '0', transform: 'scale(0.8)' },
+          '60%': { opacity: '1', transform: 'scale(1.05)' },
+          '100%': { opacity: '1', transform: 'scale(1)' },
+        },
       },
       animation: {
         'fade-in': 'fade-in 0.6s ease-out forwards',
@@ -121,6 +130,8 @@ export default {
         'slide-in-right': 'slide-in-right 0.6s ease-out forwards',
         'gallery-idle-glow': 'gallery-idle-glow 2.5s ease-in-out infinite',
         'gallery-hover-pulse': 'gallery-hover-pulse 1.2s ease-in-out infinite',
+        'quiz-answer-glow': 'quiz-answer-glow 2s ease-in-out infinite',
+        'balance-reveal': 'balance-reveal 0.8s cubic-bezier(0.34,1.56,0.64,1) forwards',
       },
     },
   },

@@ -1,10 +1,12 @@
 import Map "mo:core/Map";
+import List "mo:core/List";
 import Text "mo:core/Text";
 import Time "mo:core/Time";
 import Runtime "mo:core/Runtime";
 import Principal "mo:core/Principal";
+import Iter "mo:core/Iter";
 import Blob "mo:core/Blob";
-import List "mo:core/List";
+
 import AccessControl "authorization/access-control";
 import MixinAuthorization "authorization/MixinAuthorization";
 import MixinStorage "blob-storage/Mixin";
@@ -12,13 +14,14 @@ import Migration "migration";
 
 (with migration = Migration.run)
 actor {
-  let accessControlState = AccessControl.initState();
-
-  include MixinAuthorization(accessControlState);
-  include MixinStorage();
-
   type EpisodeId = Text;
   type EpisodeNumber = Nat;
+
+  type ContactStatus = {
+    #new;
+    #read;
+    #replied;
+  };
 
   public type UserProfile = {
     username : Text;
@@ -101,6 +104,25 @@ actor {
     primaryColor : Text;
   };
 
+  public type ContactMessage = {
+    name : Text;
+    email : Text;
+    subject : Text;
+    message : Text;
+    submittedAt : Time.Time;
+    status : ContactStatus;
+  };
+
+  public type FanMail = {
+    username : Text;
+    message : Text;
+    submittedAt : Time.Time;
+    emailOrSocial : ?Text;
+    status : ContactStatus;
+  };
+
+  let accessControlState = AccessControl.initState();
+
   let episodes = Map.empty<Text, Episode>();
   let characters = Map.empty<Text, Character>();
   let newsEntries = Map.empty<Text, NewsEntry>();
@@ -108,11 +130,255 @@ actor {
   let clans = Map.empty<Text, Clan>();
   let userProfiles = Map.empty<Principal, UserProfile>();
 
+  let contactMessages = List.empty<ContactMessage>();
+  let fanMailEntries = List.empty<FanMail>();
+
+  include MixinAuthorization(accessControlState);
+  include MixinStorage();
+
   func toUserProfileView(profile : UserProfile) : UserProfileView {
     {
       profile with
       unlockedBadges = profile.unlockedBadges.toArray();
     };
+  };
+
+  // Contact & Fan Mail - public submission, no auth required
+  public shared ({ caller }) func submitContactMessage(
+    name : Text,
+    email : Text,
+    subject : Text,
+    message : Text,
+  ) : async () {
+    let contactMessage : ContactMessage = {
+      name;
+      email;
+      subject;
+      message;
+      submittedAt = Time.now();
+      status = #new;
+    };
+    contactMessages.add(contactMessage);
+  };
+
+  public shared ({ caller }) func submitFanMail(
+    username : Text,
+    message : Text,
+    emailOrSocial : ?Text,
+  ) : async () {
+    let fanMail : FanMail = {
+      username;
+      message;
+      emailOrSocial;
+      submittedAt = Time.now();
+      status = #new;
+    };
+    fanMailEntries.add(fanMail);
+  };
+
+  // Admin-only: retrieve all contact messages
+  public query ({ caller }) func getAllContactMessages() : async [ContactMessage] {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can retrieve all contact messages");
+    };
+    contactMessages.toArray();
+  };
+
+  // Admin-only: retrieve all fan mail entries
+  public query ({ caller }) func getAllFanMail() : async [FanMail] {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can retrieve all fan mail entries");
+    };
+    fanMailEntries.toArray();
+  };
+
+  public shared ({ caller }) func updateContactMessageStatus(
+    id : Nat,
+    newStatus : ContactStatus,
+  ) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update contact message status");
+    };
+
+    let messagesArray = contactMessages.toArray();
+
+    let updatedContactMessages = List.empty<ContactMessage>();
+
+    if (id >= messagesArray.size()) {
+      Runtime.trap("Contact message with id does not exist");
+    };
+
+    for (i in Nat.range(0, messagesArray.size())) {
+      if (i == id) {
+        let message = messagesArray[i];
+        let updatedMessage = {
+          message with
+          status = newStatus;
+        };
+        updatedContactMessages.add(updatedMessage);
+      } else {
+        let message = messagesArray[i];
+        updatedContactMessages.add(message);
+      };
+    };
+
+    contactMessages.clear();
+    let tmpMessages = updatedContactMessages.toArray();
+    for (message in tmpMessages.values()) {
+      contactMessages.add(message);
+    };
+  };
+
+  public shared ({ caller }) func updateFanMailStatus(
+    id : Nat,
+    newStatus : ContactStatus,
+  ) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can update fan mail status");
+    };
+
+    let fanMailArray = fanMailEntries.toArray();
+
+    let updatedFanMailEntries = List.empty<FanMail>();
+
+    if (id >= fanMailArray.size()) {
+      Runtime.trap("Fan mail entry with id does not exist");
+    };
+
+    for (i in Nat.range(0, fanMailArray.size())) {
+      let message = fanMailArray[i];
+      if (i == id) {
+        let updatedMessage = {
+          message with
+          status = newStatus;
+        };
+        updatedFanMailEntries.add(updatedMessage);
+      } else {
+        updatedFanMailEntries.add(message);
+      };
+    };
+
+    fanMailEntries.clear();
+    let tmpFanMail = updatedFanMailEntries.toArray();
+    for (message in tmpFanMail.values()) {
+      fanMailEntries.add(message);
+    };
+  };
+
+  public shared ({ caller }) func deleteContactMessage(id : Nat) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can delete contact messages");
+    };
+
+    let allMessages = contactMessages.toArray();
+    if (id >= allMessages.size()) {
+      Runtime.trap("Contact message with id does not exist");
+    };
+
+    let updatedMessages = List.empty<ContactMessage>();
+    for (i in Nat.range(0, allMessages.size())) {
+      if (i != id) {
+        let message = allMessages[i];
+        updatedMessages.add(message);
+      };
+    };
+
+    contactMessages.clear();
+    let tmpMessages = updatedMessages.toArray();
+    for (message in tmpMessages.values()) {
+      contactMessages.add(message);
+    };
+  };
+
+  public shared ({ caller }) func deleteFanMail(id : Nat) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can delete fan mail entries");
+    };
+
+    let allEntries = fanMailEntries.toArray();
+    if (id >= allEntries.size()) {
+      Runtime.trap("Fan mail entry with id does not exist");
+    };
+
+    let updatedEntries = List.empty<FanMail>();
+    for (i in Nat.range(0, allEntries.size())) {
+      if (i != id) {
+        let entry = allEntries[i];
+        updatedEntries.add(entry);
+      };
+    };
+
+    fanMailEntries.clear();
+    let tmpEntries = updatedEntries.toArray();
+    for (entry in tmpEntries.values()) {
+      fanMailEntries.add(entry);
+    };
+  };
+
+  public shared ({ caller }) func clearAllContactMessages() : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can clear all contact messages");
+    };
+    contactMessages.clear();
+  };
+
+  public shared ({ caller }) func clearAllFanMail() : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can clear all fan mail entries");
+    };
+    fanMailEntries.clear();
+  };
+
+  // Admin-only: get contact message statistics
+  public query ({ caller }) func getContactMessageStats() : async {
+    new : Nat;
+    read : Nat;
+    replied : Nat;
+    total : Nat;
+  } {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can view contact message stats");
+    };
+
+    var newCount = 0;
+    var readCount = 0;
+    var repliedCount = 0;
+
+    let allMessages = contactMessages.toArray();
+    for (message in allMessages.values()) {
+      switch (message.status) {
+        case (#new) { newCount += 1 };
+        case (#read) { readCount += 1 };
+        case (#replied) { repliedCount += 1 };
+      };
+    };
+
+    {
+      new = newCount;
+      read = readCount;
+      replied = repliedCount;
+      total = allMessages.size();
+    };
+  };
+
+  // Admin-only: filter contact messages by status
+  public query ({ caller }) func filterContactsByStatus(status : ContactStatus) : async [ContactMessage] {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can filter contact messages");
+    };
+    contactMessages.toArray().filter(
+      func(message) { message.status == status }
+    );
+  };
+
+  // Admin-only: filter fan mail by status
+  public query ({ caller }) func filterFanMailByStatus(status : ContactStatus) : async [FanMail] {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can filter fan mail entries");
+    };
+    fanMailEntries.toArray().filter(
+      func(entry) { entry.status == status }
+    );
   };
 
   public query ({ caller }) func getCallerUserProfile() : async ?UserProfileView {
@@ -150,7 +416,7 @@ actor {
   };
 
   // BADGE MANAGEMENT
-  public shared ({ caller }) func unlockBadge(badgeId : Text) : async () {
+  public shared ({ caller }) func unlockBadge(badgeId : Text) : async Bool {
     if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
       Runtime.trap("Unauthorized: Only users can unlock badges");
     };
@@ -161,11 +427,14 @@ actor {
         let badges = profile.unlockedBadges;
 
         if (badges.any(func(b) { b == badgeId })) {
-          Runtime.trap("Badge already unlocked");
+          // Badge already unlocked, return false
+          return false;
         };
 
         badges.add(badgeId);
         userProfiles.add(caller, { profile with unlockedBadges = badges });
+        // Newly unlocked, return true
+        return true;
       };
     };
   };
@@ -179,6 +448,57 @@ actor {
       case (null) { Runtime.trap("User profile does not exist") };
       case (?profile) { profile.unlockedBadges.toArray() };
     };
+  };
+
+  // BADGE LOGIC HELPERS
+  public shared ({ caller }) func unlockLoyaltyBadges(clanId : Text) : async [Text] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can unlock badges");
+    };
+
+    switch (userProfiles.get(caller)) {
+      case (null) { Runtime.trap("User profile does not exist") };
+      case (?profile) {
+        let badges = profile.unlockedBadges;
+        let newBadges = List.empty<Text>();
+
+        let loyaltyBadges = ["loyalty-general", "loyalty-warrior", "loyalty-mystic"];
+        let clanSpecificBadges = switch (clanId) {
+          case ("dawn") { ["dawn-loyalty", "dawn-warrior", "dawn-mystic"] };
+          case ("midnight") { ["midnight-loyalty", "midnight-warrior", "midnight-mystic"] };
+          case ("stone") { ["stone-loyalty", "stone-warrior", "stone-mystic"] };
+          case ("ironwood") { ["ironwood-loyalty", "ironwood-warrior", "ironwood-mystic"] };
+          case (_) { [] };
+        };
+
+        for (badge in loyaltyBadges.values()) {
+          if (not badges.any(func(b) { b == badge })) {
+            badges.add(badge);
+            newBadges.add(badge);
+          };
+        };
+
+        for (badge in clanSpecificBadges.values()) {
+          if (not badges.any(func(b) { b == badge })) {
+            badges.add(badge);
+            newBadges.add(badge);
+          };
+        };
+
+        userProfiles.add(caller, { profile with unlockedBadges = badges });
+        newBadges.toArray();
+      };
+    };
+  };
+
+  public shared ({ caller }) func useBadgeUnlockLogic(_quizResult : Text) : async [Text] {
+    if (not (AccessControl.hasPermission(accessControlState, caller, #user))) {
+      Runtime.trap("Unauthorized: Only users can unlock badges");
+    };
+
+    // For compatibility with original return type (Text) instead of Bool
+    let loyaltyBadges = await unlockLoyaltyBadges(_quizResult);
+    loyaltyBadges;
   };
 
   // EPISODE FUNCTIONS

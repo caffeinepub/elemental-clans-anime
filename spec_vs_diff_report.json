@@ -1,63 +1,28 @@
 {
   "kind": "spec_vs_diff_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T20:58:41.678Z",
-  "summary": "The diff implements all six requirements with high fidelity. Backend unlockBadge/getUnlockedBadges functions are added, all 13 badges are defined in badges.ts, badge unlock logic is present in useBadgeUnlockLogic.ts and QuizResultPage.tsx, ProfilePage.tsx shows a badges section with BadgeCard, toast notifications appear via BadgeUnlockToast, and useQueries.ts adds both hooks. Minor gaps include: clan loyalty majority-of-answers logic is not implemented, and quiz trait scores are derived from saved profile data rather than actual quiz answers.",
+  "generatedAt": "2026-02-27T19:44:14.901Z",
+  "summary": "The diff implements all 7 requirements. REQ-1 through REQ-7 are all addressed: backend types extended with status fields, admin endpoints added, migration.mo created, React Query hooks added, ContactMessagesPanel and FanMailPanel created, and AdminDashboard updated with sidebar integration and badge counts. Minor concerns exist around stable variable persistence verification and ID-based addressing for update/delete endpoints using list index vs stable ID.",
   "missing_requirements": [
     {
-      "id": "REQ-3",
-      "requirement": "Clan loyalty badges must be unlockable based on the majority of quiz answers belonging to a clan, not just the matched clan ID",
-      "reason": "The useBadgeUnlockLogic hook only checks result.matchedClanId to unlock clan badges. There is no majority-of-answers logic. The QuizResultPage builds traitScores from the saved matchedClanId rather than actual quiz answer data.",
+      "id": "REQ-2",
+      "requirement": "Data persists across canister upgrades via stable storage",
+      "reason": "The backend/main.mo diff shows contactMessages and fanMailEntries declared as regular let bindings (let contactMessages = List.empty<ContactMessage>()), not as stable variables. There is no explicit stable keyword visible on contactMessages or fanMailEntries in the truncated diff, raising concern about upgrade persistence.",
       "evidence": [
-        "frontend/src/hooks/useBadgeUnlockLogic.ts",
-        "frontend/src/pages/QuizResultPage.tsx"
+        "backend/main.mo"
       ]
     }
   ],
-  "hallucinated_features": [
-    {
-      "description": "backend/migration.mo — a separate migration module file was added to handle data type migration from array to List for unlockedBadges",
-      "reason": "The build request did not request a migration module. This is an implementation detail not specified in any requirement.",
-      "evidence": [
-        "backend/migration.mo"
-      ]
-    },
-    {
-      "description": "BadgeCard supports a configurable size prop with sm and md variants",
-      "reason": "The build request only required displaying badge icon, name, and tagline with locked/unlocked states. A configurable size prop was not requested.",
-      "evidence": [
-        "frontend/src/components/BadgeCard.tsx"
-      ]
-    },
-    {
-      "description": "BadgeUnlockToast supports staggered entrance delays by index position, delaying each toast by 200ms per index",
-      "reason": "The build request specified toast notifications for each newly unlocked badge but did not specify staggered entrance delays by index.",
-      "evidence": [
-        "frontend/src/components/BadgeUnlockToast.tsx"
-      ]
-    },
-    {
-      "description": "useUnlockBadge also invalidates the currentUserProfile query on success in addition to the unlockedBadges query",
-      "reason": "REQ-6 only specified that useUnlockBadge should invalidate the unlocked badges query on success. Invalidating currentUserProfile was not requested.",
-      "evidence": [
-        "frontend/src/hooks/useQueries.ts"
-      ]
-    }
-  ],
-  "confidence": 0.8,
+  "hallucinated_features": [],
+  "confidence": 0.72,
   "changed_files": [
     "backend/main.mo",
     "backend/migration.mo",
     "frontend-file-summaries.txt",
-    "frontend/src/App.tsx",
-    "frontend/src/components/BadgeCard.tsx",
-    "frontend/src/components/BadgeUnlockToast.tsx",
-    "frontend/src/data/badges.ts",
-    "frontend/src/hooks/useBadgeUnlockLogic.ts",
+    "frontend/src/components/admin/AdminDashboard.tsx",
+    "frontend/src/components/admin/panels/ContactMessagesPanel.tsx",
+    "frontend/src/components/admin/panels/FanMailPanel.tsx",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/index.css",
-    "frontend/src/pages/ProfilePage.tsx",
-    "frontend/src/pages/QuizResultPage.tsx",
     "project_state.json"
   ]
 }

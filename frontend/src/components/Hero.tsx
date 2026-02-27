@@ -1,10 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParticles } from '../hooks/useParticles';
+import { useNavigate } from '@tanstack/react-router';
+import { Sparkles } from 'lucide-react';
 
 export default function Hero() {
   const canvasRef = useParticles();
   const heroRef = useRef<HTMLDivElement>(null);
   const [titleVisible, setTitleVisible] = useState(false);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timer = setTimeout(() => setTitleVisible(true), 100);
@@ -141,6 +144,28 @@ export default function Hero() {
             className="cta-secondary font-rajdhani font-bold text-sm tracking-widest uppercase px-8 py-3"
           >
             Watch Episodes
+          </button>
+          {/* Take the Quiz CTA */}
+          <button
+            onClick={() => navigate({ to: '/quiz' })}
+            className="font-rajdhani font-bold text-sm tracking-widest uppercase px-8 py-3 rounded-lg transition-all duration-300 flex items-center justify-center gap-2"
+            style={{
+              background: 'linear-gradient(135deg, rgba(168,200,240,0.12) 0%, rgba(245,200,66,0.08) 100%)',
+              border: '1px solid rgba(168,200,240,0.35)',
+              color: '#a8c8f0',
+              boxShadow: '0 0 20px rgba(168,200,240,0.15)',
+            }}
+            onMouseEnter={e => {
+              (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 30px rgba(168,200,240,0.4), 0 0 60px rgba(168,200,240,0.15)';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(168,200,240,0.6)';
+            }}
+            onMouseLeave={e => {
+              (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 20px rgba(168,200,240,0.15)';
+              (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(168,200,240,0.35)';
+            }}
+          >
+            <Sparkles className="w-4 h-4" />
+            Take the Quiz
           </button>
         </div>
       </div>

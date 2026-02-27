@@ -24,6 +24,8 @@ import Admin from './pages/Admin';
 import Donation from './pages/Donation';
 import ProfilePage from './pages/ProfilePage';
 import QuizResultPage from './pages/QuizResultPage';
+import QuizPage from './pages/QuizPage';
+import ContactPage from './pages/ContactPage';
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -98,12 +100,26 @@ const quizResultRoute = createRoute({
   component: QuizResultPage,
 });
 
+const quizRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/quiz',
+  component: QuizPage,
+});
+
+const contactRoute = createRoute({
+  getParentRoute: () => rootRoute,
+  path: '/contact',
+  component: ContactPage,
+});
+
 const routeTree = rootRoute.addChildren([
   indexRoute,
   adminRoute,
   donateRoute,
   profileRoute,
   quizResultRoute,
+  quizRoute,
+  contactRoute,
 ]);
 
 const router = createRouter({ routeTree });

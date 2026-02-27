@@ -1,7 +1,7 @@
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query';
 import { useActor } from './useActor';
-import type { Episode, GalleryImage, Character, NewsEntry, Clan, UserProfileView } from '../backend';
-import { GalleryCategory, EpisodeStatus } from '../backend';
+import type { Episode, GalleryImage, Character, NewsEntry, Clan, UserProfileView, ContactMessage, FanMail } from '../backend';
+import { GalleryCategory, EpisodeStatus, ContactStatus } from '../backend';
 
 // ── User Profile ─────────────────────────────────────────────────────────────
 
@@ -81,6 +81,129 @@ export function useUnlockBadge() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['unlockedBadges'] });
       queryClient.invalidateQueries({ queryKey: ['currentUserProfile'] });
+    },
+  });
+}
+
+// ── Contact & Fan Mail (Public Submission) ────────────────────────────────────
+
+export function useSubmitContactMessage() {
+  const { actor } = useActor();
+
+  return useMutation({
+    mutationFn: async (params: {
+      name: string;
+      email: string;
+      subject: string;
+      message: string;
+    }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.submitContactMessage(params.name, params.email, params.subject, params.message);
+    },
+  });
+}
+
+export function useSubmitFanMail() {
+  const { actor } = useActor();
+
+  return useMutation({
+    mutationFn: async (params: {
+      username: string;
+      message: string;
+      emailOrSocial: string | null;
+    }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.submitFanMail(params.username, params.message, params.emailOrSocial);
+    },
+  });
+}
+
+// ── Contact Messages (Admin) ──────────────────────────────────────────────────
+
+export function useGetContactMessages() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<ContactMessage[]>({
+    queryKey: ['contactMessages'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllContactMessages();
+    },
+    enabled: !!actor && !actorFetching,
+  });
+}
+
+export function useUpdateContactMessageStatus() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (params: { id: number; status: ContactStatus }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.updateContactMessageStatus(BigInt(params.id), params.status);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['contactMessages'] });
+    },
+  });
+}
+
+export function useDeleteContactMessage() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.deleteContactMessage(BigInt(id));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['contactMessages'] });
+    },
+  });
+}
+
+// ── Fan Mail (Admin) ──────────────────────────────────────────────────────────
+
+export function useGetFanMailEntries() {
+  const { actor, isFetching: actorFetching } = useActor();
+
+  return useQuery<FanMail[]>({
+    queryKey: ['fanMail'],
+    queryFn: async () => {
+      if (!actor) return [];
+      return actor.getAllFanMail();
+    },
+    enabled: !!actor && !actorFetching,
+  });
+}
+
+export function useUpdateFanMailStatus() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (params: { id: number; status: ContactStatus }) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.updateFanMailStatus(BigInt(params.id), params.status);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['fanMail'] });
+    },
+  });
+}
+
+export function useDeleteFanMailEntry() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (id: number) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.deleteFanMail(BigInt(id));
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['fanMail'] });
     },
   });
 }
@@ -394,4 +517,4 @@ export function useUpdateClan() {
   });
 }
 
-export { EpisodeStatus, GalleryCategory };
+export { EpisodeStatus, GalleryCategory, ContactStatus };

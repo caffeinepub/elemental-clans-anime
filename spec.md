@@ -1,14 +1,16 @@
 # Specification
 
 ## Summary
-**Goal:** Implement a full badge system for Whispers Of The White Moon, allowing users to earn, store, and view badges based on their quiz results.
+**Goal:** Connect the Contact and Fan Mail submission forms to the Admin Panel with persistent storage, status tracking, and admin management capabilities.
 
 **Planned changes:**
-- Extend the backend `UserProfile` type to store a list of unlocked badge IDs, and add `unlockBadge(badgeId)` and `getUnlockedBadges()` backend functions
-- Add `useUnlockBadge` mutation hook and `useGetUnlockedBadges` query hook in `useQueries.ts`
-- Define all 13 badges in `frontend/src/data/badges.ts` with id, name, icon (emoji), tagline, category, and unlock condition metadata — covering Character Match (Shadow Seer, Wrath Guardian, Memory Keeper, Royal Strategist, Balance King), Clan Loyalty (Moon Clan Initiate, Flame Clan Vanguard, Water Clan Guardian, Sun Clan Noble, Balance Clan Chosen), and Rare/Secret (Eclipse Soul, Stormheart, Wild Card Spirit)
-- After quiz completion, evaluate and trigger badge unlocks based on: matched character, matched/majority clan, trait score combinations (Eclipse Soul = high Sun+Moon, Stormheart = high Water+Flame, Wild Card Spirit = evenly spread scores, Balance King = perfect balance)
-- Display a Badges section on the Profile page with three sub-sections (Character Match, Clan Loyalty, Rare & Secret); unlocked badges show with full color and themed/golden glow, locked badges appear dimmed with a lock overlay
-- Show a toast/notification for each newly unlocked badge after quiz completion, with a more dramatic animation for rare badges
+- Add a `status` field (`#new`, `#read`, `#replied`) to the `ContactMessage` and `FanMail` backend types, defaulting to `#new` on creation
+- Add admin-gated backend endpoints to retrieve, update status, and delete ContactMessages and FanMail entries
+- Store ContactMessage and FanMail data in stable variables to survive canister upgrades
+- Create a migration to add `status = #new` to any existing stored entries without data loss
+- Add React Query hooks for fetching, updating status, and deleting contact messages and fan mail entries
+- Create a `ContactMessagesPanel` component displaying sender name, email, message content, date/time, and color-coded status badge (amber = New, blue = Read, green = Replied) with status change and delete actions
+- Create a `FanMailPanel` component with the same columns, status badges, and admin actions
+- Integrate both panels into the `AdminDashboard` sidebar as new navigation items ("Contact Messages" and "Fan Mail") with a badge showing the count of unread (New) entries
 
-**User-visible outcome:** After completing the quiz, authenticated users automatically earn badges based on their results and see celebratory notifications. All 13 badges are visible on the profile page, with locked badges shown in a dimmed state to encourage retaking the quiz.
+**User-visible outcome:** Admins can view all submitted contact form messages and fan mail in the Admin Panel, change their status (New → Read → Replied), and delete entries. Message counts for unread items appear as badges in the sidebar. All data persists across page refreshes and canister upgrades.

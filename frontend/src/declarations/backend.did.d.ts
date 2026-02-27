@@ -25,6 +25,17 @@ export interface Clan {
   'description' : string,
   'symbol' : string,
 }
+export interface ContactMessage {
+  'status' : ContactStatus,
+  'subject' : string,
+  'name' : string,
+  'submittedAt' : Time,
+  'email' : string,
+  'message' : string,
+}
+export type ContactStatus = { 'new' : null } |
+  { 'read' : null } |
+  { 'replied' : null };
 export interface Episode {
   'id' : EpisodeId,
   'status' : EpisodeStatus,
@@ -41,6 +52,13 @@ export type EpisodeNumber = bigint;
 export type EpisodeStatus = { 'InProduction' : null } |
   { 'Released' : null } |
   { 'ComingSoon' : null };
+export interface FanMail {
+  'status' : ContactStatus,
+  'username' : string,
+  'submittedAt' : Time,
+  'message' : string,
+  'emailOrSocial' : [] | [string],
+}
 export type GalleryCategory = { 'FightScenes' : null } |
   { 'ConceptArt' : null } |
   { 'CharacterDesigns' : null };
@@ -108,13 +126,24 @@ export interface _SERVICE {
   'addGalleryImage' : ActorMethod<[GalleryImage], undefined>,
   'addNewsEntry' : ActorMethod<[NewsEntry], undefined>,
   'assignCallerUserRole' : ActorMethod<[Principal, UserRole], undefined>,
+  'clearAllContactMessages' : ActorMethod<[], undefined>,
+  'clearAllFanMail' : ActorMethod<[], undefined>,
   'deleteCharacter' : ActorMethod<[string], undefined>,
+  'deleteContactMessage' : ActorMethod<[bigint], undefined>,
   'deleteEpisode' : ActorMethod<[string], undefined>,
+  'deleteFanMail' : ActorMethod<[bigint], undefined>,
   'deleteGalleryImage' : ActorMethod<[string], undefined>,
   'deleteNewsEntry' : ActorMethod<[string], undefined>,
+  'filterContactsByStatus' : ActorMethod<
+    [ContactStatus],
+    Array<ContactMessage>
+  >,
+  'filterFanMailByStatus' : ActorMethod<[ContactStatus], Array<FanMail>>,
   'getAllCharacters' : ActorMethod<[], Array<Character>>,
   'getAllClans' : ActorMethod<[], Array<Clan>>,
+  'getAllContactMessages' : ActorMethod<[], Array<ContactMessage>>,
   'getAllEpisodes' : ActorMethod<[], Array<Episode>>,
+  'getAllFanMail' : ActorMethod<[], Array<FanMail>>,
   'getAllGalleryImages' : ActorMethod<[], Array<GalleryImage>>,
   'getAllNewsEntries' : ActorMethod<[], Array<NewsEntry>>,
   'getCallerUserProfile' : ActorMethod<[], [] | [UserProfileView]>,
@@ -124,6 +153,10 @@ export interface _SERVICE {
   'getClan' : ActorMethod<[string], [] | [Clan]>,
   'getClanCount' : ActorMethod<[], bigint>,
   'getClansByColor' : ActorMethod<[string], Array<Clan>>,
+  'getContactMessageStats' : ActorMethod<
+    [],
+    { 'new' : bigint, 'total' : bigint, 'read' : bigint, 'replied' : bigint }
+  >,
   'getEpisode' : ActorMethod<[string], [] | [Episode]>,
   'getEpisodeCount' : ActorMethod<[], bigint>,
   'getEpisodesByStatus' : ActorMethod<[EpisodeStatus], Array<Episode>>,
@@ -143,12 +176,24 @@ export interface _SERVICE {
   'saveCallerUserProfile' : ActorMethod<[UserProfileView], undefined>,
   'searchCharactersByName' : ActorMethod<[string], Array<Character>>,
   'searchEpisodes' : ActorMethod<[string], Array<Episode>>,
-  'unlockBadge' : ActorMethod<[string], undefined>,
+  'submitContactMessage' : ActorMethod<
+    [string, string, string, string],
+    undefined
+  >,
+  'submitFanMail' : ActorMethod<[string, string, [] | [string]], undefined>,
+  'unlockBadge' : ActorMethod<[string], boolean>,
+  'unlockLoyaltyBadges' : ActorMethod<[string], Array<string>>,
   'updateCharacter' : ActorMethod<[Character], undefined>,
   'updateClan' : ActorMethod<[Clan], undefined>,
+  'updateContactMessageStatus' : ActorMethod<
+    [bigint, ContactStatus],
+    undefined
+  >,
   'updateEpisode' : ActorMethod<[Episode], undefined>,
+  'updateFanMailStatus' : ActorMethod<[bigint, ContactStatus], undefined>,
   'updateGalleryImage' : ActorMethod<[GalleryImage], undefined>,
   'updateNewsEntry' : ActorMethod<[NewsEntry], undefined>,
+  'useBadgeUnlockLogic' : ActorMethod<[string], Array<string>>,
 }
 export declare const idlService: IDL.ServiceClass;
 export declare const idlInitArgs: IDL.Type[];

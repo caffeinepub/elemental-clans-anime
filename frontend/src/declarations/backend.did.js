@@ -84,6 +84,26 @@ export const UserRole = IDL.Variant({
   'user' : IDL.Null,
   'guest' : IDL.Null,
 });
+export const ContactStatus = IDL.Variant({
+  'new' : IDL.Null,
+  'read' : IDL.Null,
+  'replied' : IDL.Null,
+});
+export const ContactMessage = IDL.Record({
+  'status' : ContactStatus,
+  'subject' : IDL.Text,
+  'name' : IDL.Text,
+  'submittedAt' : Time,
+  'email' : IDL.Text,
+  'message' : IDL.Text,
+});
+export const FanMail = IDL.Record({
+  'status' : ContactStatus,
+  'username' : IDL.Text,
+  'submittedAt' : Time,
+  'message' : IDL.Text,
+  'emailOrSocial' : IDL.Opt(IDL.Text),
+});
 export const UserProfileView = IDL.Record({
   'matchedClanId' : IDL.Opt(IDL.Text),
   'username' : IDL.Text,
@@ -126,13 +146,29 @@ export const idlService = IDL.Service({
   'addGalleryImage' : IDL.Func([GalleryImage], [], []),
   'addNewsEntry' : IDL.Func([NewsEntry], [], []),
   'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+  'clearAllContactMessages' : IDL.Func([], [], []),
+  'clearAllFanMail' : IDL.Func([], [], []),
   'deleteCharacter' : IDL.Func([IDL.Text], [], []),
+  'deleteContactMessage' : IDL.Func([IDL.Nat], [], []),
   'deleteEpisode' : IDL.Func([IDL.Text], [], []),
+  'deleteFanMail' : IDL.Func([IDL.Nat], [], []),
   'deleteGalleryImage' : IDL.Func([IDL.Text], [], []),
   'deleteNewsEntry' : IDL.Func([IDL.Text], [], []),
+  'filterContactsByStatus' : IDL.Func(
+      [ContactStatus],
+      [IDL.Vec(ContactMessage)],
+      ['query'],
+    ),
+  'filterFanMailByStatus' : IDL.Func(
+      [ContactStatus],
+      [IDL.Vec(FanMail)],
+      ['query'],
+    ),
   'getAllCharacters' : IDL.Func([], [IDL.Vec(Character)], ['query']),
   'getAllClans' : IDL.Func([], [IDL.Vec(Clan)], ['query']),
+  'getAllContactMessages' : IDL.Func([], [IDL.Vec(ContactMessage)], ['query']),
   'getAllEpisodes' : IDL.Func([], [IDL.Vec(Episode)], ['query']),
+  'getAllFanMail' : IDL.Func([], [IDL.Vec(FanMail)], ['query']),
   'getAllGalleryImages' : IDL.Func([], [IDL.Vec(GalleryImage)], ['query']),
   'getAllNewsEntries' : IDL.Func([], [IDL.Vec(NewsEntry)], ['query']),
   'getCallerUserProfile' : IDL.Func([], [IDL.Opt(UserProfileView)], ['query']),
@@ -142,6 +178,18 @@ export const idlService = IDL.Service({
   'getClan' : IDL.Func([IDL.Text], [IDL.Opt(Clan)], ['query']),
   'getClanCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getClansByColor' : IDL.Func([IDL.Text], [IDL.Vec(Clan)], ['query']),
+  'getContactMessageStats' : IDL.Func(
+      [],
+      [
+        IDL.Record({
+          'new' : IDL.Nat,
+          'total' : IDL.Nat,
+          'read' : IDL.Nat,
+          'replied' : IDL.Nat,
+        }),
+      ],
+      ['query'],
+    ),
   'getEpisode' : IDL.Func([IDL.Text], [IDL.Opt(Episode)], ['query']),
   'getEpisodeCount' : IDL.Func([], [IDL.Nat], ['query']),
   'getEpisodesByStatus' : IDL.Func(
@@ -178,12 +226,22 @@ export const idlService = IDL.Service({
       ['query'],
     ),
   'searchEpisodes' : IDL.Func([IDL.Text], [IDL.Vec(Episode)], ['query']),
-  'unlockBadge' : IDL.Func([IDL.Text], [], []),
+  'submitContactMessage' : IDL.Func(
+      [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+      [],
+      [],
+    ),
+  'submitFanMail' : IDL.Func([IDL.Text, IDL.Text, IDL.Opt(IDL.Text)], [], []),
+  'unlockBadge' : IDL.Func([IDL.Text], [IDL.Bool], []),
+  'unlockLoyaltyBadges' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Text)], []),
   'updateCharacter' : IDL.Func([Character], [], []),
   'updateClan' : IDL.Func([Clan], [], []),
+  'updateContactMessageStatus' : IDL.Func([IDL.Nat, ContactStatus], [], []),
   'updateEpisode' : IDL.Func([Episode], [], []),
+  'updateFanMailStatus' : IDL.Func([IDL.Nat, ContactStatus], [], []),
   'updateGalleryImage' : IDL.Func([GalleryImage], [], []),
   'updateNewsEntry' : IDL.Func([NewsEntry], [], []),
+  'useBadgeUnlockLogic' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Text)], []),
 });
 
 export const idlInitArgs = [];
@@ -265,6 +323,26 @@ export const idlFactory = ({ IDL }) => {
     'user' : IDL.Null,
     'guest' : IDL.Null,
   });
+  const ContactStatus = IDL.Variant({
+    'new' : IDL.Null,
+    'read' : IDL.Null,
+    'replied' : IDL.Null,
+  });
+  const ContactMessage = IDL.Record({
+    'status' : ContactStatus,
+    'subject' : IDL.Text,
+    'name' : IDL.Text,
+    'submittedAt' : Time,
+    'email' : IDL.Text,
+    'message' : IDL.Text,
+  });
+  const FanMail = IDL.Record({
+    'status' : ContactStatus,
+    'username' : IDL.Text,
+    'submittedAt' : Time,
+    'message' : IDL.Text,
+    'emailOrSocial' : IDL.Opt(IDL.Text),
+  });
   const UserProfileView = IDL.Record({
     'matchedClanId' : IDL.Opt(IDL.Text),
     'username' : IDL.Text,
@@ -307,13 +385,33 @@ export const idlFactory = ({ IDL }) => {
     'addGalleryImage' : IDL.Func([GalleryImage], [], []),
     'addNewsEntry' : IDL.Func([NewsEntry], [], []),
     'assignCallerUserRole' : IDL.Func([IDL.Principal, UserRole], [], []),
+    'clearAllContactMessages' : IDL.Func([], [], []),
+    'clearAllFanMail' : IDL.Func([], [], []),
     'deleteCharacter' : IDL.Func([IDL.Text], [], []),
+    'deleteContactMessage' : IDL.Func([IDL.Nat], [], []),
     'deleteEpisode' : IDL.Func([IDL.Text], [], []),
+    'deleteFanMail' : IDL.Func([IDL.Nat], [], []),
     'deleteGalleryImage' : IDL.Func([IDL.Text], [], []),
     'deleteNewsEntry' : IDL.Func([IDL.Text], [], []),
+    'filterContactsByStatus' : IDL.Func(
+        [ContactStatus],
+        [IDL.Vec(ContactMessage)],
+        ['query'],
+      ),
+    'filterFanMailByStatus' : IDL.Func(
+        [ContactStatus],
+        [IDL.Vec(FanMail)],
+        ['query'],
+      ),
     'getAllCharacters' : IDL.Func([], [IDL.Vec(Character)], ['query']),
     'getAllClans' : IDL.Func([], [IDL.Vec(Clan)], ['query']),
+    'getAllContactMessages' : IDL.Func(
+        [],
+        [IDL.Vec(ContactMessage)],
+        ['query'],
+      ),
     'getAllEpisodes' : IDL.Func([], [IDL.Vec(Episode)], ['query']),
+    'getAllFanMail' : IDL.Func([], [IDL.Vec(FanMail)], ['query']),
     'getAllGalleryImages' : IDL.Func([], [IDL.Vec(GalleryImage)], ['query']),
     'getAllNewsEntries' : IDL.Func([], [IDL.Vec(NewsEntry)], ['query']),
     'getCallerUserProfile' : IDL.Func(
@@ -327,6 +425,18 @@ export const idlFactory = ({ IDL }) => {
     'getClan' : IDL.Func([IDL.Text], [IDL.Opt(Clan)], ['query']),
     'getClanCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getClansByColor' : IDL.Func([IDL.Text], [IDL.Vec(Clan)], ['query']),
+    'getContactMessageStats' : IDL.Func(
+        [],
+        [
+          IDL.Record({
+            'new' : IDL.Nat,
+            'total' : IDL.Nat,
+            'read' : IDL.Nat,
+            'replied' : IDL.Nat,
+          }),
+        ],
+        ['query'],
+      ),
     'getEpisode' : IDL.Func([IDL.Text], [IDL.Opt(Episode)], ['query']),
     'getEpisodeCount' : IDL.Func([], [IDL.Nat], ['query']),
     'getEpisodesByStatus' : IDL.Func(
@@ -367,12 +477,22 @@ export const idlFactory = ({ IDL }) => {
         ['query'],
       ),
     'searchEpisodes' : IDL.Func([IDL.Text], [IDL.Vec(Episode)], ['query']),
-    'unlockBadge' : IDL.Func([IDL.Text], [], []),
+    'submitContactMessage' : IDL.Func(
+        [IDL.Text, IDL.Text, IDL.Text, IDL.Text],
+        [],
+        [],
+      ),
+    'submitFanMail' : IDL.Func([IDL.Text, IDL.Text, IDL.Opt(IDL.Text)], [], []),
+    'unlockBadge' : IDL.Func([IDL.Text], [IDL.Bool], []),
+    'unlockLoyaltyBadges' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Text)], []),
     'updateCharacter' : IDL.Func([Character], [], []),
     'updateClan' : IDL.Func([Clan], [], []),
+    'updateContactMessageStatus' : IDL.Func([IDL.Nat, ContactStatus], [], []),
     'updateEpisode' : IDL.Func([Episode], [], []),
+    'updateFanMailStatus' : IDL.Func([IDL.Nat, ContactStatus], [], []),
     'updateGalleryImage' : IDL.Func([GalleryImage], [], []),
     'updateNewsEntry' : IDL.Func([NewsEntry], [], []),
+    'useBadgeUnlockLogic' : IDL.Func([IDL.Text], [IDL.Vec(IDL.Text)], []),
   });
 };
 

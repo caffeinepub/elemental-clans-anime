@@ -2,52 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-expand-the-static-badge-data-in-frontend-src-data-badges-ts-to-include-all-13-badges-character-match-badges-shadow-seer-wrath-guardian-memory-keeper-royal-strategist-balance-king-clan-loyalty-badges-moon-clan-initiate-flame-clan-vanguard-water-clan-guardian-sun-clan-noble-balance-clan-chosen-and-rare-secret-badges-eclipse-soul-stormheart-wild-card-spirit-each-badge-must-have-id-name-icon-emoji-tagline-description-category-character-clan-rare-and-unlock-condition-metadata-e-g-requiredcharacterid-requiredclanid-or-unlockrule-for-rare-badges",
-      "featureTitle": "Expand the static badge data in `frontend/src/data/badges.ts` to include all 13 badges: Character Match Badges (Shadow Seer, Wrath Guardian, Memory Keeper, Royal Strategist, Balance King), Clan Loyalty Badges (Moon Clan Initiate, Flame Clan Vanguard, Water Clan Guardian, Sun Clan Noble, Balance Clan Chosen), and Rare/Secret Badges (Eclipse Soul, Stormheart, Wild Card Spirit). Each badge must have: id, name, icon (emoji), tagline/description, category ('character' | 'clan' | 'rare'), and unlock condition metadata (e.g., requiredCharacterId, requiredClanId, or unlockRule for rare badges).",
+      "featureId": "feature-add-react-query-hooks-in-frontend-src-hooks-usequeries-ts-for-fetching-all-contact-messages-admin-fetching-all-fan-mail-entries-admin-updating-message-fan-mail-status-and-deleting-message-fan-mail-entries",
+      "featureTitle": "Add React Query hooks in `frontend/src/hooks/useQueries.ts` for: fetching all contact messages (admin), fetching all fan mail entries (admin), updating message/fan mail status, and deleting message/fan mail entries.",
       "files": [
-        "frontend/src/data/badges.ts"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-2"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-add-badge-unlock-logic-to-the-frontend-quiz-result-flow-after-a-quiz-result-is-determined-evaluate-which-badges-the-user-has-earned-and-call-the-backend-unlockbadge-mutation-for-each-earned-badge-logic-must-check-1-character-match-if-the-matched-character-corresponds-to-a-badge-unlock-it-2-clan-loyalty-if-the-matched-clan-or-the-majority-of-answers-belong-to-a-clan-unlock-the-corresponding-clan-badge-3-rare-secret-eclipse-soul-if-both-sun-and-moon-trait-scores-are-high-stormheart-if-both-water-and-flame-trait-scores-are-high-wild-card-spirit-if-all-trait-scores-are-within-a-close-range-of-each-other-also-unlock-balance-king-if-the-quiz-result-is-a-perfect-balance-across-all-traits",
-      "featureTitle": "Add badge unlock logic to the frontend quiz result flow. After a quiz result is determined, evaluate which badges the user has earned and call the backend `unlockBadge` mutation for each earned badge. Logic must check: (1) Character Match — if the matched character corresponds to a badge, unlock it; (2) Clan Loyalty — if the matched clan or the majority of answers belong to a clan, unlock the corresponding clan badge; (3) Rare/Secret — Eclipse Soul if both Sun and Moon trait scores are high, Stormheart if both Water and Flame trait scores are high, Wild Card Spirit if all trait scores are within a close range of each other. Also unlock Balance King if the quiz result is a perfect balance across all traits.",
-      "files": [
-        "frontend/src/hooks/useBadgeUnlockLogic.ts",
-        "frontend/src/pages/QuizResultPage.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-3"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-display-earned-badges-on-the-user-s-profile-page-frontend-src-pages-profilepage-tsx-show-a-badges-section-with-three-sub-sections-character-match-badges-clan-loyalty-badges-and-rare-secret-badges-for-each-badge-display-its-icon-name-and-tagline-locked-badges-should-appear-dimmed-greyed-out-with-a-lock-icon-overlay-so-users-can-see-what-they-haven-t-earned-yet-encouraging-re-engagement-unlocked-badges-should-be-visually-highlighted-with-the-clan-s-themed-glow-color-or-a-golden-glow-for-rare-badges",
-      "featureTitle": "Display earned badges on the user's profile page (`frontend/src/pages/ProfilePage.tsx`). Show a badges section with three sub-sections: Character Match Badges, Clan Loyalty Badges, and Rare & Secret Badges. For each badge, display its icon, name, and tagline. Locked badges should appear dimmed/greyed out with a lock icon overlay so users can see what they haven't earned yet (encouraging re-engagement). Unlocked badges should be visually highlighted with the clan's themed glow color or a golden glow for rare badges.",
-      "files": [
-        "frontend/src/components/BadgeCard.tsx",
-        "frontend/src/pages/ProfilePage.tsx"
+        "frontend/src/hooks/useQueries.ts"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -64,11 +22,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-after-a-quiz-result-is-processed-and-badges-are-unlocked-display-a-badge-unlock-celebration-notification-to-the-user-for-each-newly-earned-badge-show-a-styled-toast-or-modal-pop-up-with-the-badge-s-icon-name-and-tagline-rare-badge-unlocks-should-have-a-more-dramatic-reveal-animation-e-g-shimmer-or-pulse-effect",
-      "featureTitle": "After a quiz result is processed and badges are unlocked, display a badge unlock celebration/notification to the user. For each newly earned badge, show a styled toast or modal pop-up with the badge's icon, name, and tagline. Rare badge unlocks should have a more dramatic reveal animation (e.g., shimmer or pulse effect).",
+      "featureId": "feature-create-a-new-contactmessagespanel-component-at-frontend-src-components-admin-panels-contactmessagespanel-tsx-display-all-submitted-contact-form-messages-in-a-table-list-with-columns-sender-name-email-message-content-date-time-received-and-status-allow-admins-to-change-the-status-new-read-replied-via-a-dropdown-or-button-and-delete-individual-messages-the-status-badge-should-be-color-coded-new-amber-yellow-read-blue-replied-green",
+      "featureTitle": "Create a new `ContactMessagesPanel` component at `frontend/src/components/admin/panels/ContactMessagesPanel.tsx`. Display all submitted contact form messages in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status (New → Read → Replied) via a dropdown or button, and delete individual messages. The status badge should be color-coded: New = amber/yellow, Read = blue, Replied = green.",
       "files": [
-        "frontend/src/components/BadgeUnlockToast.tsx",
-        "frontend/src/pages/QuizResultPage.tsx"
+        "frontend/src/components/admin/panels/ContactMessagesPanel.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -85,10 +42,10 @@
       "confidence": "high"
     },
     {
-      "featureId": "feature-add-a-useunlockbadge-mutation-hook-and-a-usegetunlockedbadges-query-hook-to-frontend-src-hooks-usequeries-ts-wired-to-the-new-backend-unlockbadge-and-getunlockedbadges-functions-respectively",
-      "featureTitle": "Add a `useUnlockBadge` mutation hook and a `useGetUnlockedBadges` query hook to `frontend/src/hooks/useQueries.ts`, wired to the new backend `unlockBadge` and `getUnlockedBadges` functions respectively.",
+      "featureId": "feature-create-a-new-fanmailpanel-component-at-frontend-src-components-admin-panels-fanmailpanel-tsx-display-all-submitted-fan-mail-entries-in-a-table-list-with-columns-sender-name-email-message-content-date-time-received-and-status-allow-admins-to-change-the-status-and-delete-individual-entries-with-the-same-color-coded-status-badge-system-as-the-contactmessagespanel",
+      "featureTitle": "Create a new `FanMailPanel` component at `frontend/src/components/admin/panels/FanMailPanel.tsx`. Display all submitted fan mail entries in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status and delete individual entries, with the same color-coded status badge system as the ContactMessagesPanel.",
       "files": [
-        "frontend/src/hooks/useQueries.ts"
+        "frontend/src/components/admin/panels/FanMailPanel.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -101,6 +58,26 @@
       ],
       "testIds": [
         "REQ-6"
+      ],
+      "confidence": "high"
+    },
+    {
+      "featureId": "feature-integrate-the-contactmessagespanel-and-fanmailpanel-into-the-admindashboard-sidebar-navigation-frontend-src-components-admin-admindashboard-tsx-add-contact-messages-and-fan-mail-as-new-navigation-items-in-the-sidebar-and-render-the-corresponding-panel-when-each-item-is-selected-show-a-badge-count-of-unread-status-new-messages-next-to-each-sidebar-label",
+      "featureTitle": "Integrate the `ContactMessagesPanel` and `FanMailPanel` into the `AdminDashboard` sidebar navigation (`frontend/src/components/admin/AdminDashboard.tsx`). Add 'Contact Messages' and 'Fan Mail' as new navigation items in the sidebar, and render the corresponding panel when each item is selected. Show a badge count of unread (status = New) messages next to each sidebar label.",
+      "files": [
+        "frontend/src/components/admin/AdminDashboard.tsx"
+      ],
+      "components": [
+        "core-infrastructure@1.0.2",
+        "shadcn-ui@1.0.0",
+        "build-template-react@1.0.0",
+        "initial-app@1.0.0",
+        "github-export-icp-cli@1.0.0",
+        "blob-storage@4.0.0",
+        "authorization@4.0.0"
+      ],
+      "testIds": [
+        "REQ-7"
       ],
       "confidence": "high"
     }

@@ -27,14 +27,15 @@ export interface Episode {
     number: EpisodeNumber;
     releaseDate?: Time;
 }
-export interface Clan {
-    id: string;
-    primaryColor: string;
-    name: string;
-    description: string;
-    symbol: string;
-}
 export type EpisodeNumber = bigint;
+export interface ContactMessage {
+    status: ContactStatus;
+    subject: string;
+    name: string;
+    submittedAt: Time;
+    email: string;
+    message: string;
+}
 export interface NewsEntry {
     id: string;
     title: string;
@@ -51,6 +52,13 @@ export interface GalleryImage {
     category: GalleryCategory;
     altText: string;
 }
+export interface Clan {
+    id: string;
+    primaryColor: string;
+    name: string;
+    description: string;
+    symbol: string;
+}
 export interface UserProfileView {
     matchedClanId?: string;
     username: string;
@@ -58,7 +66,19 @@ export interface UserProfileView {
     unlockedBadges: Array<string>;
     avatarUrl: string;
 }
+export interface FanMail {
+    status: ContactStatus;
+    username: string;
+    submittedAt: Time;
+    message: string;
+    emailOrSocial?: string;
+}
 export type EpisodeId = string;
+export enum ContactStatus {
+    new_ = "new",
+    read = "read",
+    replied = "replied"
+}
 export enum EpisodeStatus {
     InProduction = "InProduction",
     Released = "Released",
@@ -86,13 +106,21 @@ export interface backendInterface {
     addGalleryImage(image: GalleryImage): Promise<void>;
     addNewsEntry(entry: NewsEntry): Promise<void>;
     assignCallerUserRole(user: Principal, role: UserRole): Promise<void>;
+    clearAllContactMessages(): Promise<void>;
+    clearAllFanMail(): Promise<void>;
     deleteCharacter(id: string): Promise<void>;
+    deleteContactMessage(id: bigint): Promise<void>;
     deleteEpisode(id: string): Promise<void>;
+    deleteFanMail(id: bigint): Promise<void>;
     deleteGalleryImage(id: string): Promise<void>;
     deleteNewsEntry(id: string): Promise<void>;
+    filterContactsByStatus(status: ContactStatus): Promise<Array<ContactMessage>>;
+    filterFanMailByStatus(status: ContactStatus): Promise<Array<FanMail>>;
     getAllCharacters(): Promise<Array<Character>>;
     getAllClans(): Promise<Array<Clan>>;
+    getAllContactMessages(): Promise<Array<ContactMessage>>;
     getAllEpisodes(): Promise<Array<Episode>>;
+    getAllFanMail(): Promise<Array<FanMail>>;
     getAllGalleryImages(): Promise<Array<GalleryImage>>;
     getAllNewsEntries(): Promise<Array<NewsEntry>>;
     getCallerUserProfile(): Promise<UserProfileView | null>;
@@ -102,6 +130,12 @@ export interface backendInterface {
     getClan(id: string): Promise<Clan | null>;
     getClanCount(): Promise<bigint>;
     getClansByColor(color: string): Promise<Array<Clan>>;
+    getContactMessageStats(): Promise<{
+        new: bigint;
+        total: bigint;
+        read: bigint;
+        replied: bigint;
+    }>;
     getEpisode(id: string): Promise<Episode | null>;
     getEpisodeCount(): Promise<bigint>;
     getEpisodesByStatus(status: EpisodeStatus): Promise<Array<Episode>>;
@@ -118,10 +152,16 @@ export interface backendInterface {
     saveCallerUserProfile(profile: UserProfileView): Promise<void>;
     searchCharactersByName(searchTerm: string): Promise<Array<Character>>;
     searchEpisodes(searchTerm: string): Promise<Array<Episode>>;
-    unlockBadge(badgeId: string): Promise<void>;
+    submitContactMessage(name: string, email: string, subject: string, message: string): Promise<void>;
+    submitFanMail(username: string, message: string, emailOrSocial: string | null): Promise<void>;
+    unlockBadge(badgeId: string): Promise<boolean>;
+    unlockLoyaltyBadges(clanId: string): Promise<Array<string>>;
     updateCharacter(character: Character): Promise<void>;
     updateClan(clan: Clan): Promise<void>;
+    updateContactMessageStatus(id: bigint, newStatus: ContactStatus): Promise<void>;
     updateEpisode(episode: Episode): Promise<void>;
+    updateFanMailStatus(id: bigint, newStatus: ContactStatus): Promise<void>;
     updateGalleryImage(image: GalleryImage): Promise<void>;
     updateNewsEntry(entry: NewsEntry): Promise<void>;
+    useBadgeUnlockLogic(_quizResult: string): Promise<Array<string>>;
 }

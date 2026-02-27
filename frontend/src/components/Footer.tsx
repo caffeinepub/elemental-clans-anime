@@ -89,6 +89,26 @@ export default function Footer() {
                   </button>
                 </li>
               ))}
+              {/* Contact page link */}
+              <li>
+                <Link
+                  to="/contact"
+                  className="font-rajdhani text-sm text-silver/50 hover:text-moon-blue transition-all duration-300 tracking-wider relative group inline-block"
+                >
+                  Contact
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-moon-blue transition-all duration-300 group-hover:w-full" />
+                </Link>
+              </li>
+              {/* Donate page link */}
+              <li>
+                <Link
+                  to="/donate"
+                  className="font-rajdhani text-sm text-silver/50 hover:text-fiery-gold transition-all duration-300 tracking-wider relative group inline-block"
+                >
+                  Donate
+                  <span className="absolute -bottom-0.5 left-0 w-0 h-px bg-fiery-gold transition-all duration-300 group-hover:w-full" />
+                </Link>
+              </li>
             </ul>
           </div>
 

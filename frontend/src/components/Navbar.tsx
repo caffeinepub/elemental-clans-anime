@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef } from 'react';
-import { Menu, X, Moon, User } from 'lucide-react';
-import { Link } from '@tanstack/react-router';
+import { Menu, X, Moon, User, Sparkles, Mail } from 'lucide-react';
+import { Link, useNavigate } from '@tanstack/react-router';
 import { useInternetIdentity } from '../hooks/useInternetIdentity';
 
 const navLinks = [
@@ -24,6 +24,7 @@ export default function Navbar() {
   const navLinksRef = useRef<(HTMLAnchorElement | null)[]>([]);
   const { identity } = useInternetIdentity();
   const isAuthenticated = !!identity;
+  const navigate = useNavigate();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -68,6 +69,16 @@ export default function Navbar() {
     setMenuOpen(false);
   };
 
+  const handleQuizClick = () => {
+    navigate({ to: '/quiz' });
+    setMenuOpen(false);
+  };
+
+  const handleContactClick = () => {
+    navigate({ to: '/contact' });
+    setMenuOpen(false);
+  };
+
   return (
     <nav
       className={`fixed top-0 left-0 right-0 z-50 transition-all duration-500 ${
@@ -108,6 +119,54 @@ export default function Navbar() {
               </a>
             ))}
 
+            {/* Take the Quiz link */}
+            <button
+              onClick={handleQuizClick}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-rajdhani font-semibold tracking-widest uppercase transition-all duration-300 rounded-md ml-1"
+              style={{
+                background: 'rgba(168,200,240,0.08)',
+                border: '1px solid rgba(168,200,240,0.25)',
+                color: '#a8c8f0',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(168,200,240,0.15)';
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(168,200,240,0.5)';
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 12px rgba(168,200,240,0.25)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(168,200,240,0.08)';
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(168,200,240,0.25)';
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
+              }}
+            >
+              <Sparkles className="w-3 h-3" />
+              Quiz
+            </button>
+
+            {/* Contact link */}
+            <button
+              onClick={handleContactClick}
+              className="flex items-center gap-1.5 px-3 py-1.5 text-xs font-rajdhani font-semibold tracking-widest uppercase transition-all duration-300 rounded-md ml-1"
+              style={{
+                background: 'rgba(251,191,36,0.06)',
+                border: '1px solid rgba(251,191,36,0.2)',
+                color: 'oklch(0.82 0.12 60)',
+              }}
+              onMouseEnter={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(251,191,36,0.12)';
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(251,191,36,0.45)';
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = '0 0 12px rgba(251,191,36,0.2)';
+              }}
+              onMouseLeave={e => {
+                (e.currentTarget as HTMLButtonElement).style.background = 'rgba(251,191,36,0.06)';
+                (e.currentTarget as HTMLButtonElement).style.borderColor = 'rgba(251,191,36,0.2)';
+                (e.currentTarget as HTMLButtonElement).style.boxShadow = 'none';
+              }}
+            >
+              <Mail className="w-3 h-3" />
+              Contact
+            </button>
+
             {/* Profile link — authenticated only */}
             {isAuthenticated && (
               <Link
@@ -143,7 +202,7 @@ export default function Navbar() {
       {/* Mobile menu */}
       <div
         className={`md:hidden mobile-menu-glass overflow-hidden transition-all duration-400 ease-in-out ${
-          menuOpen ? 'max-h-[28rem] opacity-100' : 'max-h-0 opacity-0'
+          menuOpen ? 'max-h-[36rem] opacity-100' : 'max-h-0 opacity-0'
         }`}
       >
         <div className="px-4 py-3 flex flex-col gap-1">
@@ -161,6 +220,34 @@ export default function Navbar() {
               {link.label}
             </a>
           ))}
+
+          {/* Take the Quiz — mobile */}
+          <button
+            onClick={handleQuizClick}
+            className="flex items-center gap-2 px-3 py-2 text-sm font-rajdhani font-semibold tracking-widest uppercase transition-colors duration-200 rounded text-left"
+            style={{
+              background: 'rgba(168,200,240,0.08)',
+              border: '1px solid rgba(168,200,240,0.2)',
+              color: '#a8c8f0',
+            }}
+          >
+            <Sparkles className="w-4 h-4" />
+            Take the Quiz
+          </button>
+
+          {/* Contact — mobile */}
+          <button
+            onClick={handleContactClick}
+            className="flex items-center gap-2 px-3 py-2 text-sm font-rajdhani font-semibold tracking-widest uppercase transition-colors duration-200 rounded text-left"
+            style={{
+              background: 'rgba(251,191,36,0.06)',
+              border: '1px solid rgba(251,191,36,0.2)',
+              color: 'oklch(0.82 0.12 60)',
+            }}
+          >
+            <Mail className="w-4 h-4" />
+            Contact
+          </button>
 
           {/* Profile link in mobile menu — authenticated only */}
           {isAuthenticated && (

@@ -1,154 +1,172 @@
 {
   "kind": "build_request",
-  "title": "Implement Badge System (Character Match, Clan Loyalty, Rare/Secret Badges)",
+  "title": "Connect Contact & Fan Mail Forms to Admin Panel with Persistent Storage",
   "projectName": "Whispers Of The White Moon",
-  "priority": "normal",
+  "priority": "high",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Extend the backend UserProfile data type and actor to store a list of unlocked badge IDs per user. Add a backend function `unlockBadge(badgeId: Text)` that appends a badge ID to the caller's profile if not already present, and a function `getUnlockedBadges()` that returns the caller's current list of badge IDs.",
+      "text": "Extend the backend ContactMessage and FanMail data types to include a `status` field with values: `#new`, `#read`, `#replied`. Ensure all existing and new submissions default to `#new` on creation.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "Users earn these when they match a character",
-          "Unlocked by matching Haruna",
-          "These trigger based on the clan result OR majority of answers"
+          "Status (New, Read, Replied)"
         ]
       },
       "acceptanceCriteria": [
-        "UserProfile type includes an `unlockedBadges: [Text]` field",
-        "`unlockBadge` adds the given badgeId to the caller's profile without duplicates",
-        "`getUnlockedBadges` returns all badge IDs unlocked by the authenticated caller",
-        "Unauthenticated calls to `unlockBadge` are rejected"
+        "ContactMessage type includes a `status` variant field with #new, #read, #replied",
+        "FanMail type includes a `status` variant field with #new, #read, #replied",
+        "New submissions created via submitContact and submitFanMail default to #new status"
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Expand the static badge data in `frontend/src/data/badges.ts` to include all 13 badges: Character Match Badges (Shadow Seer, Wrath Guardian, Memory Keeper, Royal Strategist, Balance King), Clan Loyalty Badges (Moon Clan Initiate, Flame Clan Vanguard, Water Clan Guardian, Sun Clan Noble, Balance Clan Chosen), and Rare/Secret Badges (Eclipse Soul, Stormheart, Wild Card Spirit). Each badge must have: id, name, icon (emoji), tagline/description, category ('character' | 'clan' | 'rare'), and unlock condition metadata (e.g., requiredCharacterId, requiredClanId, or unlockRule for rare badges).",
-      "target": "frontend",
+      "text": "Add backend admin endpoints to: (1) retrieve all ContactMessages, (2) retrieve all FanMail entries, (3) update the status of a ContactMessage by ID, (4) update the status of a FanMail entry by ID, (5) delete a ContactMessage by ID, (6) delete a FanMail entry by ID. All mutating endpoints must be access-controlled to admin principals only.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "🌑 Shadow Seer Badge\nUnlocked by matching Haruna\nTagline: \"Master of hidden truths.\"",
-          "🔥 Wrath Guardian Badge\nUnlocked by matching Raizen\nTagline: \"Power fueled by loyalty.\"",
-          "🌊 Memory Keeper Badge\nUnlocked by matching Selene\nTagline: \"Protector of emotional tides.\"",
-          "☀️ Royal Strategist Badge\nUnlocked by matching Valerinon\nTagline: \"Guiding light in chaos.\"",
-          "⚖️ Balance King Badge\nUnlocked by rare perfect balance result\nTagline: \"Harmony above all.\"",
-          "🌑 Moon Clan Initiate\n🔥 Flame Clan Vanguard\n🌊 Water Clan Guardian\n☀️ Sun Clan Noble\n⚖️ Balance Clan Chosen",
-          "🌘 Eclipse Soul\n→ Unlock if someone shows both Sun + Moon traits",
-          "🌊🔥 Stormheart\n→ Unlock if Water + Flame traits are high",
-          "🎭 Wild Card Spirit\n→ Unlock if answers are evenly spread across everything"
+          "permanently saved until deleted by an admin",
+          "Messages should appear inside the Admin Panel"
         ]
       },
       "acceptanceCriteria": [
-        "All 13 badges are defined in badges.ts with id, name, icon, tagline, category, and unlock condition metadata",
-        "Character Match Badges reference the correct character IDs (Haruna, Raizen, Selene, Valerinon)",
-        "Clan Loyalty Badges reference the correct clan IDs",
-        "Rare badges have unlock rules: Eclipse Soul requires Sun+Moon traits, Stormheart requires Water+Flame traits, Wild Card Spirit requires evenly spread trait scores"
+        "getContactMessages() returns all stored contact messages and is admin-gated",
+        "getFanMailEntries() returns all stored fan mail entries and is admin-gated",
+        "updateContactMessageStatus(id, status) updates the status field and is admin-gated",
+        "updateFanMailStatus(id, status) updates the status field and is admin-gated",
+        "deleteContactMessage(id) removes the entry permanently and is admin-gated",
+        "deleteFanMailEntry(id) removes the entry permanently and is admin-gated",
+        "Data persists across canister upgrades via stable storage"
       ]
     },
     {
       "id": "REQ-3",
-      "text": "Add badge unlock logic to the frontend quiz result flow. After a quiz result is determined, evaluate which badges the user has earned and call the backend `unlockBadge` mutation for each earned badge. Logic must check: (1) Character Match — if the matched character corresponds to a badge, unlock it; (2) Clan Loyalty — if the matched clan or the majority of answers belong to a clan, unlock the corresponding clan badge; (3) Rare/Secret — Eclipse Soul if both Sun and Moon trait scores are high, Stormheart if both Water and Flame trait scores are high, Wild Card Spirit if all trait scores are within a close range of each other. Also unlock Balance King if the quiz result is a perfect balance across all traits.",
-      "target": "frontend",
+      "text": "Generate a migration.mo that upgrades existing actor state to add the `status` field to any ContactMessage and FanMail entries already stored, defaulting them to `#new`, while preserving all other existing data.",
+      "target": "backend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "Users earn these when they match a character",
-          "These trigger based on the clan result OR majority of answers",
-          "Unlock if someone shows both Sun + Moon traits",
-          "Unlock if Water + Flame traits are high",
-          "Unlock if answers are evenly spread across everything",
-          "Unlocked by rare perfect balance result"
+          "Make sure messages do not disappear after refresh and are permanently saved"
         ]
       },
       "acceptanceCriteria": [
-        "After quiz completion, character match badges are automatically evaluated and unlocked if conditions are met",
-        "Clan loyalty badges are unlocked based on the resulting clan or majority of answers",
-        "Eclipse Soul is unlocked when Sun and Moon trait scores are both above a defined threshold",
-        "Stormheart is unlocked when Water and Flame trait scores are both above a defined threshold",
-        "Wild Card Spirit is unlocked when all trait scores are within a narrow range (e.g., max difference ≤ 15%)",
-        "Balance King is unlocked only on a perfect balance result",
-        "`unlockBadge` is called for each newly earned badge when the user is authenticated"
+        "migration.mo preserves all existing episodes, characters, news, gallery images, clans, and user profiles",
+        "Existing contactMessages and fanMailEntries are migrated with status = #new",
+        "No data loss occurs during upgrade"
       ]
     },
     {
       "id": "REQ-4",
-      "text": "Display earned badges on the user's profile page (`frontend/src/pages/ProfilePage.tsx`). Show a badges section with three sub-sections: Character Match Badges, Clan Loyalty Badges, and Rare & Secret Badges. For each badge, display its icon, name, and tagline. Locked badges should appear dimmed/greyed out with a lock icon overlay so users can see what they haven't earned yet (encouraging re-engagement). Unlocked badges should be visually highlighted with the clan's themed glow color or a golden glow for rare badges.",
+      "text": "Add React Query hooks in `frontend/src/hooks/useQueries.ts` for: fetching all contact messages (admin), fetching all fan mail entries (admin), updating message/fan mail status, and deleting message/fan mail entries.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "These make people want to retake the quiz (huge engagement boost)",
-          "🌑 Shadow Seer Badge",
-          "🎭 Wild Card Spirit"
+          "Messages should appear inside the Admin Panel"
         ]
       },
       "acceptanceCriteria": [
-        "Profile page shows a Badges section with three categorized sub-sections",
-        "All 13 badges are visible on the profile (locked or unlocked)",
-        "Unlocked badges display with full color, icon, name, and tagline",
-        "Locked badges are visually dimmed with a lock overlay, name shown but tagline optionally hidden or shown as '???'",
-        "Rare/Secret badge icons and names are visible when locked to entice users to discover them",
-        "Unlocked badges use clan-appropriate or golden glow styling"
+        "useGetContactMessages() query hook is available and calls the admin-gated backend endpoint",
+        "useGetFanMailEntries() query hook is available and calls the admin-gated backend endpoint",
+        "useUpdateContactMessageStatus() mutation hook updates status and invalidates the contact messages query",
+        "useUpdateFanMailStatus() mutation hook updates status and invalidates the fan mail query",
+        "useDeleteContactMessage() mutation hook deletes an entry and invalidates the contact messages query",
+        "useDeleteFanMailEntry() mutation hook deletes an entry and invalidates the fan mail query"
       ]
     },
     {
       "id": "REQ-5",
-      "text": "After a quiz result is processed and badges are unlocked, display a badge unlock celebration/notification to the user. For each newly earned badge, show a styled toast or modal pop-up with the badge's icon, name, and tagline. Rare badge unlocks should have a more dramatic reveal animation (e.g., shimmer or pulse effect).",
+      "text": "Create a new `ContactMessagesPanel` component at `frontend/src/components/admin/panels/ContactMessagesPanel.tsx`. Display all submitted contact form messages in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status (New → Read → Replied) via a dropdown or button, and delete individual messages. The status badge should be color-coded: New = amber/yellow, Read = blue, Replied = green.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
         ],
         "quotes": [
-          "These make people want to retake the quiz (huge engagement boost)"
+          "Contact Messages",
+          "Sender name",
+          "Email (if provided)",
+          "Message content",
+          "Date and time received",
+          "Status (New, Read, Replied)"
         ]
       },
       "acceptanceCriteria": [
-        "A notification/toast appears for each newly unlocked badge after quiz completion",
-        "Notification shows the badge icon, name, and tagline",
-        "Rare badge (Eclipse Soul, Stormheart, Wild Card Spirit, Balance King) notifications have a distinct and more dramatic animation",
-        "Notifications are dismissible and auto-dismiss after a few seconds"
+        "Panel renders a list/table of all contact messages from the backend",
+        "Each row shows sender name, email (or '—' if not provided), message content, date/time, and status badge",
+        "Admin can change message status; change is persisted to the backend",
+        "Admin can delete a message; it is removed from the backend and disappears from the list",
+        "Status badges are color-coded: New = amber, Read = blue, Replied = green",
+        "List updates after status change or deletion without full page reload"
       ]
     },
     {
       "id": "REQ-6",
-      "text": "Add a `useUnlockBadge` mutation hook and a `useGetUnlockedBadges` query hook to `frontend/src/hooks/useQueries.ts`, wired to the new backend `unlockBadge` and `getUnlockedBadges` functions respectively.",
+      "text": "Create a new `FanMailPanel` component at `frontend/src/components/admin/panels/FanMailPanel.tsx`. Display all submitted fan mail entries in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status and delete individual entries, with the same color-coded status badge system as the ContactMessagesPanel.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-4"
+          "msg-3"
+        ],
+        "quotes": [
+          "Fan Mail",
+          "Sender name",
+          "Email (if provided)",
+          "Message content",
+          "Date and time received",
+          "Status (New, Read, Replied)"
         ]
       },
       "acceptanceCriteria": [
-        "`useGetUnlockedBadges` fetches the authenticated user's unlocked badge IDs from the backend",
-        "`useUnlockBadge` calls the backend `unlockBadge` function and invalidates the unlocked badges query on success",
-        "Both hooks follow the existing patterns in `useQueries.ts`"
+        "Panel renders a list/table of all fan mail entries from the backend",
+        "Each row shows sender name, email (or '—' if not provided), message content, date/time, and status badge",
+        "Admin can change fan mail status; change is persisted to the backend",
+        "Admin can delete a fan mail entry; it is removed from the backend and disappears from the list",
+        "Status badges are color-coded: New = amber, Read = blue, Replied = green",
+        "List updates after status change or deletion without full page reload"
+      ]
+    },
+    {
+      "id": "REQ-7",
+      "text": "Integrate the `ContactMessagesPanel` and `FanMailPanel` into the `AdminDashboard` sidebar navigation (`frontend/src/components/admin/AdminDashboard.tsx`). Add 'Contact Messages' and 'Fan Mail' as new navigation items in the sidebar, and render the corresponding panel when each item is selected. Show a badge count of unread (status = New) messages next to each sidebar label.",
+      "target": "frontend",
+      "source": {
+        "messageIds": [
+          "msg-3"
+        ],
+        "quotes": [
+          "Messages should appear inside the Admin Panel under: Contact Messages, Fan Mail"
+        ]
+      },
+      "acceptanceCriteria": [
+        "AdminDashboard sidebar includes 'Contact Messages' and 'Fan Mail' navigation items",
+        "Clicking 'Contact Messages' renders ContactMessagesPanel in the main content area",
+        "Clicking 'Fan Mail' renders FanMailPanel in the main content area",
+        "Each sidebar item shows a numeric badge indicating the count of messages with status = New",
+        "Badge disappears or shows 0 when all messages have been read or replied to"
       ]
     }
   ],
   "constraints": [
-    "All Motoko logic must remain in the single backend/main.mo actor",
-    "Do not modify files under frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, or frontend/src/components/ui",
-    "Badge unlock logic must only trigger when the user is authenticated via Internet Identity",
-    "Locked rare/secret badges must still be visible (name and icon shown) to encourage re-engagement — do not fully hide them"
+    "All admin-only backend endpoints must enforce principal-based authorization; unauthenticated or non-admin calls must be rejected",
+    "ContactMessage and FanMail data must be stored in stable variables to survive canister upgrades",
+    "Do not modify immutable frontend paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui"
   ],
   "nonGoals": [
-    "Leaderboards or badge comparison between users",
-    "Custom badge image assets (emoji icons are sufficient)",
-    "Admin panel management of badges",
-    "Social sharing of badges",
-    "Fixing profile page data persistence / Internet Identity sync issues (separate known issue)"
+    "Email notification to admin when new messages arrive",
+    "Replying to messages directly from the admin panel (only status change to 'Replied')",
+    "Pagination or search/filter for message lists in this iteration",
+    "Any changes to the Contact Page or Fan Mail form submission UI"
   ],
   "imageRequirements": {
     "required": [],

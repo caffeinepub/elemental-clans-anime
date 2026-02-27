@@ -1,81 +1,78 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-26T20:58:41.684Z",
+  "generatedAt": "2026-02-27T19:44:14.904Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 6,
-    "implemented": 5,
+    "total": 7,
+    "implemented": 4,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Extend the backend UserProfile data type and actor to store a list of unlocked badge IDs per user. Add a backend function `unlockBadge(badgeId: Text)` that appends a badge ID to the caller's profile if not already present, and a function `getUnlockedBadges()` that returns the caller's current list of badge IDs.",
+        "summary": "Extend the backend ContactMessage and FanMail data types to include a `status` field with values: `#new`, `#read`, `#replied`. Ensure all existing and new submissions default to `#new` on creation.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Expand the static badge data in `frontend/src/data/badges.ts` to include all 13 badges: Character Match Badges (Shadow Seer, Wrath Guardian, Memory Keeper, Royal Strategist, Balance King), Clan Loyalty Badges (Moon Clan Initiate, Flame Clan Vanguard, Water Clan Guardian, Sun Clan Noble, Balance Clan Chosen), and Rare/Secret Badges (Eclipse Soul, Stormheart, Wild Card Spirit). Each badge must have: id, name, icon (emoji), tagline/description, category ('character' | 'clan' | 'rare'), and unlock condition metadata (e.g., requiredCharacterId, requiredClanId, or unlockRule for rare badges).",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/data/badges.ts"
-        ],
-        "matchedFiles": [
-          "frontend/src/data/badges.ts"
-        ]
+        "summary": "Add backend admin endpoints to: (1) retrieve all ContactMessages, (2) retrieve all FanMail entries, (3) update the status of a ContactMessage by ID, (4) update the status of a FanMail entry by ID, (5) delete a ContactMessage by ID, (6) delete a FanMail entry by ID. All mutating endpoints must be access-controlled to admin principals only.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-3",
-        "summary": "Add badge unlock logic to the frontend quiz result flow. After a quiz result is determined, evaluate which badges the user has earned and call the backend `unlockBadge` mutation for each earned badge. Logic must check: (1) Character Match — if the matched character corresponds to a badge, unlock it; (2) Clan Loyalty — if the matched clan or the majority of answers belong to a clan, unlock the corresponding clan badge; (3) Rare/Secret — Eclipse Soul if both Sun and Moon trait scores are high, Stormheart if both Water and Flame trait scores are high, Wild Card Spirit if all trait scores are within a close range of each other. Also unlock Balance King if the quiz result is a perfect balance across all traits.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/hooks/useBadgeUnlockLogic.ts",
-          "frontend/src/pages/QuizResultPage.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/hooks/useBadgeUnlockLogic.ts",
-          "frontend/src/pages/QuizResultPage.tsx"
-        ]
+        "summary": "Generate a migration.mo that upgrades existing actor state to add the `status` field to any ContactMessage and FanMail entries already stored, defaulting them to `#new`, while preserving all other existing data.",
+        "status": "unknown",
+        "plannedFiles": [],
+        "matchedFiles": []
       },
       {
         "id": "REQ-4",
-        "summary": "Display earned badges on the user's profile page (`frontend/src/pages/ProfilePage.tsx`). Show a badges section with three sub-sections: Character Match Badges, Clan Loyalty Badges, and Rare & Secret Badges. For each badge, display its icon, name, and tagline. Locked badges should appear dimmed/greyed out with a lock icon overlay so users can see what they haven't earned yet (encouraging re-engagement). Unlocked badges should be visually highlighted with the clan's themed glow color or a golden glow for rare badges.",
+        "summary": "Add React Query hooks in `frontend/src/hooks/useQueries.ts` for: fetching all contact messages (admin), fetching all fan mail entries (admin), updating message/fan mail status, and deleting message/fan mail entries.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/pages/ProfilePage.tsx",
-          "frontend/src/components/BadgeCard.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ],
         "matchedFiles": [
-          "frontend/src/pages/ProfilePage.tsx",
-          "frontend/src/components/BadgeCard.tsx"
+          "frontend/src/hooks/useQueries.ts"
         ]
       },
       {
         "id": "REQ-5",
-        "summary": "After a quiz result is processed and badges are unlocked, display a badge unlock celebration/notification to the user. For each newly earned badge, show a styled toast or modal pop-up with the badge's icon, name, and tagline. Rare badge unlocks should have a more dramatic reveal animation (e.g., shimmer or pulse effect).",
+        "summary": "Create a new `ContactMessagesPanel` component at `frontend/src/components/admin/panels/ContactMessagesPanel.tsx`. Display all submitted contact form messages in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status (New → Read → Replied) via a dropdown or button, and delete individual messages. The status badge should be color-coded: New = amber/yellow, Read = blue, Replied = green.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/components/BadgeUnlockToast.tsx",
-          "frontend/src/pages/QuizResultPage.tsx"
+          "frontend/src/components/admin/panels/ContactMessagesPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/components/BadgeUnlockToast.tsx",
-          "frontend/src/pages/QuizResultPage.tsx"
+          "frontend/src/components/admin/panels/ContactMessagesPanel.tsx"
         ]
       },
       {
         "id": "REQ-6",
-        "summary": "Add a `useUnlockBadge` mutation hook and a `useGetUnlockedBadges` query hook to `frontend/src/hooks/useQueries.ts`, wired to the new backend `unlockBadge` and `getUnlockedBadges` functions respectively.",
+        "summary": "Create a new `FanMailPanel` component at `frontend/src/components/admin/panels/FanMailPanel.tsx`. Display all submitted fan mail entries in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status and delete individual entries, with the same color-coded status badge system as the ContactMessagesPanel.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/components/admin/panels/FanMailPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/components/admin/panels/FanMailPanel.tsx"
+        ]
+      },
+      {
+        "id": "REQ-7",
+        "summary": "Integrate the `ContactMessagesPanel` and `FanMailPanel` into the `AdminDashboard` sidebar navigation (`frontend/src/components/admin/AdminDashboard.tsx`). Add 'Contact Messages' and 'Fan Mail' as new navigation items in the sidebar, and render the corresponding panel when each item is selected. Show a badge count of unread (status = New) messages next to each sidebar label.",
+        "status": "implemented",
+        "plannedFiles": [
+          "frontend/src/components/admin/AdminDashboard.tsx"
+        ],
+        "matchedFiles": [
+          "frontend/src/components/admin/AdminDashboard.tsx"
         ]
       }
     ]
@@ -87,19 +84,14 @@
     "feature_evidence.json",
     "frontend-file-summaries.txt",
     "frontend-implementation-plan.json",
-    "frontend/src/App.tsx",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/BadgeCard.tsx",
-    "frontend/src/components/BadgeUnlockToast.tsx",
-    "frontend/src/data/badges.ts",
+    "frontend/src/components/admin/AdminDashboard.tsx",
+    "frontend/src/components/admin/panels/ContactMessagesPanel.tsx",
+    "frontend/src/components/admin/panels/FanMailPanel.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
-    "frontend/src/hooks/useBadgeUnlockLogic.ts",
     "frontend/src/hooks/useQueries.ts",
-    "frontend/src/index.css",
-    "frontend/src/pages/ProfilePage.tsx",
-    "frontend/src/pages/QuizResultPage.tsx",
     "project_state.json",
     "scratch/component-selection.json",
     "spec.md",
