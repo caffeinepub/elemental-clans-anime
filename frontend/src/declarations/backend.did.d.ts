@@ -121,6 +121,7 @@ export interface _SERVICE {
   '_caffeineStorageUpdateGatewayPrincipals' : ActorMethod<[], undefined>,
   '_initializeAccessControlWithSecret' : ActorMethod<[string], undefined>,
   'addCharacter' : ActorMethod<[Character], undefined>,
+  'addCharacters' : ActorMethod<[Array<Character>], undefined>,
   'addClan' : ActorMethod<[Clan], undefined>,
   'addEpisode' : ActorMethod<[Episode], undefined>,
   'addGalleryImage' : ActorMethod<[GalleryImage], undefined>,

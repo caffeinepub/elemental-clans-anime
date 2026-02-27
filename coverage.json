@@ -1,78 +1,31 @@
 {
   "kind": "coverage_report",
   "version": "1.0",
-  "generatedAt": "2026-02-27T19:44:14.904Z",
+  "generatedAt": "2026-02-27T22:07:13.558Z",
   "sources": {
     "buildRequest": true,
     "implementationPlan": true
   },
   "requirements": {
-    "total": 7,
-    "implemented": 4,
+    "total": 2,
+    "implemented": 1,
     "items": [
       {
         "id": "REQ-1",
-        "summary": "Extend the backend ContactMessage and FanMail data types to include a `status` field with values: `#new`, `#read`, `#replied`. Ensure all existing and new submissions default to `#new` on creation.",
+        "summary": "Update the backend character creation API to accept and persist an array of characters in a single call, so admins can create multiple characters at once.",
         "status": "unknown",
         "plannedFiles": [],
         "matchedFiles": []
       },
       {
         "id": "REQ-2",
-        "summary": "Add backend admin endpoints to: (1) retrieve all ContactMessages, (2) retrieve all FanMail entries, (3) update the status of a ContactMessage by ID, (4) update the status of a FanMail entry by ID, (5) delete a ContactMessage by ID, (6) delete a FanMail entry by ID. All mutating endpoints must be access-controlled to admin principals only.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-3",
-        "summary": "Generate a migration.mo that upgrades existing actor state to add the `status` field to any ContactMessage and FanMail entries already stored, defaulting them to `#new`, while preserving all other existing data.",
-        "status": "unknown",
-        "plannedFiles": [],
-        "matchedFiles": []
-      },
-      {
-        "id": "REQ-4",
-        "summary": "Add React Query hooks in `frontend/src/hooks/useQueries.ts` for: fetching all contact messages (admin), fetching all fan mail entries (admin), updating message/fan mail status, and deleting message/fan mail entries.",
+        "summary": "Update the CharactersPanel admin UI to allow adding multiple characters in a single session. The modal form should support adding and removing multiple character entries before submitting, so all entries are saved at once with a single submit action.",
         "status": "implemented",
         "plannedFiles": [
-          "frontend/src/hooks/useQueries.ts"
+          "frontend/src/components/admin/panels/CharactersPanel.tsx"
         ],
         "matchedFiles": [
-          "frontend/src/hooks/useQueries.ts"
-        ]
-      },
-      {
-        "id": "REQ-5",
-        "summary": "Create a new `ContactMessagesPanel` component at `frontend/src/components/admin/panels/ContactMessagesPanel.tsx`. Display all submitted contact form messages in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status (New → Read → Replied) via a dropdown or button, and delete individual messages. The status badge should be color-coded: New = amber/yellow, Read = blue, Replied = green.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/admin/panels/ContactMessagesPanel.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/admin/panels/ContactMessagesPanel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-6",
-        "summary": "Create a new `FanMailPanel` component at `frontend/src/components/admin/panels/FanMailPanel.tsx`. Display all submitted fan mail entries in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status and delete individual entries, with the same color-coded status badge system as the ContactMessagesPanel.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/admin/panels/FanMailPanel.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/admin/panels/FanMailPanel.tsx"
-        ]
-      },
-      {
-        "id": "REQ-7",
-        "summary": "Integrate the `ContactMessagesPanel` and `FanMailPanel` into the `AdminDashboard` sidebar navigation (`frontend/src/components/admin/AdminDashboard.tsx`). Add 'Contact Messages' and 'Fan Mail' as new navigation items in the sidebar, and render the corresponding panel when each item is selected. Show a badge count of unread (status = New) messages next to each sidebar label.",
-        "status": "implemented",
-        "plannedFiles": [
-          "frontend/src/components/admin/AdminDashboard.tsx"
-        ],
-        "matchedFiles": [
-          "frontend/src/components/admin/AdminDashboard.tsx"
+          "frontend/src/components/admin/panels/CharactersPanel.tsx"
         ]
       }
     ]
@@ -86,9 +39,7 @@
     "frontend-implementation-plan.json",
     "frontend/src/backend.d.ts",
     "frontend/src/backend.ts",
-    "frontend/src/components/admin/AdminDashboard.tsx",
-    "frontend/src/components/admin/panels/ContactMessagesPanel.tsx",
-    "frontend/src/components/admin/panels/FanMailPanel.tsx",
+    "frontend/src/components/admin/panels/CharactersPanel.tsx",
     "frontend/src/declarations/backend.did.d.ts",
     "frontend/src/declarations/backend.did.js",
     "frontend/src/hooks/useQueries.ts",

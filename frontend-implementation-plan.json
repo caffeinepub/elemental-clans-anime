@@ -1,80 +1,25 @@
 {
   "kind": "implementation_plan",
   "version": "1.0",
-  "title": "Connect Contact & Fan Mail Forms to Admin Panel with Persistent Storage - Frontend",
+  "title": "Allow bulk (multiple) character creation in Admin Panel",
   "requirements": [
     {
-      "id": "REQ-4",
-      "summary": "Add React Query hooks for fetching and managing contact messages and fan mail entries",
+      "id": "REQ-2",
+      "summary": "Update the CharactersPanel admin UI to allow adding multiple characters in a single session with add/remove controls and batch submission",
       "acceptanceCriteria": [
-        "useGetContactMessages() query hook is available and calls the admin-gated backend endpoint",
-        "useGetFanMailEntries() query hook is available and calls the admin-gated backend endpoint",
-        "useUpdateContactMessageStatus() mutation hook updates status and invalidates the contact messages query",
-        "useUpdateFanMailStatus() mutation hook updates status and invalidates the fan mail query",
-        "useDeleteContactMessage() mutation hook deletes an entry and invalidates the contact messages query",
-        "useDeleteFanMailEntry() mutation hook deletes an entry and invalidates the fan mail query"
+        "The 'Add Character' modal displays at least one character form entry by default.",
+        "An 'Add Another Character' button appends a new blank character form entry to the modal.",
+        "Each character entry has a remove button to delete that entry (disabled when only one entry remains).",
+        "Each entry includes all existing fields: name, initials, clan, role, and bio.",
+        "Submitting the form saves all character entries at once via the bulk backend method.",
+        "Success and error states are communicated clearly to the admin.",
+        "After a successful bulk save, the character list is refreshed."
       ],
       "file_operations": [
         {
-          "path": "frontend/src/hooks/useQueries.ts",
+          "path": "frontend/src/components/admin/panels/CharactersPanel.tsx",
           "operation": "modify",
-          "description": "Add six new React Query hooks: useGetContactMessages (query hook calling getAllContactMessages), useGetFanMailEntries (query hook calling getAllFanMail), useUpdateContactMessageStatus (mutation hook calling updateContactMessageStatus and invalidating 'contactMessages' query), useUpdateFanMailStatus (mutation hook calling updateFanMailStatus and invalidating 'fanMail' query), useDeleteContactMessage (mutation hook calling deleteContactMessage and invalidating 'contactMessages' query), and useDeleteFanMailEntry (mutation hook calling deleteFanMail and invalidating 'fanMail' query). All query hooks should be enabled only when the actor is available and the user is authenticated. Mutation hooks should handle backend errors gracefully and show user-friendly error messages."
-        }
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "summary": "Create ContactMessagesPanel component for admin management of contact form submissions",
-      "acceptanceCriteria": [
-        "Panel renders a list/table of all contact messages from the backend",
-        "Each row shows sender name, email (or '—' if not provided), message content, date/time, and status badge",
-        "Admin can change message status; change is persisted to the backend",
-        "Admin can delete a message; it is removed from the backend and disappears from the list",
-        "Status badges are color-coded: New = amber, Read = blue, Replied = green",
-        "List updates after status change or deletion without full page reload"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/admin/panels/ContactMessagesPanel.tsx",
-          "operation": "create",
-          "description": "Create a new admin panel component that fetches all contact messages using useGetContactMessages(). Display messages in a table/list with columns: Sender Name, Email (show '—' if empty), Message Content (truncated with expand option), Date & Time Received (formatted using Intl.DateTimeFormat), and Status (rendered as a color-coded badge: New = amber/yellow, Read = blue, Replied = green). Each row should have action buttons: a dropdown or button group to change status (New → Read → Replied) using useUpdateContactMessageStatus, and a delete button using useDeleteContactMessage with confirmation dialog. The component should show a loading state while fetching, handle empty state gracefully, and display error messages if mutations fail. Sort messages by submittedAt descending (newest first). Use Tailwind CSS classes for styling consistent with existing admin panels."
-        }
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "summary": "Create FanMailPanel component for admin management of fan mail submissions",
-      "acceptanceCriteria": [
-        "Panel renders a list/table of all fan mail entries from the backend",
-        "Each row shows sender name, email (or '—' if not provided), message content, date/time, and status badge",
-        "Admin can change fan mail status; change is persisted to the backend",
-        "Admin can delete a fan mail entry; it is removed from the backend and disappears from the list",
-        "Status badges are color-coded: New = amber, Read = blue, Replied = green",
-        "List updates after status change or deletion without full page reload"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/admin/panels/FanMailPanel.tsx",
-          "operation": "create",
-          "description": "Create a new admin panel component that fetches all fan mail entries using useGetFanMailEntries(). Display entries in a table/list with columns: Sender Name (username field), Email/Social (show '—' if emailOrSocial is null/empty), Message Content (truncated with expand option), Date & Time Received (formatted using Intl.DateTimeFormat), and Status (rendered as a color-coded badge: New = amber/yellow, Read = blue, Replied = green). Each row should have action buttons: a dropdown or button group to change status (New → Read → Replied) using useUpdateFanMailStatus, and a delete button using useDeleteFanMailEntry with confirmation dialog. The component should show a loading state while fetching, handle empty state gracefully, and display error messages if mutations fail. Sort entries by submittedAt descending (newest first). Use Tailwind CSS classes for styling consistent with existing admin panels and ContactMessagesPanel."
-        }
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "summary": "Integrate ContactMessagesPanel and FanMailPanel into AdminDashboard with sidebar navigation and unread badge counts",
-      "acceptanceCriteria": [
-        "AdminDashboard sidebar includes 'Contact Messages' and 'Fan Mail' navigation items",
-        "Clicking 'Contact Messages' renders ContactMessagesPanel in the main content area",
-        "Clicking 'Fan Mail' renders FanMailPanel in the main content area",
-        "Each sidebar item shows a numeric badge indicating the count of messages with status = New",
-        "Badge disappears or shows 0 when all messages have been read or replied to"
-      ],
-      "file_operations": [
-        {
-          "path": "frontend/src/components/admin/AdminDashboard.tsx",
-          "operation": "modify",
-          "description": "Add two new navigation items to the sidebar: 'Contact Messages' and 'Fan Mail'. Import and use useGetContactMessages and useGetFanMailEntries hooks to fetch message data. Calculate the count of messages with status = 'new' for each category and display as a numeric badge next to the respective sidebar label (hide badge or show 0 when count is 0). When 'Contact Messages' is selected, render <ContactMessagesPanel /> in the main content area. When 'Fan Mail' is selected, render <FanMailPanel />. Ensure the active panel state is tracked and the selected item is visually highlighted in the sidebar. Position the new items logically in the sidebar order (e.g., after Gallery or Clans). Use consistent styling with existing sidebar items and badge styling (e.g., rounded pill with background color)."
+          "description": "Update the CharactersPanel component to support bulk character creation. Replace the single-character form state with an array of character form entries. Add an 'Add Another Character' button that appends a new blank entry to the array. Add a remove button next to each entry (disabled when only one remains). Update the form submission handler to call the backend addCharacters method with the array of character entries. Preserve all existing single-character edit/update functionality. Ensure the character list refreshes after successful bulk submission and display clear success/error messages to the admin."
         }
       ]
     }

@@ -1,43 +1,18 @@
 {
   "schemaVersion": "1.0.0",
   "projectStateVersion": 3,
-  "summary": "Website project with Admin Panel, Contact Page, and Fan Mail section. Form submissions must be stored in a database and displayed in the Admin Panel with persistent storage.",
+  "summary": "A website for an anime/story world featuring clans (Moon, Fire, Earth, Sun) and characters. Admins can manage characters via an admin panel.",
   "architectural_notes": [
-    "Form submissions from Contact Page and Fan Mail must be persisted in a database with fields: sender name, email, message content, timestamp, and status (New/Read/Replied).",
-    "Admin Panel must display persistent Contact Messages and Fan Mail sections; messages survive page refresh and are only removed by admin deletion."
+    "Site involves clan-based characters (Moon, Fire, Earth, Sun clans) with an admin panel for character management"
   ],
   "known_issues": [],
   "isFixRequest": false,
   "existing_features": [
     {
-      "id": "feature-add-react-query-hooks-in-frontend-src-hooks-usequeries-ts-for-fetching-all-contact-messages-admin-fetching-all-fan-mail-entries-admin-updating-message-fan-mail-status-and-deleting-message-fan-mail-entries",
-      "title": "Add React Query hooks in `frontend/src/hooks/useQueries.ts` for: fetching all contact messages (admin), fetching all fan mail entries (admin), updating message/fan mail status, and deleting message/fan mail entries.",
+      "id": "feature-update-the-characterspanel-admin-ui-to-allow-adding-multiple-characters-in-a-single-session-the-modal-form-should-support-adding-and-removing-multiple-character-entries-before-submitting-so-all-entries-are-saved-at-once-with-a-single-submit-action",
+      "title": "Update the CharactersPanel admin UI to allow adding multiple characters in a single session. The modal form should support adding and removing multiple character entries before submitting, so all entries are saved at once with a single submit action.",
       "reqIds": [
-        "REQ-4"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-a-new-contactmessagespanel-component-at-frontend-src-components-admin-panels-contactmessagespanel-tsx-display-all-submitted-contact-form-messages-in-a-table-list-with-columns-sender-name-email-message-content-date-time-received-and-status-allow-admins-to-change-the-status-new-read-replied-via-a-dropdown-or-button-and-delete-individual-messages-the-status-badge-should-be-color-coded-new-amber-yellow-read-blue-replied-green",
-      "title": "Create a new `ContactMessagesPanel` component at `frontend/src/components/admin/panels/ContactMessagesPanel.tsx`. Display all submitted contact form messages in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status (New → Read → Replied) via a dropdown or button, and delete individual messages. The status badge should be color-coded: New = amber/yellow, Read = blue, Replied = green.",
-      "reqIds": [
-        "REQ-5"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-create-a-new-fanmailpanel-component-at-frontend-src-components-admin-panels-fanmailpanel-tsx-display-all-submitted-fan-mail-entries-in-a-table-list-with-columns-sender-name-email-message-content-date-time-received-and-status-allow-admins-to-change-the-status-and-delete-individual-entries-with-the-same-color-coded-status-badge-system-as-the-contactmessagespanel",
-      "title": "Create a new `FanMailPanel` component at `frontend/src/components/admin/panels/FanMailPanel.tsx`. Display all submitted fan mail entries in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status and delete individual entries, with the same color-coded status badge system as the ContactMessagesPanel.",
-      "reqIds": [
-        "REQ-6"
-      ],
-      "version": 1
-    },
-    {
-      "id": "feature-integrate-the-contactmessagespanel-and-fanmailpanel-into-the-admindashboard-sidebar-navigation-frontend-src-components-admin-admindashboard-tsx-add-contact-messages-and-fan-mail-as-new-navigation-items-in-the-sidebar-and-render-the-corresponding-panel-when-each-item-is-selected-show-a-badge-count-of-unread-status-new-messages-next-to-each-sidebar-label",
-      "title": "Integrate the `ContactMessagesPanel` and `FanMailPanel` into the `AdminDashboard` sidebar navigation (`frontend/src/components/admin/AdminDashboard.tsx`). Add 'Contact Messages' and 'Fan Mail' as new navigation items in the sidebar, and render the corresponding panel when each item is selected. Show a badge count of unread (status = New) messages next to each sidebar label.",
-      "reqIds": [
-        "REQ-7"
+        "REQ-2"
       ],
       "version": 1
     }
@@ -45,37 +20,27 @@
   "new_feature_requests": [
     {
       "id": "AR-1",
-      "summary": "Store Contact Page and Fan Mail form submissions in the database, displayed in Admin Panel under 'Contact Messages' and 'Fan Mail' sections with sender name, email, message content, date/time, and status (New/Read/Replied). Messages persist until deleted by admin.",
+      "summary": "Add characters page with: Kazeyori Shiranagi (Moon Clan), Sankei Enshiro (Fire Clan), Haruna Hishigawa (Earth Clan), Iwagami Sekien (Moon Clan), Aurelian (Sun Clan) with their descriptions",
       "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-2",
-      "summary": "Extend the backend ContactMessage and FanMail data types to include a `status` field with values: `#new`, `#read`, `#replied`. Ensure all existing and new submissions default to `#new` on creation.",
-      "reqIds": [
-        "REQ-1"
-      ],
+      "summary": "Admin panel: allow admins to create multiple characters at once (bulk character creation)",
+      "reqIds": [],
       "status": "pending"
     },
     {
       "id": "AR-3",
-      "summary": "Add backend admin endpoints to: (1) retrieve all ContactMessages, (2) retrieve all FanMail entries, (3) update the status of a ContactMessage by ID, (4) update the status of a FanMail entry by ID, (5) delete a ContactMessage by ID, (6) delete a FanMail entry by ID. All mutating endpoints must be access-controlled to admin principals only.",
+      "summary": "Update the backend character creation API to accept and persist an array of characters in a single call, so admins can create multiple characters at once.",
       "reqIds": [
-        "REQ-2"
-      ],
-      "status": "pending"
-    },
-    {
-      "id": "AR-4",
-      "summary": "Generate a migration.mo that upgrades existing actor state to add the `status` field to any ContactMessage and FanMail entries already stored, defaulting them to `#new`, while preserving all other existing data.",
-      "reqIds": [
-        "REQ-3"
+        "REQ-1"
       ],
       "status": "pending"
     }
   ],
   "gameProjectType": "none",
-  "projectName": "Whispers Of The White Moon",
+  "projectName": "WhispersoftheWhiteMoon",
   "clarification_mode": "instant",
   "clarification_rounds": 0
 }

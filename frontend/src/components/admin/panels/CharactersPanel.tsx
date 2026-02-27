@@ -1,8 +1,8 @@
 import { useState } from 'react';
-import { Plus, Pencil, Trash2, Loader2, X, Users } from 'lucide-react';
+import { Plus, Pencil, Trash2, Loader2, X, Users, PlusCircle, MinusCircle, CheckCircle2, AlertCircle } from 'lucide-react';
 import {
   useGetAllCharacters,
-  useAddCharacter,
+  useAddCharacters,
   useUpdateCharacter,
   useDeleteCharacter,
   useGetAllClans,
@@ -12,6 +12,7 @@ import { AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent, 
 import { clans as staticClans } from '../../../data/clans';
 
 type CharacterFormData = {
+  _key: string; // internal key for list management
   id: string;
   name: string;
   clan: string;
@@ -20,16 +21,256 @@ type CharacterFormData = {
   initials: string;
 };
 
-const emptyForm: CharacterFormData = {
-  id: '',
-  name: '',
-  clan: 'moon',
-  role: '',
-  bio: '',
-  initials: '',
-};
+function makeEmptyEntry(): CharacterFormData {
+  return {
+    _key: `entry-${Date.now()}-${Math.random()}`,
+    id: `char-${Date.now()}-${Math.floor(Math.random() * 100000)}`,
+    name: '',
+    clan: 'moon',
+    role: '',
+    bio: '',
+    initials: '',
+  };
+}
 
-function CharacterModal({
+// ── Single character entry form ───────────────────────────────────────────────
+
+function CharacterEntryForm({
+  entry,
+  index,
+  total,
+  clanOptions,
+  onChange,
+  onRemove,
+}: {
+  entry: CharacterFormData;
+  index: number;
+  total: number;
+  clanOptions: { id: string; name: string }[];
+  onChange: (key: string, field: keyof CharacterFormData, value: string) => void;
+  onRemove: (key: string) => void;
+}) {
+  return (
+    <div
+      className="rounded-md border border-moon-blue/15 p-4 space-y-3"
+      style={{ background: 'rgba(79,195,247,0.03)' }}
+    >
+      {/* Entry header */}
+      <div className="flex items-center justify-between mb-1">
+        <span className="font-cinzel text-xs font-bold text-moon-blue/70 tracking-widest uppercase">
+          Character {index + 1}
+        </span>
+        <button
+          type="button"
+          onClick={() => onRemove(entry._key)}
+          disabled={total === 1}
+          title={total === 1 ? 'At least one character is required' : 'Remove this character'}
+          className="flex items-center gap-1 text-xs font-rajdhani text-silver/40 hover:text-crimson disabled:opacity-25 disabled:cursor-not-allowed transition-colors"
+        >
+          <MinusCircle className="w-3.5 h-3.5" />
+          <span>Remove</span>
+        </button>
+      </div>
+
+      {/* Name + Initials */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block font-rajdhani text-xs tracking-widest uppercase text-silver/60 mb-1.5">Name</label>
+          <input
+            type="text"
+            required
+            value={entry.name}
+            onChange={e => onChange(entry._key, 'name', e.target.value)}
+            className="admin-input w-full"
+            placeholder="Character name"
+          />
+        </div>
+        <div>
+          <label className="block font-rajdhani text-xs tracking-widest uppercase text-silver/60 mb-1.5">Initials</label>
+          <input
+            type="text"
+            required
+            maxLength={2}
+            value={entry.initials}
+            onChange={e => onChange(entry._key, 'initials', e.target.value.toUpperCase().slice(0, 2))}
+            className="admin-input w-full"
+            placeholder="KD"
+          />
+        </div>
+      </div>
+
+      {/* Clan + Role */}
+      <div className="grid grid-cols-2 gap-3">
+        <div>
+          <label className="block font-rajdhani text-xs tracking-widest uppercase text-silver/60 mb-1.5">Clan</label>
+          <select
+            value={entry.clan}
+            onChange={e => onChange(entry._key, 'clan', e.target.value)}
+            className="admin-input w-full"
+          >
+            {clanOptions.map(c => (
+              <option key={c.id} value={c.id}>{c.name}</option>
+            ))}
+          </select>
+        </div>
+        <div>
+          <label className="block font-rajdhani text-xs tracking-widest uppercase text-silver/60 mb-1.5">Role</label>
+          <input
+            type="text"
+            required
+            value={entry.role}
+            onChange={e => onChange(entry._key, 'role', e.target.value)}
+            className="admin-input w-full"
+            placeholder="Protagonist"
+          />
+        </div>
+      </div>
+
+      {/* Bio */}
+      <div>
+        <label className="block font-rajdhani text-xs tracking-widest uppercase text-silver/60 mb-1.5">Bio</label>
+        <textarea
+          required
+          rows={3}
+          value={entry.bio}
+          onChange={e => onChange(entry._key, 'bio', e.target.value)}
+          className="admin-input w-full resize-none"
+          placeholder="Character biography..."
+        />
+      </div>
+    </div>
+  );
+}
+
+// ── Bulk Add Modal ────────────────────────────────────────────────────────────
+
+function BulkAddModal({
+  open,
+  onClose,
+  onSave,
+  isSaving,
+  saveError,
+  clanOptions,
+}: {
+  open: boolean;
+  onClose: () => void;
+  onSave: (entries: CharacterFormData[]) => void;
+  isSaving: boolean;
+  saveError: string | null;
+  clanOptions: { id: string; name: string }[];
+}) {
+  const [entries, setEntries] = useState<CharacterFormData[]>([makeEmptyEntry()]);
+
+  if (!open) return null;
+
+  const handleChange = (key: string, field: keyof CharacterFormData, value: string) => {
+    setEntries(prev =>
+      prev.map(e => (e._key === key ? { ...e, [field]: value } : e))
+    );
+  };
+
+  const handleAddAnother = () => {
+    setEntries(prev => [...prev, makeEmptyEntry()]);
+  };
+
+  const handleRemove = (key: string) => {
+    setEntries(prev => prev.filter(e => e._key !== key));
+  };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    onSave(entries);
+  };
+
+  const handleClose = () => {
+    setEntries([makeEmptyEntry()]);
+    onClose();
+  };
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-black/70 backdrop-blur-sm" onClick={handleClose} />
+      <div
+        className="relative w-full max-w-xl rounded-lg border border-moon-blue/20 flex flex-col max-h-[92vh]"
+        style={{ background: 'rgba(13,13,26,0.97)', boxShadow: '0 0 40px rgba(79,195,247,0.1), 0 20px 60px rgba(0,0,0,0.8)' }}
+      >
+        {/* Modal header */}
+        <div className="flex items-center justify-between px-6 pt-6 pb-4 border-b border-moon-blue/10 flex-shrink-0">
+          <div>
+            <h2 className="font-cinzel text-lg font-bold text-white">Add Characters</h2>
+            <p className="font-rajdhani text-xs text-silver/40 mt-0.5 tracking-wide">
+              {entries.length === 1 ? '1 character' : `${entries.length} characters`} to be added
+            </p>
+          </div>
+          <button onClick={handleClose} className="text-silver/40 hover:text-silver transition-colors">
+            <X className="w-5 h-5" />
+          </button>
+        </div>
+
+        {/* Scrollable form body */}
+        <form onSubmit={handleSubmit} className="flex flex-col flex-1 min-h-0">
+          <div className="overflow-y-auto flex-1 px-6 py-4 space-y-4">
+            {entries.map((entry, index) => (
+              <CharacterEntryForm
+                key={entry._key}
+                entry={entry}
+                index={index}
+                total={entries.length}
+                clanOptions={clanOptions}
+                onChange={handleChange}
+                onRemove={handleRemove}
+              />
+            ))}
+
+            {/* Add another button */}
+            <button
+              type="button"
+              onClick={handleAddAnother}
+              className="w-full flex items-center justify-center gap-2 py-2.5 rounded-md border border-dashed border-moon-blue/30 text-moon-blue/60 hover:text-moon-blue hover:border-moon-blue/60 hover:bg-moon-blue/5 font-rajdhani text-sm tracking-wider transition-all duration-200"
+            >
+              <PlusCircle className="w-4 h-4" />
+              Add Another Character
+            </button>
+          </div>
+
+          {/* Error message */}
+          {saveError && (
+            <div className="mx-6 mb-2 flex items-start gap-2 rounded-md border border-crimson/30 bg-crimson/10 px-3 py-2.5">
+              <AlertCircle className="w-4 h-4 text-crimson flex-shrink-0 mt-0.5" />
+              <p className="font-rajdhani text-xs text-crimson leading-relaxed">{saveError}</p>
+            </div>
+          )}
+
+          {/* Footer actions */}
+          <div className="flex gap-3 px-6 py-4 border-t border-moon-blue/10 flex-shrink-0">
+            <button type="button" onClick={handleClose} className="flex-1 admin-btn-secondary">
+              Cancel
+            </button>
+            <button type="submit" disabled={isSaving} className="flex-1 admin-btn-primary flex items-center justify-center gap-2">
+              {isSaving ? (
+                <>
+                  <Loader2 className="w-4 h-4 animate-spin" />
+                  <span>Saving…</span>
+                </>
+              ) : (
+                <>
+                  <CheckCircle2 className="w-4 h-4" />
+                  <span>Save {entries.length > 1 ? `${entries.length} Characters` : 'Character'}</span>
+                </>
+              )}
+            </button>
+          </div>
+        </form>
+      </div>
+    </div>
+  );
+}
+
+// ── Edit Modal (single character) ────────────────────────────────────────────
+
+type SingleCharacterFormData = Omit<CharacterFormData, '_key'>;
+
+function EditModal({
   open,
   onClose,
   initial,
@@ -39,12 +280,12 @@ function CharacterModal({
 }: {
   open: boolean;
   onClose: () => void;
-  initial: CharacterFormData;
-  onSave: (data: CharacterFormData) => void;
+  initial: SingleCharacterFormData;
+  onSave: (data: SingleCharacterFormData) => void;
   isSaving: boolean;
   clanOptions: { id: string; name: string }[];
 }) {
-  const [form, setForm] = useState<CharacterFormData>(initial);
+  const [form, setForm] = useState<SingleCharacterFormData>(initial);
 
   if (!open) return null;
 
@@ -61,9 +302,7 @@ function CharacterModal({
         style={{ background: 'rgba(13,13,26,0.97)', boxShadow: '0 0 40px rgba(79,195,247,0.1), 0 20px 60px rgba(0,0,0,0.8)' }}
       >
         <div className="flex items-center justify-between mb-6">
-          <h2 className="font-cinzel text-lg font-bold text-white">
-            {initial.id ? 'Edit Character' : 'Add Character'}
-          </h2>
+          <h2 className="font-cinzel text-lg font-bold text-white">Edit Character</h2>
           <button onClick={onClose} className="text-silver/40 hover:text-silver transition-colors">
             <X className="w-5 h-5" />
           </button>
@@ -142,15 +381,21 @@ function CharacterModal({
   );
 }
 
+// ── Main Panel ────────────────────────────────────────────────────────────────
+
 export default function CharactersPanel() {
   const { data: characters = [], isLoading } = useGetAllCharacters();
   const { data: backendClans = [] } = useGetAllClans();
-  const addCharacter = useAddCharacter();
+  const addCharacters = useAddCharacters();
   const updateCharacter = useUpdateCharacter();
   const deleteCharacter = useDeleteCharacter();
 
-  const [modalOpen, setModalOpen] = useState(false);
-  const [editingForm, setEditingForm] = useState<CharacterFormData>(emptyForm);
+  const [bulkModalOpen, setBulkModalOpen] = useState(false);
+  const [editModalOpen, setEditModalOpen] = useState(false);
+  const [editingForm, setEditingForm] = useState<SingleCharacterFormData>({
+    id: '', name: '', clan: 'moon', role: '', bio: '', initials: '',
+  });
+  const [saveError, setSaveError] = useState<string | null>(null);
 
   // Use backend clans if available, otherwise fall back to static
   const clanOptions = backendClans.length > 0
@@ -167,11 +412,6 @@ export default function CharactersPanel() {
     return staticClan?.glowColorRgb ?? '79, 195, 247';
   };
 
-  const openAdd = () => {
-    setEditingForm({ ...emptyForm, id: `char-${Date.now()}` });
-    setModalOpen(true);
-  };
-
   const openEdit = (char: Character) => {
     setEditingForm({
       id: char.id,
@@ -181,10 +421,32 @@ export default function CharactersPanel() {
       bio: char.bio,
       initials: char.initials,
     });
-    setModalOpen(true);
+    setEditModalOpen(true);
   };
 
-  const handleSave = (data: CharacterFormData) => {
+  const handleBulkSave = (entries: CharacterFormData[]) => {
+    setSaveError(null);
+    const charactersList: Character[] = entries.map(e => ({
+      id: e.id,
+      name: e.name,
+      clan: e.clan,
+      role: e.role,
+      bio: e.bio,
+      initials: e.initials,
+    }));
+    addCharacters.mutate(charactersList, {
+      onSuccess: () => {
+        setBulkModalOpen(false);
+        setSaveError(null);
+      },
+      onError: (err: unknown) => {
+        const msg = err instanceof Error ? err.message : String(err);
+        setSaveError(msg || 'Failed to save characters. Please try again.');
+      },
+    });
+  };
+
+  const handleEditSave = (data: SingleCharacterFormData) => {
     const character: Character = {
       id: data.id,
       name: data.name,
@@ -193,16 +455,14 @@ export default function CharactersPanel() {
       bio: data.bio,
       initials: data.initials,
     };
-    const isEdit = characters.some(c => c.id === data.id);
-    const mutation = isEdit ? updateCharacter : addCharacter;
-    mutation.mutate(character, { onSuccess: () => setModalOpen(false) });
+    updateCharacter.mutate(character, {
+      onSuccess: () => setEditModalOpen(false),
+    });
   };
 
   const handleDelete = (id: string) => {
     deleteCharacter.mutate(id);
   };
-
-  const isSaving = addCharacter.isPending || updateCharacter.isPending;
 
   return (
     <div>
@@ -213,7 +473,7 @@ export default function CharactersPanel() {
           </h1>
           <p className="font-rajdhani text-sm text-silver/50 mt-1">Manage the cast of characters</p>
         </div>
-        <button onClick={openAdd} className="admin-btn-primary flex items-center gap-2">
+        <button onClick={() => { setSaveError(null); setBulkModalOpen(true); }} className="admin-btn-primary flex items-center gap-2">
           <Plus className="w-4 h-4" />
           <span>Add Character</span>
         </button>
@@ -309,12 +569,23 @@ export default function CharactersPanel() {
         </div>
       )}
 
-      <CharacterModal
-        open={modalOpen}
-        onClose={() => setModalOpen(false)}
+      {/* Bulk Add Modal */}
+      <BulkAddModal
+        open={bulkModalOpen}
+        onClose={() => { setBulkModalOpen(false); setSaveError(null); }}
+        onSave={handleBulkSave}
+        isSaving={addCharacters.isPending}
+        saveError={saveError}
+        clanOptions={clanOptions}
+      />
+
+      {/* Edit Modal */}
+      <EditModal
+        open={editModalOpen}
+        onClose={() => setEditModalOpen(false)}
         initial={editingForm}
-        onSave={handleSave}
-        isSaving={isSaving}
+        onSave={handleEditSave}
+        isSaving={updateCharacter.isPending}
         clanOptions={clanOptions}
       />
     </div>

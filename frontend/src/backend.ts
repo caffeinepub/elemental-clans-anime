@@ -201,6 +201,7 @@ export interface backendInterface {
     _caffeineStorageUpdateGatewayPrincipals(): Promise<void>;
     _initializeAccessControlWithSecret(userSecret: string): Promise<void>;
     addCharacter(character: Character): Promise<void>;
+    addCharacters(charactersList: Array<Character>): Promise<void>;
     addClan(clan: Clan): Promise<void>;
     addEpisode(episode: Episode): Promise<void>;
     addGalleryImage(image: GalleryImage): Promise<void>;
@@ -377,6 +378,20 @@ export class Backend implements backendInterface {
             }
         } else {
             const result = await this.actor.addCharacter(arg0);
+            return result;
+        }
+    }
+    async addCharacters(arg0: Array<Character>): Promise<void> {
+        if (this.processError) {
+            try {
+                const result = await this.actor.addCharacters(arg0);
+                return result;
+            } catch (e) {
+                this.processError(e);
+                throw new Error("unreachable");
+            }
+        } else {
+            const result = await this.actor.addCharacters(arg0);
             return result;
         }
     }

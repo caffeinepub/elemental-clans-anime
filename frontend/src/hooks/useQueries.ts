@@ -388,6 +388,21 @@ export function useAddCharacter() {
   });
 }
 
+export function useAddCharacters() {
+  const { actor } = useActor();
+  const queryClient = useQueryClient();
+
+  return useMutation({
+    mutationFn: async (charactersList: Character[]) => {
+      if (!actor) throw new Error('Actor not available');
+      return actor.addCharacters(charactersList);
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ['characters'] });
+    },
+  });
+}
+
 export function useUpdateCharacter() {
   const { actor } = useActor();
   const queryClient = useQueryClient();

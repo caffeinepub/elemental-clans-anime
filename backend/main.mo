@@ -566,6 +566,19 @@ actor {
     characters.add(character.id, character);
   };
 
+  public shared ({ caller }) func addCharacters(charactersList : [Character]) : async () {
+    if (not (AccessControl.isAdmin(accessControlState, caller))) {
+      Runtime.trap("Unauthorized: Only admins can add characters");
+    };
+
+    for (character in charactersList.values()) {
+      if (characters.containsKey(character.id)) {
+        Runtime.trap("Character with id already exists: " # character.id);
+      };
+      characters.add(character.id, character);
+    };
+  };
+
   public shared ({ caller }) func updateCharacter(character : Character) : async () {
     if (not (AccessControl.isAdmin(accessControlState, caller))) {
       Runtime.trap("Unauthorized: Only admins can update characters");

@@ -101,6 +101,7 @@ export enum UserRole {
 }
 export interface backendInterface {
     addCharacter(character: Character): Promise<void>;
+    addCharacters(charactersList: Array<Character>): Promise<void>;
     addClan(clan: Clan): Promise<void>;
     addEpisode(episode: Episode): Promise<void>;
     addGalleryImage(image: GalleryImage): Promise<void>;

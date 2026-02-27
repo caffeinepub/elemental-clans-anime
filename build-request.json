@@ -1,172 +1,58 @@
 {
   "kind": "build_request",
-  "title": "Connect Contact & Fan Mail Forms to Admin Panel with Persistent Storage",
-  "projectName": "Whispers Of The White Moon",
-  "priority": "high",
+  "title": "Allow bulk (multiple) character creation in Admin Panel",
+  "projectName": "Whispers of the White Moon",
+  "priority": "normal",
   "requirements": [
     {
       "id": "REQ-1",
-      "text": "Extend the backend ContactMessage and FanMail data types to include a `status` field with values: `#new`, `#read`, `#replied`. Ensure all existing and new submissions default to `#new` on creation.",
+      "text": "Update the backend character creation API to accept and persist an array of characters in a single call, so admins can create multiple characters at once.",
       "target": "backend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-latest"
         ],
         "quotes": [
-          "Status (New, Read, Replied)"
+          "in the admin panel, when admins make characters...alow them to make mutible"
         ]
       },
       "acceptanceCriteria": [
-        "ContactMessage type includes a `status` variant field with #new, #read, #replied",
-        "FanMail type includes a `status` variant field with #new, #read, #replied",
-        "New submissions created via submitContact and submitFanMail default to #new status"
+        "A new public method (e.g., addCharacters) accepts an array of character records and stores all of them.",
+        "Individual character creation still works via the existing addCharacter method.",
+        "All submitted characters are persisted and retrievable via getCharacters."
       ]
     },
     {
       "id": "REQ-2",
-      "text": "Add backend admin endpoints to: (1) retrieve all ContactMessages, (2) retrieve all FanMail entries, (3) update the status of a ContactMessage by ID, (4) update the status of a FanMail entry by ID, (5) delete a ContactMessage by ID, (6) delete a FanMail entry by ID. All mutating endpoints must be access-controlled to admin principals only.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "permanently saved until deleted by an admin",
-          "Messages should appear inside the Admin Panel"
-        ]
-      },
-      "acceptanceCriteria": [
-        "getContactMessages() returns all stored contact messages and is admin-gated",
-        "getFanMailEntries() returns all stored fan mail entries and is admin-gated",
-        "updateContactMessageStatus(id, status) updates the status field and is admin-gated",
-        "updateFanMailStatus(id, status) updates the status field and is admin-gated",
-        "deleteContactMessage(id) removes the entry permanently and is admin-gated",
-        "deleteFanMailEntry(id) removes the entry permanently and is admin-gated",
-        "Data persists across canister upgrades via stable storage"
-      ]
-    },
-    {
-      "id": "REQ-3",
-      "text": "Generate a migration.mo that upgrades existing actor state to add the `status` field to any ContactMessage and FanMail entries already stored, defaulting them to `#new`, while preserving all other existing data.",
-      "target": "backend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "Make sure messages do not disappear after refresh and are permanently saved"
-        ]
-      },
-      "acceptanceCriteria": [
-        "migration.mo preserves all existing episodes, characters, news, gallery images, clans, and user profiles",
-        "Existing contactMessages and fanMailEntries are migrated with status = #new",
-        "No data loss occurs during upgrade"
-      ]
-    },
-    {
-      "id": "REQ-4",
-      "text": "Add React Query hooks in `frontend/src/hooks/useQueries.ts` for: fetching all contact messages (admin), fetching all fan mail entries (admin), updating message/fan mail status, and deleting message/fan mail entries.",
+      "text": "Update the CharactersPanel admin UI to allow adding multiple characters in a single session. The modal form should support adding and removing multiple character entries before submitting, so all entries are saved at once with a single submit action.",
       "target": "frontend",
       "source": {
         "messageIds": [
-          "msg-3"
+          "msg-latest"
         ],
         "quotes": [
-          "Messages should appear inside the Admin Panel"
+          "in the admin panel, when admins make characters...alow them to make mutible"
         ]
       },
       "acceptanceCriteria": [
-        "useGetContactMessages() query hook is available and calls the admin-gated backend endpoint",
-        "useGetFanMailEntries() query hook is available and calls the admin-gated backend endpoint",
-        "useUpdateContactMessageStatus() mutation hook updates status and invalidates the contact messages query",
-        "useUpdateFanMailStatus() mutation hook updates status and invalidates the fan mail query",
-        "useDeleteContactMessage() mutation hook deletes an entry and invalidates the contact messages query",
-        "useDeleteFanMailEntry() mutation hook deletes an entry and invalidates the fan mail query"
-      ]
-    },
-    {
-      "id": "REQ-5",
-      "text": "Create a new `ContactMessagesPanel` component at `frontend/src/components/admin/panels/ContactMessagesPanel.tsx`. Display all submitted contact form messages in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status (New → Read → Replied) via a dropdown or button, and delete individual messages. The status badge should be color-coded: New = amber/yellow, Read = blue, Replied = green.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "Contact Messages",
-          "Sender name",
-          "Email (if provided)",
-          "Message content",
-          "Date and time received",
-          "Status (New, Read, Replied)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Panel renders a list/table of all contact messages from the backend",
-        "Each row shows sender name, email (or '—' if not provided), message content, date/time, and status badge",
-        "Admin can change message status; change is persisted to the backend",
-        "Admin can delete a message; it is removed from the backend and disappears from the list",
-        "Status badges are color-coded: New = amber, Read = blue, Replied = green",
-        "List updates after status change or deletion without full page reload"
-      ]
-    },
-    {
-      "id": "REQ-6",
-      "text": "Create a new `FanMailPanel` component at `frontend/src/components/admin/panels/FanMailPanel.tsx`. Display all submitted fan mail entries in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status and delete individual entries, with the same color-coded status badge system as the ContactMessagesPanel.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "Fan Mail",
-          "Sender name",
-          "Email (if provided)",
-          "Message content",
-          "Date and time received",
-          "Status (New, Read, Replied)"
-        ]
-      },
-      "acceptanceCriteria": [
-        "Panel renders a list/table of all fan mail entries from the backend",
-        "Each row shows sender name, email (or '—' if not provided), message content, date/time, and status badge",
-        "Admin can change fan mail status; change is persisted to the backend",
-        "Admin can delete a fan mail entry; it is removed from the backend and disappears from the list",
-        "Status badges are color-coded: New = amber, Read = blue, Replied = green",
-        "List updates after status change or deletion without full page reload"
-      ]
-    },
-    {
-      "id": "REQ-7",
-      "text": "Integrate the `ContactMessagesPanel` and `FanMailPanel` into the `AdminDashboard` sidebar navigation (`frontend/src/components/admin/AdminDashboard.tsx`). Add 'Contact Messages' and 'Fan Mail' as new navigation items in the sidebar, and render the corresponding panel when each item is selected. Show a badge count of unread (status = New) messages next to each sidebar label.",
-      "target": "frontend",
-      "source": {
-        "messageIds": [
-          "msg-3"
-        ],
-        "quotes": [
-          "Messages should appear inside the Admin Panel under: Contact Messages, Fan Mail"
-        ]
-      },
-      "acceptanceCriteria": [
-        "AdminDashboard sidebar includes 'Contact Messages' and 'Fan Mail' navigation items",
-        "Clicking 'Contact Messages' renders ContactMessagesPanel in the main content area",
-        "Clicking 'Fan Mail' renders FanMailPanel in the main content area",
-        "Each sidebar item shows a numeric badge indicating the count of messages with status = New",
-        "Badge disappears or shows 0 when all messages have been read or replied to"
+        "The 'Add Character' modal displays at least one character form entry by default.",
+        "An 'Add Another Character' button appends a new blank character form entry to the modal.",
+        "Each character entry has a remove button to delete that entry (disabled when only one entry remains).",
+        "Each entry includes all existing fields: name, initials, clan, role, and bio.",
+        "Submitting the form saves all character entries at once via the bulk backend method.",
+        "Success and error states are communicated clearly to the admin.",
+        "After a successful bulk save, the character list is refreshed."
       ]
     }
   ],
   "constraints": [
-    "All admin-only backend endpoints must enforce principal-based authorization; unauthenticated or non-admin calls must be rejected",
-    "ContactMessage and FanMail data must be stored in stable variables to survive canister upgrades",
-    "Do not modify immutable frontend paths: frontend/src/hooks/useInternetIdentity.ts, frontend/src/hooks/useActor.ts, frontend/src/main.tsx, frontend/src/components/ui"
+    "Do not remove or break existing single-character editing (edit/update) functionality in CharactersPanel.",
+    "Do not modify any files listed in frontend.immutablePaths."
   ],
   "nonGoals": [
-    "Email notification to admin when new messages arrive",
-    "Replying to messages directly from the admin panel (only status change to 'Replied')",
-    "Pagination or search/filter for message lists in this iteration",
-    "Any changes to the Contact Page or Fan Mail form submission UI"
+    "Bulk editing or bulk deleting of existing characters.",
+    "CSV or file-based import of characters.",
+    "Any changes to the public-facing Characters display component."
   ],
   "imageRequirements": {
     "required": [],

@@ -2,10 +2,10 @@
   "kind": "feature_evidence_report",
   "features": [
     {
-      "featureId": "feature-add-react-query-hooks-in-frontend-src-hooks-usequeries-ts-for-fetching-all-contact-messages-admin-fetching-all-fan-mail-entries-admin-updating-message-fan-mail-status-and-deleting-message-fan-mail-entries",
-      "featureTitle": "Add React Query hooks in `frontend/src/hooks/useQueries.ts` for: fetching all contact messages (admin), fetching all fan mail entries (admin), updating message/fan mail status, and deleting message/fan mail entries.",
+      "featureId": "feature-update-the-characterspanel-admin-ui-to-allow-adding-multiple-characters-in-a-single-session-the-modal-form-should-support-adding-and-removing-multiple-character-entries-before-submitting-so-all-entries-are-saved-at-once-with-a-single-submit-action",
+      "featureTitle": "Update the CharactersPanel admin UI to allow adding multiple characters in a single session. The modal form should support adding and removing multiple character entries before submitting, so all entries are saved at once with a single submit action.",
       "files": [
-        "frontend/src/hooks/useQueries.ts"
+        "frontend/src/components/admin/panels/CharactersPanel.tsx"
       ],
       "components": [
         "core-infrastructure@1.0.2",
@@ -17,67 +17,7 @@
         "authorization@4.0.0"
       ],
       "testIds": [
-        "REQ-4"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-new-contactmessagespanel-component-at-frontend-src-components-admin-panels-contactmessagespanel-tsx-display-all-submitted-contact-form-messages-in-a-table-list-with-columns-sender-name-email-message-content-date-time-received-and-status-allow-admins-to-change-the-status-new-read-replied-via-a-dropdown-or-button-and-delete-individual-messages-the-status-badge-should-be-color-coded-new-amber-yellow-read-blue-replied-green",
-      "featureTitle": "Create a new `ContactMessagesPanel` component at `frontend/src/components/admin/panels/ContactMessagesPanel.tsx`. Display all submitted contact form messages in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status (New → Read → Replied) via a dropdown or button, and delete individual messages. The status badge should be color-coded: New = amber/yellow, Read = blue, Replied = green.",
-      "files": [
-        "frontend/src/components/admin/panels/ContactMessagesPanel.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-5"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-create-a-new-fanmailpanel-component-at-frontend-src-components-admin-panels-fanmailpanel-tsx-display-all-submitted-fan-mail-entries-in-a-table-list-with-columns-sender-name-email-message-content-date-time-received-and-status-allow-admins-to-change-the-status-and-delete-individual-entries-with-the-same-color-coded-status-badge-system-as-the-contactmessagespanel",
-      "featureTitle": "Create a new `FanMailPanel` component at `frontend/src/components/admin/panels/FanMailPanel.tsx`. Display all submitted fan mail entries in a table/list with columns: Sender Name, Email, Message Content, Date & Time Received, and Status. Allow admins to change the status and delete individual entries, with the same color-coded status badge system as the ContactMessagesPanel.",
-      "files": [
-        "frontend/src/components/admin/panels/FanMailPanel.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-6"
-      ],
-      "confidence": "high"
-    },
-    {
-      "featureId": "feature-integrate-the-contactmessagespanel-and-fanmailpanel-into-the-admindashboard-sidebar-navigation-frontend-src-components-admin-admindashboard-tsx-add-contact-messages-and-fan-mail-as-new-navigation-items-in-the-sidebar-and-render-the-corresponding-panel-when-each-item-is-selected-show-a-badge-count-of-unread-status-new-messages-next-to-each-sidebar-label",
-      "featureTitle": "Integrate the `ContactMessagesPanel` and `FanMailPanel` into the `AdminDashboard` sidebar navigation (`frontend/src/components/admin/AdminDashboard.tsx`). Add 'Contact Messages' and 'Fan Mail' as new navigation items in the sidebar, and render the corresponding panel when each item is selected. Show a badge count of unread (status = New) messages next to each sidebar label.",
-      "files": [
-        "frontend/src/components/admin/AdminDashboard.tsx"
-      ],
-      "components": [
-        "core-infrastructure@1.0.2",
-        "shadcn-ui@1.0.0",
-        "build-template-react@1.0.0",
-        "initial-app@1.0.0",
-        "github-export-icp-cli@1.0.0",
-        "blob-storage@4.0.0",
-        "authorization@4.0.0"
-      ],
-      "testIds": [
-        "REQ-7"
+        "REQ-2"
       ],
       "confidence": "high"
     }
